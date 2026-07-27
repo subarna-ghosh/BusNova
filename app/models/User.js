@@ -24,17 +24,27 @@ const userSchema = new Schema(
     phone: {
       type: String,
     },
-    avatar: {
+    profileImage: {
       type: String,
+      default: null,
     },
-    lastLoginAt: {
-      type: Date,
+    profileImagePublicId: {
+      type: String,
+      default: null,
     },
     refreshToken: { type: String },
     status: {
       type: String,
       enum: ["active", "inactive"],
       default: "active",
+    },
+    lastLoginAt: {
+      type: Date,
+      default: null,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
     },
     isDeleted: {
       type: Boolean,
