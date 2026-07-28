@@ -5,7 +5,7 @@ const registerValidation = [
     .trim()
     .notEmpty()
     .withMessage("Name is required")
-    .bail()     
+    .bail()
     .isLength({ min: 3, max: 50 })
     .withMessage("Name must be between 3 and 50 characters"),
 
@@ -53,6 +53,16 @@ const loginValidation = [
   body("password")
     .notEmpty()
     .withMessage("Password is required")
+    .bail()
+    .isStrongPassword({
+      minLength: 8,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
+    })
+    .withMessage(
+      "Password must contain uppercase, lowercase, number and special character",
+    ),
 ];
 
 const forgotPasswordValidation = [
@@ -79,13 +89,33 @@ const resetPasswordValidation = [
     .withMessage("Password is too weak"),
 ];
 
+const verifyEmailValidation = [
+  body("userId")
+    .trim()
+    .notEmpty()
+    .withMessage("User ID is required")
+    .bail()
+    .isMongoId()
+    .withMessage("Invalid User ID"),
+
+  body("otp")
+    .trim()
+    .notEmpty()
+    .withMessage("OTP is required")
+    .bail()
+    .isLength({ min: 6, max: 6 })
+    .withMessage("OTP must be 6 digits")
+    .bail()
+    .isNumeric()
+    .withMessage("OTP must contain only numbers"),
+];
+
 module.exports = {
   registerValidation,
   loginValidation,
   forgotPasswordValidation,
   resetPasswordValidation,
+  verifyEmailValidation,
 };
-
-
 
 // .bail() --> If this validation fails, stop validating this field and don't run the remaining validations.

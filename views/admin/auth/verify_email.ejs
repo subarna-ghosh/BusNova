@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BusNova — Verify Email</title>
+
+    <!-- Bootstrap 5 & Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- BusNova CSS -->
+     <link rel="stylesheet" href="/assets/css/verify_email.css" />
+  </head>
+  <body>
+    <div class="login-shell">
+      <!-- Brand Panel (Left Side - Desktop) -->
+      <div class="brand-panel d-none d-lg-flex">
+        <div class="brand-glow"></div>
+        <div class="brand-content">
+          <div class="brand-mark-row">
+            <span class="brand-mark">B</span>
+            <span class="brand-word">BusNova</span>
+          </div>
+
+          <h1>Almost there.<br />Verify your email.</h1>
+          <p>
+            We take account security seriously. Verify your email address to
+            complete registration and access your dashboard.
+          </p>
+
+          <ul class="role-list">
+            <li>
+              <i class="bi bi-shield-check"></i>Protect your account against
+              unauthorized access
+            </li>
+            <li>
+              <i class="bi bi-envelope-paper"></i>Receive instant trip updates
+              and booking confirmations
+            </li>
+            <li>
+              <i class="bi bi-key"></i>Easy password recovery whenever you need
+              it
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Form Panel (Right Side) -->
+      <div class="form-panel">
+        <div class="form-wrap">
+          <!-- Mobile Header Logo -->
+          <div class="mobile-brand d-lg-none">
+            <span class="brand-mark">B</span>
+            <span class="brand-word">BusNova</span>
+          </div>
+
+          <h2>Verify Email</h2>
+          <p class="subtitle">
+            Enter the 6-digit OTP code sent to your registered email address.
+          </p>
+
+          <!-- Alert Box (Hidden by default, show via JS if needed) -->
+          <div class="alert-box d-none" id="verifyError">
+            <i class="bi bi-exclamation-circle"></i>
+            <span id="verifyErrorText">Invalid or expired OTP code.</span>
+          </div>
+
+          <form action="/web/auth/save/verify-email" method="POST" id="verifyForm">
+            <!-- User ID Hidden Input -->
+            <input type="hidden" name="userId" id="userId" value="<%= userId %>" />
+
+            <!-- OTP Input -->
+            <div class="mb-4">
+              <label for="otp" class="form-label small"
+                >Verification Code (OTP)</label
+              >
+              <input
+                type="text"
+                name="otp"
+                class="form-control otp-input"
+                id="otp"
+                placeholder="000000"
+                maxlength="6"
+                pattern="[0-9]{6}"
+                inputmode="numeric"
+                required
+                autofocus
+              />
+            </div>
+
+            <!-- Submit Button -->
+            <button
+              type="submit"
+              class="btn btn-brand w-100"
+              id="verifySubmitBtn"
+            >
+              Verify &amp; Continue
+            </button>
+          </form>
+
+          <div class="divider"><span>or</span></div>
+
+          <p class="signup-line mt-2">
+            <a
+              href="/web/auth/view/login"
+              class="text-muted text-decoration-none small"
+            >
+              <i class="bi bi-arrow-left me-1"></i>Back to Sign in
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

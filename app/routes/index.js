@@ -4,7 +4,14 @@ const Router = express.Router();
 // web routes
 const webAuthRoutes = require("./web/authRoutes");
 Router.use("/web/auth", webAuthRoutes);
-
+const webAdminRoutes = require("./web/adminRoutes");
+Router.use("/web/admin", webAdminRoutes);
+const webCustomerRoutes = require("./web/customerRoutes");
+Router.use("/web/customer", webCustomerRoutes);
+const webDriverRoutes = require("./web/driverRoutes");
+Router.use("/web/driver", webDriverRoutes);
+const webStaffRoutes = require("./web/staffRoutes");
+Router.use("/web/staff", webStaffRoutes);
 
 // api routes
 // const apiAuthRoutes = require("./api/authRoutes");

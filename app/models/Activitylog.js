@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const activityLogSchema = new Schema(
   {
-    actorId: {
+    userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -37,9 +37,6 @@ const activityLogSchema = new Schema(
     },
     ipAddress: {
       type: String,
-    },
-    metadata: {
-      type: Schema.Types.Mixed,
     },
   },
   {

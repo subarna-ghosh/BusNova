@@ -6,12 +6,32 @@ const {
   loginValidation,
   forgotPasswordValidation,
   resetPasswordValidation,
+  verifyEmailValidation
 } = require("../../validations/authValidation");
 const validateWeb = require("../../middlewares/validateWebMiddleware");
 
+// landing page
 Router.get("/view/landing/page", AuthController.viewLandingPage);
-Router.get("/view/register", AuthController.viewRegister);
 
+// register
+Router.get("/view/register", AuthController.viewRegister);
+Router.post(
+  "/save/register",
+  registerValidation,
+  validateWeb("admin/auth/register"),
+  AuthController.saveRegister,
+);
+
+// verify email
+Router.get("/view/verify-email/:id", AuthController.verifyViewEmail);
+Router.post(
+  "/save/verify-email",
+  verifyEmailValidation,
+  validateWeb("admin/auth/verify_email"),
+  AuthController.saveVerifyEmail
+);
+
+// login
 Router.get("/view/login", AuthController.viewLogin);
 Router.post(
   "/save/login",
@@ -19,6 +39,8 @@ Router.post(
   validateWeb("admin/auth/login"),
   AuthController.saveLogin,
 );
+
+// forgot password
 Router.get("/view/forgot-password", AuthController.viewForgotPasword);
 
 module.exports = Router;
