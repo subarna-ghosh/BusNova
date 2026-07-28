@@ -82,12 +82,19 @@
               <label for="loginEmail" class="form-label small">Email</label>
               <input
                 type="email"
+                name="email"
                 class="form-control"
                 id="loginEmail"
                 placeholder="you@example.com"
+                value="<%= old?.email || '' %>"
                 required
                 autocomplete="username"
               />
+              <% if (errors.email) { %>
+                      <small class="text-danger">
+                          <%= errors.email %>
+                      </small>
+              <% } %>
             </div>
 
             <div class="mb-2">
@@ -97,9 +104,11 @@
               <div class="password-field">
                 <input
                   type="password"
+                  name="password"
                   class="form-control"
                   id="loginPassword"
                   placeholder="Enter your password"
+                  value="<%= old?.password || '' %>"
                   required
                   minlength="8"
                   autocomplete="current-password"
@@ -113,6 +122,11 @@
                   <i class="bi bi-eye"></i>
                 </button>
               </div>
+              <% if (errors.password) { %>
+                      <small class="text-danger">
+                          <%= errors.password%>
+                      </small>
+              <% } %>
             </div>
 
             <div class="form-row-between mb-4">
@@ -145,7 +159,7 @@
           <p class="signup-line">
             New to BusNova?
             <a href="/web/auth/view/register" class="link-brand"
-              >Create a customer account</a
+              >Create an account</a
             >
           </p>
           <p class="signup-note">

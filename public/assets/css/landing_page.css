@@ -1,0 +1,406 @@
+:root {
+  --bn-orange: #ff9e2c;
+  --bn-orange-dark: #e8850d;
+  --bn-orange-soft: #fff2de;
+  --bn-ink: #171310;
+  --bn-ink-soft: #2b251e;
+  --bn-muted: #726a5c;
+  --bn-line: rgba(23, 19, 16, 0.1);
+  --bs-secondary-color: #ffff;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  color: var(--bn-ink);
+}
+
+h1,
+h2,
+h3,
+h5,
+.navbar-brand {
+  font-family: "Baloo 2", sans-serif;
+}
+
+.text-muted {
+  color: var(--bs-secondary-color) !important;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* ---------- Brand elements ---------- */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.5rem;
+  /* color: var(--bn-ink) !important; */
+}
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--bn-orange), #ffc46b);
+  color: var(--bn-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  transform: rotate(-6deg);
+}
+
+.btn-brand {
+  background: var(--bn-orange);
+  border: none;
+  color: var(--bn-ink);
+  font-weight: 600;
+  border-radius: 50px;
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+  box-shadow: 0 10px 22px -10px rgba(255, 158, 44, 0.6);
+}
+.btn-brand:hover {
+  background: var(--bn-orange-dark);
+  color: var(--bn-ink);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px -10px rgba(232, 133, 13, 0.55);
+}
+
+.btn-light {
+  border-radius: 50px;
+  font-weight: 600;
+}
+
+.text-brand {
+  color: var(--bn-orange) !important;
+}
+
+.eyebrow,
+.eyebrow-dark {
+  font-family: "Poppins", monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.eyebrow {
+  color: var(--bn-orange);
+}
+.eyebrow-dark {
+  color: var(--bn-orange-dark);
+}
+
+.navbar .nav-link {
+  font-weight: 500;
+  color: var(--bn-ink-soft);
+}
+.navbar .nav-link:hover {
+  color: var(--bn-orange-dark);
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  min-height: 85vh;
+  /* Replace the image URL below with your own fleet / highway photo */
+  background:
+    linear-gradient(rgba(23, 19, 16, 0.6), rgba(23, 19, 16, 0.75)),
+    url("https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1600&q=80")
+      center/cover no-repeat;
+  position: relative;
+}
+
+.search-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.35);
+  padding: 22px;
+  max-width: 900px;
+}
+.search-card .form-control {
+  border: 1.5px solid var(--bn-line);
+  border-radius: 10px;
+  background: #faf8f5;
+}
+.search-card .form-control:focus {
+  border-color: var(--bn-orange);
+  box-shadow: 0 0 0 0.2rem rgba(255, 158, 44, 0.2);
+}
+
+/* ---------- Trust strip ---------- */
+.trust-strip {
+  background: #fff;
+  border-bottom: 1px solid var(--bn-line);
+  padding: 30px 0;
+}
+.trust-num {
+  font-family: "Baloo 2", sans-serif;
+  font-weight: 800;
+  font-size: 1.9rem;
+  color: var(--bn-ink);
+}
+.trust-label {
+  font-size: 0.8rem;
+  color: var(--bn-muted);
+}
+
+/* ---------- Routes ---------- */
+.route-card {
+  border: none;
+  border-radius: 16px;
+  background: #fff;
+  border: 1.5px solid var(--bn-line);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.route-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--bn-orange);
+  box-shadow: 0 18px 30px -20px rgba(255, 158, 44, 0.4);
+}
+.route-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.route-price {
+  font-family: "Baloo 2", sans-serif;
+  font-weight: 700;
+  color: var(--bn-orange-dark);
+  font-size: 1.2rem;
+}
+
+/* ---------- How it works ---------- */
+.how-section {
+  background: #f7f5f1;
+}
+.step-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--bn-orange);
+  color: var(--bn-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  box-shadow: 0 12px 20px -10px rgba(255, 158, 44, 0.55);
+}
+
+/* ---------- Testimonials ---------- */
+.testimonials {
+  background: var(--bn-ink);
+  color: #fff;
+}
+.avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  border: 3px solid var(--bn-orange);
+  background: rgba(255, 158, 44, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Baloo 2", sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--bn-orange);
+}
+.t-quote {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #f0ebe0;
+  max-width: 560px;
+  margin: 18px auto;
+}
+.t-name {
+  font-weight: 600;
+  color: var(--bn-orange);
+}
+.t-role {
+  font-size: 0.8rem;
+  color: #a69f8e;
+}
+.carousel-arrow {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.testimonials .carousel-arrow:hover {
+  border-color: var(--bn-orange);
+  color: var(--bn-orange);
+}
+.gallery-card {
+  background: #fff;
+}
+.gallery-card ~ .carousel-arrow,
+#gallery .carousel-arrow {
+  border: 1.5px solid var(--bn-line);
+  color: var(--bn-ink);
+  background: #fff;
+}
+#gallery .carousel-arrow:hover {
+  border-color: var(--bn-orange);
+  color: var(--bn-orange-dark);
+}
+.carousel-indicators-custom {
+  display: flex;
+  gap: 9px;
+}
+.carousel-indicators-custom button {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 0;
+  transition: all 0.2s ease;
+}
+.testimonials .carousel-indicators-custom button.active {
+  background: var(--bn-orange);
+  width: 22px;
+  border-radius: 6px;
+}
+#gallery .carousel-indicators-custom button {
+  background: var(--bn-line);
+}
+#gallery .carousel-indicators-custom button.active {
+  background: var(--bn-orange);
+  width: 22px;
+  border-radius: 6px;
+}
+
+/* ---------- Stats band ---------- */
+.stats-band {
+  background: var(--bn-orange-soft);
+  border-top: 1px solid var(--bn-line);
+  border-bottom: 1px solid var(--bn-line);
+}
+.stat-num {
+  font-family: "Baloo 2", sans-serif;
+  font-weight: 800;
+  font-size: 2.4rem;
+  color: var(--bn-orange-dark);
+}
+.stat-label {
+  font-size: 0.82rem;
+  color: var(--bn-ink-soft);
+}
+
+/* ---------- Gallery ---------- */
+.gallery-card {
+  border-radius: 18px;
+  border: 1.5px solid var(--bn-line);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.gallery-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 34px -22px rgba(23, 19, 16, 0.3);
+}
+.gallery-card i {
+  color: var(--bn-orange-dark);
+}
+
+/* ---------- Why choose us ---------- */
+.why-section {
+  background: #f7f5f1;
+}
+.feature-card {
+  border-radius: 16px;
+  border: 1.5px solid var(--bn-line);
+  background: #fff;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--bn-orange);
+  box-shadow: 0 18px 30px -20px rgba(255, 158, 44, 0.4);
+}
+.feature-card i {
+  color: var(--bn-orange-dark);
+}
+
+/* ---------- Final CTA ---------- */
+.cta-panel {
+  background: var(--bn-ink);
+  border-radius: 26px;
+  position: relative;
+  overflow: hidden;
+}
+.cta-panel::before {
+  content: "";
+  position: absolute;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 158, 44, 0.35),
+    transparent 70%
+  );
+  top: -140px;
+  right: -100px;
+}
+.cta-panel > * {
+  position: relative;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  background: var(--bn-ink);
+}
+.footer .brand-mark {
+  transform: rotate(-6deg);
+}
+.social-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.social-icon:hover {
+  border-color: var(--bn-orange);
+  color: var(--bn-orange);
+}
+
+/* Make mobile navbar overlay content instead of pushing it down */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    position: absolute;
+    top: 100%; /* Positions it right below the top bar */
+    left: 0;
+    width: 100%;
+    background-color: #ffffff; /* Solid background so text doesn't overlap */
+    padding: 15px 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Adds depth */
+    z-index: 1000; /* Ensures it sits above search bar & content */
+  }
+
+  .navbar-nav {
+    align-items: flex-start !important; /* Fixes alignment for mobile links */
+    gap: 8px;
+  }
+}
