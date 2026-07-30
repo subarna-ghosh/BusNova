@@ -6,7 +6,7 @@ const {
   loginValidation,
   forgotPasswordValidation,
   resetPasswordValidation,
-  verifyEmailValidation
+  verifyEmailValidation,
 } = require("../../validations/authValidation");
 const validateWeb = require("../../middlewares/validateWebMiddleware");
 
@@ -28,7 +28,7 @@ Router.post(
   "/save/verify-email",
   verifyEmailValidation,
   validateWeb("admin/auth/verify_email"),
-  AuthController.saveVerifyEmail
+  AuthController.saveVerifyEmail,
 );
 
 // login
@@ -42,5 +42,19 @@ Router.post(
 
 // forgot password
 Router.get("/view/forgot-password", AuthController.viewForgotPasword);
+Router.post(
+  "/save/forgot-password",
+  forgotPasswordValidation,
+  validateWeb("admin/auth/forgot_password"),
+  AuthController.forgotPassword,
+);
 
+// reset password
+Router.get("/view/reset-password/:id/:token", AuthController.viewResetPassword);
+Router.post(
+  "/save/reset-password/:id/:token",
+  resetPasswordValidation,
+  validateWeb("admin/auth/reset_password"),
+  AuthController.saveResetPassword,
+);
 module.exports = Router;
