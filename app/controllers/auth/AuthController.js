@@ -465,5 +465,87 @@ class AuthController {
       return res.redirect("/web/auth/view/login");
     }
   }
+
+  async refreshToken(req, res) {
+    try {
+      const refreshToken = req.cookies.refreshToken;
+      if (!refreshToken) {
+        return res.redirect("/web/auth/view/login");
+      }
+      const decoded = jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET_KEY,
+      );
+      const findUser = await User.findOne({
+        _id: decoded.id,
+        refreshToken,
+      });
+      if (!findUser) {
+        logger.warn(`user not found! Redirecting to login.`);
+        return res.redirect("/web/auth/view/login");
+      }
+      const role = await Role.findById(findUser.roleId);
+      if (!role) {
+        return res.redirect("/web/auth/view/login");
+      }
+      const newAccessToken = createAccessToken({
+        id: findUser._id,
+        name: findUser.name,
+        email: findUser.email,
+        role: role.roleName,
+      });
+
+      res.cookie("accessToken", newAccessToken, {
+        httpOnly: true,
+        sameSite: "strict",
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 15 * 60 * 1000,
+      });
+      const redirectUrl =
+        req.cookies.redirectAfterRefresh || "/web/admin/view/dashboard";
+
+      res.clearCookie("redirectAfterRefresh");
+      logger.info(`Access token refreshed for ${findUser.email}`);
+
+      return res.redirect(redirectUrl);
+    } catch (error) {
+      res.clearCookie("accessToken");
+      res.clearCookie("refreshToken");
+      res.clearCookie("redirectAfterRefresh");
+
+      logger.warn(`Refresh token failed: ${error.message}`); //if the refresh token is expired or invalid. Browser still has the old cookies.
+
+      return res.redirect("/web/auth/view/login");
+    }
+  }
+
+  async logout(req, res) {
+    try {
+      const refreshToken = req.cookies.refreshToken;
+      if (refreshToken) {
+        await User.findOneAndUpdate(
+          { refreshToken },
+          { $unset: { refreshToken: 1 } }, //Remove this field from the document.
+        );
+      }
+      res.clearCookie("accessToken");
+      res.clearCookie("refreshToken");
+      res.clearCookie("redirectAfterRefresh"); //ensures that all authentication-related cookies are removed. It prevents any leftover redirect information from surviving into a future login session
+
+      await activityLogger(req, {
+        userId: req.user.id,
+        module: "Auth",
+        action: "Logout",
+        description: `${req.user.email} logged out`,
+      });
+
+      logger.info(`User logged out successfully.`);
+
+      return res.redirect("/web/auth/view/login");
+    } catch (error) {
+      logger.error(`Logout Error: ${error.message}`);
+      return res.redirect("/web/auth/view/login");
+    }
+  }
 }
 module.exports = new AuthController();

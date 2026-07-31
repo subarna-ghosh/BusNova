@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>BusNova — Driver Management</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./admin.css" />
+  </head>
+  <body>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-brand">
+        <span class="brand-mark">B</span>
+        <span>BusNova</span>
+        <button
+          class="sidebar-close d-lg-none"
+          id="sidebarClose"
+          aria-label="Close menu"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-group-label">Overview</div>
+        <a href="dashboard.html" class="nav-link-item">
+          <i class="bi bi-speedometer2"></i><span>Dashboard</span>
+        </a>
+        <div class="nav-group-label">Fleet</div>
+        <a href="buses.html" class="nav-link-item">
+          <i class="bi bi-bus-front"></i><span>Bus Management</span>
+        </a>
+        <a href="seats.html" class="nav-link-item">
+          <i class="bi bi-grid-3x3-gap"></i><span>Seat Layout Management</span>
+        </a>
+        <a href="routes.html" class="nav-link-item">
+          <i class="bi bi-signpost-split"></i><span>Route Management</span>
+        </a>
+        <a href="trips.html" class="nav-link-item">
+          <i class="bi bi-calendar2-week"></i><span>Trip Scheduling</span>
+        </a>
+        <a href="fares.html" class="nav-link-item">
+          <i class="bi bi-tag"></i><span>Fare Management</span>
+        </a>
+        <a href="drivers.html" class="nav-link-item active">
+          <i class="bi bi-person-badge"></i><span>Driver Management</span>
+        </a>
+        <div class="nav-group-label">Sales</div>
+        <a href="bookings.html" class="nav-link-item">
+          <i class="bi bi-ticket-perforated"></i><span>Booking Management</span>
+        </a>
+        <a href="customers.html" class="nav-link-item">
+          <i class="bi bi-people"></i><span>Customer Management</span>
+        </a>
+        <a href="coupons.html" class="nav-link-item">
+          <i class="bi bi-percent"></i><span>Coupon Management</span>
+        </a>
+        <a href="payments.html" class="nav-link-item">
+          <i class="bi bi-credit-card"></i><span>Payment Management</span>
+        </a>
+        <div class="nav-group-label">System</div>
+        <a href="reports.html" class="nav-link-item">
+          <i class="bi bi-bar-chart-line"></i><span>Reports & Analytics</span>
+        </a>
+        <a href="notifications.html" class="nav-link-item">
+          <i class="bi bi-bell"></i><span>Notification Management</span>
+        </a>
+        <a href="settings.html" class="nav-link-item">
+          <i class="bi bi-gear"></i><span>Website Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-foot">
+        <a href="index.html" class="nav-link-item">
+          <i class="bi bi-box-arrow-left"></i><span>Back to site</span>
+        </a>
+      </div>
+    </aside>
+
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <button
+          class="icon-btn d-lg-none"
+          id="sidebarToggle"
+          aria-label="Open menu"
+        >
+          <i class="bi bi-list"></i>
+        </button>
+
+        <div class="topbar-search">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Search bookings, buses, customers…" />
+        </div>
+
+        <div class="topbar-actions">
+          <button
+            class="icon-btn"
+            aria-label="Notifications"
+            data-bs-toggle="dropdown"
+          >
+            <i class="bi bi-bell"></i>
+            <span class="icon-dot"></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end notif-menu">
+            <li class="notif-item">
+              <i class="bi bi-ticket-perforated text-brand"></i>
+              <div>
+                <strong>New booking</strong
+                ><span>Seat 4B on Kolkata → Digha</span>
+              </div>
+            </li>
+            <li class="notif-item">
+              <i class="bi bi-exclamation-triangle text-danger"></i>
+              <div>
+                <strong>Trip delayed</strong
+                ><span>BN-04 NV running 20 min late</span>
+              </div>
+            </li>
+            <li class="notif-item">
+              <i class="bi bi-cash-coin text-success"></i>
+              <div>
+                <strong>Payment received</strong
+                ><span>₹1,300 for booking #10493</span>
+              </div>
+            </li>
+          </ul>
+
+          <div class="dropdown">
+            <button
+              class="admin-profile"
+              data-bs-toggle="dropdown"
+              aria-label="Admin menu"
+            >
+              <span class="avatar-initials">RA</span>
+              <span class="d-none d-md-inline">Riya Agarwal</span>
+              <i class="bi bi-chevron-down small"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="#"
+                  ><i class="bi bi-person me-2"></i>My profile</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#"
+                  ><i class="bi bi-gear me-2"></i>Account settings</a
+                >
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <a class="dropdown-item" href="#"
+                  ><i class="bi bi-box-arrow-right me-2"></i>Sign out</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </header>
+
+      <main class="admin-content">
+        <section class="admin-page">
+          <div class="page-head">
+            <div>
+              <h1>Driver Management</h1>
+              <p>License details and current assignments.</p>
+            </div>
+            <button
+              class="btn btn-brand"
+              data-bs-toggle="modal"
+              data-bs-target="#addDriverModal"
+            >
+              <i class="bi bi-plus-lg me-1"></i>Add Driver
+            </button>
+          </div>
+          <div class="panel">
+            <div class="table-responsive">
+              <table class="table admin-table align-middle">
+                <thead>
+                  <tr>
+                    <th>Driver</th>
+                    <th>License No.</th>
+                    <th>Phone</th>
+                    <th>Assigned Bus</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>S. Mallick</td>
+                    <td class="mono">WB-2291-04</td>
+                    <td>98300 11223</td>
+                    <td class="mono">BN-04 NV</td>
+                    <td><span class="badge badge-success">On duty</span></td>
+                    <td>
+                      <button class="icon-btn-sm">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>A. Das</td>
+                    <td class="mono">WB-1187-19</td>
+                    <td>98310 44556</td>
+                    <td class="mono">BN-11 NV</td>
+                    <td><span class="badge badge-success">On duty</span></td>
+                    <td>
+                      <button class="icon-btn-sm">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>K. Reddy</td>
+                    <td class="mono">KA-0093-21</td>
+                    <td>90000 77889</td>
+                    <td class="mono">BN-22 NV</td>
+                    <td><span class="badge badge-muted">Off duty</span></td>
+                    <td>
+                      <button class="icon-btn-sm">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div
+      class="modal fade"
+      id="addDriverModal"
+      tabindex="-1"
+      aria-labelledby="addDriverModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h5 class="modal-title" id="addDriverModalLabel">
+              <i class="bi bi-person-plus me-2 text-brand"></i>Add New Driver
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <!-- Driver Creation Form -->
+          <form
+            action="/api/admin/drivers"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <div class="modal-body">
+              <div class="row g-3">
+                <!-- Driver Profile Image Upload -->
+                <div class="col-12 text-center mb-3">
+                  <label class="form-label d-block small text-muted fw-semibold"
+                    >Driver Photo</label
+                  >
+
+                  <div class="d-inline-block position-relative">
+                    <!-- Visible Avatar Circular Frame -->
+                    <div
+                      class="avatar-preview-wrapper rounded-circle border border-2 border-brand overflow-hidden position-relative mx-auto"
+                      style="
+                        width: 100px;
+                        height: 100px;
+                        background-color: #f8f9fa;
+                      "
+                    >
+                      <img
+                        id="driverAvatarPreview"
+                        src="https://via.placeholder.com/100?text=Driver"
+                        alt="Driver Preview"
+                        class="w-100 h-100 object-fit-cover d-none"
+                      />
+                      <div
+                        id="avatarPlaceholder"
+                        class="w-100 h-100 d-flex flex-column align-items-center justify-content-center text-muted"
+                      >
+                        <i class="bi bi-camera fs-3"></i>
+                        <span style="font-size: 10px">Upload</span>
+                      </div>
+                    </div>
+
+                    <!-- Real Functional File Input (Overlaid on top, completely clickable) -->
+                    <input
+                      type="file"
+                      class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
+                      id="driverImage"
+                      name="image"
+                      accept="image/*"
+                      onchange="previewDriverImage(event)"
+                      required
+                    />
+                  </div>
+
+                  <div class="form-text mt-1">
+                    Click circle to upload photo (JPG, PNG)
+                  </div>
+                </div>
+
+                <!-- Full Name -->
+                <div class="col-md-6">
+                  <label for="driverName" class="form-label small"
+                    >Full Name</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="driverName"
+                    name="name"
+                    placeholder="e.g. S. Mallick"
+                    required
+                  />
+                </div>
+
+                <!-- Email -->
+                <div class="col-md-6">
+                  <label for="driverEmail" class="form-label small"
+                    >Email Address</label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="driverEmail"
+                    name="email"
+                    placeholder="driver@busnova.com"
+                    required
+                  />
+                </div>
+
+                <!-- Phone Number -->
+                <div class="col-md-6">
+                  <label for="driverPhone" class="form-label small"
+                    >Phone Number</label
+                  >
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="driverPhone"
+                    name="phone"
+                    placeholder="98300 11223"
+                    required
+                  />
+                </div>
+
+                <!-- Password -->
+                <div class="col-md-6">
+                  <label for="driverPassword" class="form-label small"
+                    >Account Password</label
+                  >
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="driverPassword"
+                    name="password"
+                    placeholder="••••••••"
+                    required
+                  />
+                </div>
+
+                <!-- License Number -->
+                <div class="col-md-6">
+                  <label for="licenseNumber" class="form-label small"
+                    >License Number</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="licenseNumber"
+                    name="licenseNumber"
+                    placeholder="WB-2291-04"
+                    required
+                  />
+                </div>
+
+                <!-- License Expiry Date -->
+                <div class="col-md-6">
+                  <label for="licenseExpiry" class="form-label small"
+                    >License Expiry Date</label
+                  >
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="licenseExpiry"
+                    name="licenseExpiry"
+                    required
+                  />
+                </div>
+
+                <!-- Assign Bus (Optional) -->
+                <div class="col-md-6">
+                  <label for="assignedBusId" class="form-label small"
+                    >Assigned Bus</label
+                  >
+                  <select
+                    class="form-select"
+                    id="assignedBusId"
+                    name="assignedBusId"
+                  >
+                    <option value="" selected>Unassigned</option>
+                    <option value="bus_id_1">BN-04 NV</option>
+                    <option value="bus_id_2">BN-11 NV</option>
+                    <option value="bus_id_3">BN-22 NV</option>
+                  </select>
+                </div>
+
+                <!-- Duty Status -->
+                <div class="col-md-6">
+                  <label for="dutyStatus" class="form-label small"
+                    >Initial Status</label
+                  >
+                  <select class="form-select" id="dutyStatus" name="dutyStatus">
+                    <option value="off_duty" selected>Off Duty</option>
+                    <option value="on_duty">On Duty</option>
+                    <option value="suspended">Suspended</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-brand">
+                Save & Add Driver
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./admin.js"></script>
+  </body>
+</html>

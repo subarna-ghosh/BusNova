@@ -9,6 +9,7 @@ const {
   verifyEmailValidation,
 } = require("../../validations/authValidation");
 const validateWeb = require("../../middlewares/validateWebMiddleware");
+const webProtect = require("../../middlewares/webProtect");
 
 // landing page
 Router.get("/view/landing/page", AuthController.viewLandingPage);
@@ -57,4 +58,10 @@ Router.post(
   validateWeb("admin/auth/reset_password"),
   AuthController.saveResetPassword,
 );
+
+// refresh token
+Router.get("/refresh-token", AuthController.refreshToken);
+// logout
+Router.get("/logout", webProtect, AuthController.logout);
+
 module.exports = Router;
