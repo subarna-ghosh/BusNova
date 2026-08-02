@@ -16,159 +16,15 @@
       href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./admin.css" />
+    <link rel="stylesheet" href="/assets/css/admin_dashboard.css" />
   </head>
   <body>
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
-    <aside class="admin-sidebar" id="adminSidebar">
-      <div class="sidebar-brand">
-        <span class="brand-mark">B</span>
-        <span>BusNova</span>
-        <button
-          class="sidebar-close d-lg-none"
-          id="sidebarClose"
-          aria-label="Close menu"
-        >
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </div>
-
-      <nav class="sidebar-nav">
-        <div class="nav-group-label">Overview</div>
-        <a href="dashboard.html" class="nav-link-item">
-          <i class="bi bi-speedometer2"></i><span>Dashboard</span>
-        </a>
-        <div class="nav-group-label">Fleet</div>
-        <a href="buses.html" class="nav-link-item">
-          <i class="bi bi-bus-front"></i><span>Bus Management</span>
-        </a>
-        <a href="seats.html" class="nav-link-item">
-          <i class="bi bi-grid-3x3-gap"></i><span>Seat Layout Management</span>
-        </a>
-        <a href="routes.html" class="nav-link-item">
-          <i class="bi bi-signpost-split"></i><span>Route Management</span>
-        </a>
-        <a href="trips.html" class="nav-link-item">
-          <i class="bi bi-calendar2-week"></i><span>Trip Scheduling</span>
-        </a>
-        <a href="fares.html" class="nav-link-item">
-          <i class="bi bi-tag"></i><span>Fare Management</span>
-        </a>
-        <a href="drivers.html" class="nav-link-item active">
-          <i class="bi bi-person-badge"></i><span>Driver Management</span>
-        </a>
-        <div class="nav-group-label">Sales</div>
-        <a href="bookings.html" class="nav-link-item">
-          <i class="bi bi-ticket-perforated"></i><span>Booking Management</span>
-        </a>
-        <a href="customers.html" class="nav-link-item">
-          <i class="bi bi-people"></i><span>Customer Management</span>
-        </a>
-        <a href="coupons.html" class="nav-link-item">
-          <i class="bi bi-percent"></i><span>Coupon Management</span>
-        </a>
-        <a href="payments.html" class="nav-link-item">
-          <i class="bi bi-credit-card"></i><span>Payment Management</span>
-        </a>
-        <div class="nav-group-label">System</div>
-        <a href="reports.html" class="nav-link-item">
-          <i class="bi bi-bar-chart-line"></i><span>Reports & Analytics</span>
-        </a>
-        <a href="notifications.html" class="nav-link-item">
-          <i class="bi bi-bell"></i><span>Notification Management</span>
-        </a>
-        <a href="settings.html" class="nav-link-item">
-          <i class="bi bi-gear"></i><span>Website Settings</span>
-        </a>
-      </nav>
-
-      <div class="sidebar-foot">
-        <a href="index.html" class="nav-link-item">
-          <i class="bi bi-box-arrow-left"></i><span>Back to site</span>
-        </a>
-      </div>
-    </aside>
+    <%- include('../../layouts/admin_sidebar') %>
 
     <div class="admin-main">
-      <header class="admin-topbar">
-        <button
-          class="icon-btn d-lg-none"
-          id="sidebarToggle"
-          aria-label="Open menu"
-        >
-          <i class="bi bi-list"></i>
-        </button>
-
-        <div class="topbar-search">
-          <i class="bi bi-search"></i>
-          <input type="text" placeholder="Search bookings, buses, customers…" />
-        </div>
-
-        <div class="topbar-actions">
-          <button
-            class="icon-btn"
-            aria-label="Notifications"
-            data-bs-toggle="dropdown"
-          >
-            <i class="bi bi-bell"></i>
-            <span class="icon-dot"></span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end notif-menu">
-            <li class="notif-item">
-              <i class="bi bi-ticket-perforated text-brand"></i>
-              <div>
-                <strong>New booking</strong
-                ><span>Seat 4B on Kolkata → Digha</span>
-              </div>
-            </li>
-            <li class="notif-item">
-              <i class="bi bi-exclamation-triangle text-danger"></i>
-              <div>
-                <strong>Trip delayed</strong
-                ><span>BN-04 NV running 20 min late</span>
-              </div>
-            </li>
-            <li class="notif-item">
-              <i class="bi bi-cash-coin text-success"></i>
-              <div>
-                <strong>Payment received</strong
-                ><span>₹1,300 for booking #10493</span>
-              </div>
-            </li>
-          </ul>
-
-          <div class="dropdown">
-            <button
-              class="admin-profile"
-              data-bs-toggle="dropdown"
-              aria-label="Admin menu"
-            >
-              <span class="avatar-initials">RA</span>
-              <span class="d-none d-md-inline">Riya Agarwal</span>
-              <i class="bi bi-chevron-down small"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li>
-                <a class="dropdown-item" href="#"
-                  ><i class="bi bi-person me-2"></i>My profile</a
-                >
-              </li>
-              <li>
-                <a class="dropdown-item" href="#"
-                  ><i class="bi bi-gear me-2"></i>Account settings</a
-                >
-              </li>
-              <li><hr class="dropdown-divider" /></li>
-              <li>
-                <a class="dropdown-item" href="#"
-                  ><i class="bi bi-box-arrow-right me-2"></i>Sign out</a
-                >
-              </li>
-            </ul>
-          </div>
-        </div>
-      </header>
+      <%- include('../../layouts/admin_navbar') %>
 
       <main class="admin-content">
         <section class="admin-page">
@@ -185,7 +41,35 @@
               <i class="bi bi-plus-lg me-1"></i>Add Driver
             </button>
           </div>
-          <div class="panel">
+
+
+          <% if (success) { %>
+              <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                  <i class="bi bi-check-circle-fill me-2"></i>
+                  <%= success %>
+                  <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="alert"
+                  ></button>
+              </div>
+              <% } %>
+
+              <% if (errors && errors.driver) { %>
+              <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                  <%= errors.driver%>
+                  <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="alert"
+                  ></button>
+              </div>
+        <% } %>
+
+
+
+          <div class="panel mt-4">
             <div class="table-responsive">
               <table class="table admin-table align-middle">
                 <thead>
@@ -195,46 +79,65 @@
                     <th>Phone</th>
                     <th>Assigned Bus</th>
                     <th>Status</th>
-                    <th></th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>S. Mallick</td>
-                    <td class="mono">WB-2291-04</td>
-                    <td>98300 11223</td>
-                    <td class="mono">BN-04 NV</td>
-                    <td><span class="badge badge-success">On duty</span></td>
-                    <td>
-                      <button class="icon-btn-sm">
-                        <i class="bi bi-pencil"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>A. Das</td>
-                    <td class="mono">WB-1187-19</td>
-                    <td>98310 44556</td>
-                    <td class="mono">BN-11 NV</td>
-                    <td><span class="badge badge-success">On duty</span></td>
-                    <td>
-                      <button class="icon-btn-sm">
-                        <i class="bi bi-pencil"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>K. Reddy</td>
-                    <td class="mono">KA-0093-21</td>
-                    <td>90000 77889</td>
-                    <td class="mono">BN-22 NV</td>
-                    <td><span class="badge badge-muted">Off duty</span></td>
-                    <td>
-                      <button class="icon-btn-sm">
-                        <i class="bi bi-pencil"></i>
-                      </button>
-                    </td>
-                  </tr>
+                  <% if (typeof drivers !== 'undefined' && drivers && drivers.length > 0) { %>
+                    <% drivers.forEach((driver) => { %>
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center gap-2">
+                            <img 
+                              src="<%= (driver.user && driver.user.profileImage) ? driver.user.profileImage : 'https://via.placeholder.com/40' %>" 
+                              alt="<%= driver.user?.name || 'Driver Avatar' %>" 
+                              class="rounded-circle object-fit-cover" 
+                              width="40" 
+                              height="40"
+                            />
+                            <span class="fw-semibold"><%= driver.user?.name || 'N/A' %></span>
+                          </div>
+                        </td>
+                        <td class="mono"><%= driver.licenseNumber || 'N/A' %></td>
+                        <td><%= driver.user?.phone || 'N/A' %></td>
+                        <td class="mono">
+                          <%= driver.bus?.busNumber || 'Unassigned' %>
+                        </td>
+                        <td>
+                          <% if (driver.dutyStatus === 'on_duty') { %>
+                            <span class="badge badge-success">On duty</span>
+                          <% } else if (driver.dutyStatus === 'off_duty') { %>
+                            <span class="badge badge-muted">Off duty</span>
+                          <% } else { %>
+                            <span class="badge badge-danger">Suspended</span>
+                          <% } %>
+                        </td>
+                        <td>
+                          <button 
+                            class="icon-btn-sm edit-driver-btn" 
+                            title="Edit Driver"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#editDriverModal"
+                            data-id="<%= driver._id %>"
+                            data-name="<%= driver.user?.name || '' %>"
+                            data-email="<%= driver.user?.email || '' %>"
+                            data-phone="<%= driver.user?.phone || '' %>"
+                            data-licensenumber="<%= driver.licenseNumber || '' %>"
+                            data-licenseexpiry="<%= driver.licenseExpiry ? new Date(driver.licenseExpiry).toISOString().split('T')[0] : '' %>"
+                            data-assignedbusid="<%= driver.bus?._id || '' %>"
+                            data-dutystatus="<%= driver.dutyStatus || 'off_duty' %>"
+                            data-profileimage="<%= driver.user?.profileImage || '' %>"
+                          >
+                            <i class="bi bi-pencil"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  <% } else { %>
+                    <tr>
+                      <td colspan="6" class="text-center text-muted py-4">No drivers registered yet.</td>
+                    </tr>
+                  <% } %>
                 </tbody>
               </table>
             </div>
@@ -243,6 +146,7 @@
       </main>
     </div>
 
+    <!-- Modal for Adding Driver -->
     <div
       class="modal fade"
       id="addDriverModal"
@@ -252,7 +156,6 @@
     >
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-          <!-- Modal Header -->
           <div class="modal-header">
             <h5 class="modal-title" id="addDriverModalLabel">
               <i class="bi bi-person-plus me-2 text-brand"></i>Add New Driver
@@ -265,9 +168,8 @@
             ></button>
           </div>
 
-          <!-- Driver Creation Form -->
           <form
-            action="/api/admin/drivers"
+            action="/web/admin/driver/save"
             method="POST"
             enctype="multipart/form-data"
           >
@@ -275,23 +177,16 @@
               <div class="row g-3">
                 <!-- Driver Profile Image Upload -->
                 <div class="col-12 text-center mb-3">
-                  <label class="form-label d-block small text-muted fw-semibold"
-                    >Driver Photo</label
-                  >
+                  <label class="form-label d-block small text-muted fw-semibold">Driver Photo</label>
 
                   <div class="d-inline-block position-relative">
-                    <!-- Visible Avatar Circular Frame -->
                     <div
                       class="avatar-preview-wrapper rounded-circle border border-2 border-brand overflow-hidden position-relative mx-auto"
-                      style="
-                        width: 100px;
-                        height: 100px;
-                        background-color: #f8f9fa;
-                      "
+                      style="width: 100px; height: 100px; background-color: #f8f9fa;"
                     >
                       <img
                         id="driverAvatarPreview"
-                        src="https://via.placeholder.com/100?text=Driver"
+                        src=""
                         alt="Driver Preview"
                         class="w-100 h-100 object-fit-cover d-none"
                       />
@@ -304,12 +199,11 @@
                       </div>
                     </div>
 
-                    <!-- Real Functional File Input (Overlaid on top, completely clickable) -->
                     <input
                       type="file"
                       class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
                       id="driverImage"
-                      name="image"
+                      name="profileImage"
                       accept="image/*"
                       onchange="previewDriverImage(event)"
                       required
@@ -317,15 +211,13 @@
                   </div>
 
                   <div class="form-text mt-1">
-                    Click circle to upload photo (JPG, PNG)
+                    Click circle to upload photo (JPG, PNG, WEBP - Max 3MB)
                   </div>
                 </div>
 
                 <!-- Full Name -->
                 <div class="col-md-6">
-                  <label for="driverName" class="form-label small"
-                    >Full Name</label
-                  >
+                  <label for="driverName" class="form-label small">Full Name</label>
                   <input
                     type="text"
                     class="form-control"
@@ -338,9 +230,7 @@
 
                 <!-- Email -->
                 <div class="col-md-6">
-                  <label for="driverEmail" class="form-label small"
-                    >Email Address</label
-                  >
+                  <label for="driverEmail" class="form-label small">Email Address</label>
                   <input
                     type="email"
                     class="form-control"
@@ -353,9 +243,7 @@
 
                 <!-- Phone Number -->
                 <div class="col-md-6">
-                  <label for="driverPhone" class="form-label small"
-                    >Phone Number</label
-                  >
+                  <label for="driverPhone" class="form-label small">Phone Number</label>
                   <input
                     type="tel"
                     class="form-control"
@@ -366,11 +254,9 @@
                   />
                 </div>
 
-                <!-- Password -->
+                <!-- Account Password -->
                 <div class="col-md-6">
-                  <label for="driverPassword" class="form-label small"
-                    >Account Password</label
-                  >
+                  <label for="driverPassword" class="form-label small">Account Password</label>
                   <input
                     type="password"
                     class="form-control"
@@ -383,9 +269,7 @@
 
                 <!-- License Number -->
                 <div class="col-md-6">
-                  <label for="licenseNumber" class="form-label small"
-                    >License Number</label
-                  >
+                  <label for="licenseNumber" class="form-label small">License Number</label>
                   <input
                     type="text"
                     class="form-control"
@@ -398,9 +282,7 @@
 
                 <!-- License Expiry Date -->
                 <div class="col-md-6">
-                  <label for="licenseExpiry" class="form-label small"
-                    >License Expiry Date</label
-                  >
+                  <label for="licenseExpiry" class="form-label small">License Expiry Date</label>
                   <input
                     type="date"
                     class="form-control"
@@ -410,28 +292,26 @@
                   />
                 </div>
 
-                <!-- Assign Bus (Optional) -->
+                <!-- Assign Bus -->
                 <div class="col-md-6">
-                  <label for="assignedBusId" class="form-label small"
-                    >Assigned Bus</label
-                  >
+                  <label for="assignedBusId" class="form-label small">Assigned Bus</label>
                   <select
                     class="form-select"
                     id="assignedBusId"
                     name="assignedBusId"
                   >
                     <option value="" selected>Unassigned</option>
-                    <option value="bus_id_1">BN-04 NV</option>
-                    <option value="bus_id_2">BN-11 NV</option>
-                    <option value="bus_id_3">BN-22 NV</option>
+                    <% if (typeof findBuses !== 'undefined' && findBuses && findBuses.length > 0) { %>
+                      <% findBuses.forEach((bus) => { %>
+                        <option value="<%= bus._id %>"><%= bus.busNumber %></option>
+                      <% }) %>
+                    <% } %>
                   </select>
                 </div>
 
                 <!-- Duty Status -->
                 <div class="col-md-6">
-                  <label for="dutyStatus" class="form-label small"
-                    >Initial Status</label
-                  >
+                  <label for="dutyStatus" class="form-label small">Initial Status</label>
                   <select class="form-select" id="dutyStatus" name="dutyStatus">
                     <option value="off_duty" selected>Off Duty</option>
                     <option value="on_duty">On Duty</option>
@@ -441,7 +321,6 @@
               </div>
             </div>
 
-            <!-- Modal Footer -->
             <div class="modal-footer">
               <button
                 type="button"
@@ -459,7 +338,250 @@
       </div>
     </div>
 
+    <!-- Edit Driver Modal -->
+    <div
+      class="modal fade"
+      id="editDriverModal"
+      tabindex="-1"
+      aria-labelledby="editDriverModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editDriverModalLabel">
+              <i class="bi bi-pencil-square me-2 text-brand"></i>Edit Driver Details
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <form
+            id="editDriverForm"
+            action=""
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <div class="modal-body">
+              <div class="row g-3">
+                <!-- Profile Image Upload -->
+                <div class="col-12 text-center mb-3">
+                  <label class="form-label d-block small text-muted fw-semibold">Driver Photo</label>
+
+                  <div class="d-inline-block position-relative">
+                    <div
+                      class="avatar-preview-wrapper rounded-circle border border-2 border-brand overflow-hidden position-relative mx-auto"
+                      style="width: 100px; height: 100px; background-color: #f8f9fa;"
+                    >
+                      <img
+                        id="editDriverAvatarPreview"
+                        src=""
+                        alt="Driver Preview"
+                        class="w-100 h-100 object-fit-cover"
+                      />
+                      <div
+                        id="editAvatarPlaceholder"
+                        class="w-100 h-100 d-flex flex-column align-items-center justify-content-center text-muted d-none"
+                      >
+                        <i class="bi bi-camera fs-3"></i>
+                        <span style="font-size: 10px">Upload</span>
+                      </div>
+                    </div>
+
+                    <input
+                      type="file"
+                      class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
+                      id="editDriverImage"
+                      name="profileImage"
+                      accept="image/*"
+                      onchange="previewEditDriverImage(event)"
+                    />
+                  </div>
+
+                  <div class="form-text mt-1">
+                    Click circle to replace photo (Optional)
+                  </div>
+                </div>
+
+                <!-- Full Name -->
+                <div class="col-md-6">
+                  <label for="editDriverName" class="form-label small">Full Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="editDriverName"
+                    name="name"
+                    required
+                  />
+                </div>
+
+                <!-- Email -->
+                <div class="col-md-6">
+                  <label for="editDriverEmail" class="form-label small">Email Address</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="editDriverEmail"
+                    name="email"
+                    required
+                  />
+                </div>
+
+                <!-- Phone Number -->
+                <div class="col-md-6">
+                  <label for="editDriverPhone" class="form-label small">Phone Number</label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="editDriverPhone"
+                    name="phone"
+                    required
+                  />
+                </div>
+
+                <!-- License Number -->
+                <div class="col-md-6">
+                  <label for="editLicenseNumber" class="form-label small">License Number</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="editLicenseNumber"
+                    name="licenseNumber"
+                    required
+                  />
+                </div>
+
+                <!-- License Expiry Date -->
+                <div class="col-md-6">
+                  <label for="editLicenseExpiry" class="form-label small">License Expiry Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="editLicenseExpiry"
+                    name="licenseExpiry"
+                    required
+                  />
+                </div>
+
+                <!-- Assign Bus -->
+                <div class="col-md-6">
+                  <label for="editAssignedBusId" class="form-label small">Assigned Bus</label>
+                  <select
+                    class="form-select"
+                    id="editAssignedBusId"
+                    name="assignedBusId"
+                  >
+                    <option value="">Unassigned</option>
+                    <% if (typeof findBuses !== 'undefined' && findBuses && findBuses.length > 0) { %>
+                      <% findBuses.forEach((bus) => { %>
+                        <option value="<%= bus._id %>"><%= bus.busNumber %></option>
+                      <% }) %>
+                    <% } %>
+                  </select>
+                </div>
+
+                <!-- Duty Status -->
+                <div class="col-md-6">
+                  <label for="editDutyStatus" class="form-label small">Duty Status</label>
+                  <select class="form-select" id="editDutyStatus" name="dutyStatus">
+                    <option value="off_duty">Off Duty</option>
+                    <option value="on_duty">On Duty</option>
+                    <option value="suspended">Suspended</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-brand">
+                Update Driver
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="./admin.js"></script>
+    <script src="/assets/js/admin_dashboard.js"></script>
+
+    <script>
+      function previewDriverImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('driverAvatarPreview');
+        const placeholder = document.getElementById('avatarPlaceholder');
+
+        if (input.files && input.files[0]) {
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.classList.remove('d-none');
+            placeholder.classList.add('d-none');
+          };
+
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+
+      // Populate Edit Modal Data
+      document.querySelectorAll('.edit-driver-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          const driverId = this.getAttribute('data-id');
+          const form = document.getElementById('editDriverForm');
+          form.action = `/web/admin/driver/update/${driverId}`;
+
+          document.getElementById('editDriverName').value = this.getAttribute('data-name');
+          document.getElementById('editDriverEmail').value = this.getAttribute('data-email');
+          document.getElementById('editDriverPhone').value = this.getAttribute('data-phone');
+          document.getElementById('editLicenseNumber').value = this.getAttribute('data-licensenumber');
+          document.getElementById('editLicenseExpiry').value = this.getAttribute('data-licenseexpiry');
+          document.getElementById('editAssignedBusId').value = this.getAttribute('data-assignedbusid');
+          document.getElementById('editDutyStatus').value = this.getAttribute('data-dutystatus');
+
+          const profileImage = this.getAttribute('data-profileimage');
+          const preview = document.getElementById('editDriverAvatarPreview');
+          const placeholder = document.getElementById('editAvatarPlaceholder');
+
+          if (profileImage) {
+            preview.src = profileImage;
+            preview.classList.remove('d-none');
+            placeholder.classList.add('d-none');
+          } else {
+            preview.src = '';
+            preview.classList.add('d-none');
+            placeholder.classList.remove('d-none');
+          }
+        });
+      });
+
+      // Preview replacement image
+      function previewEditDriverImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('editDriverAvatarPreview');
+        const placeholder = document.getElementById('editAvatarPlaceholder');
+
+        if (input.files && input.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.classList.remove('d-none');
+            placeholder.classList.add('d-none');
+          };
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+    </script>
   </body>
 </html>

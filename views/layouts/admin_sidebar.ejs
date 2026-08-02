@@ -1,0 +1,93 @@
+<aside class="admin-sidebar" id="adminSidebar">
+  <div class="sidebar-brand">
+    <span class="brand-mark">B</span>
+    <span>BusNova</span>
+    <button
+      class="sidebar-close d-lg-none"
+      id="sidebarClose"
+      aria-label="Close menu"
+    >
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-group-label">Overview</div>
+    <a
+      href="/web/admin/view/dashboard"
+      class="nav-link-item <%= currentPath === '/web/admin/view/dashboard' ? 'active' : '' %>"
+    >
+      <i class="bi bi-speedometer2"></i><span>Dashboard</span>
+    </a>
+    <div class="nav-group-label">Fleet</div>
+
+    <a
+      href="/web/admin/view/buses"
+      class="nav-link-item <%= currentPath === '/web/admin/view/buses' ? 'active' : '' %>"
+    >
+      <i class="bi bi-bus-front"></i><span>Bus Management</span>
+    </a>
+    <a
+      href="/web/admin/view/seats"
+      class="nav-link-item <%= currentPath === '/web/admin/view/seats' ? 'active' : '' %>"
+    >
+      <i class="bi bi-grid-3x3-gap"></i><span>Seat Layout Management</span>
+    </a>
+    <a
+      href="/web/admin/view/stops"
+      class="nav-link-item <%= currentPath === '/web/admin/view/stops' ? 'active' : '' %>"
+    >
+      <i class="bi bi-pin-map-fill"></i><span>Stop Management</span>
+    </a>
+    <a
+      href="/web/admin/view/routes"
+      class="nav-link-item <%= currentPath === '/web/admin/view/routes' ? 'active' : '' %>"
+    >
+      <i class="bi bi-signpost-split"></i><span>Route Management</span>
+    </a>
+    <a
+      href="/web/admin/view/trips"
+      class="nav-link-item <%= currentPath === '/web/admin/view/trips' ? 'active' : '' %>"
+    >
+      <i class="bi bi-calendar2-week"></i><span>Trip Scheduling</span>
+    </a>
+    <a href="fares.html" class="nav-link-item">
+      <i class="bi bi-tag"></i><span>Fare Management</span>
+    </a>
+    <a
+      href="/web/admin/view/drivers"
+      class="nav-link-item <%= currentPath === '/web/admin/view/drivers' ? 'active' : '' %>"
+    >
+      <i class="bi bi-person-badge"></i><span>Driver Management</span>
+    </a>
+    <div class="nav-group-label">Sales</div>
+    <a href="bookings.html" class="nav-link-item">
+      <i class="bi bi-ticket-perforated"></i><span>Booking Management</span>
+    </a>
+    <a href="customers.html" class="nav-link-item">
+      <i class="bi bi-people"></i><span>Customer Management</span>
+    </a>
+    <a href="coupons.html" class="nav-link-item">
+      <i class="bi bi-percent"></i><span>Coupon Management</span>
+    </a>
+    <a href="payments.html" class="nav-link-item">
+      <i class="bi bi-credit-card"></i><span>Payment Management</span>
+    </a>
+    <div class="nav-group-label">System</div>
+    <a href="reports.html" class="nav-link-item">
+      <i class="bi bi-bar-chart-line"></i><span>Reports & Analytics</span>
+    </a>
+    <a href="notifications.html" class="nav-link-item">
+      <i class="bi bi-bell"></i><span>Notification Management</span>
+    </a>
+    <a href="settings.html" class="nav-link-item">
+      <i class="bi bi-gear"></i><span>Website Settings</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-foot">
+    <a href="/web/auth/view/landing/page" class="nav-link-item">
+      <i class="bi bi-box-arrow-left"></i><span>Back to site</span>
+    </a>
+  </div>
+</aside>

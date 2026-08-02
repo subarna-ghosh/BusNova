@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
     cb(null, `${fileName}-${Date.now()}.${extension}`);
   },
 });
-const uploadImage = multer({
+const uploadDriverImage = multer({
   storage: storage,
   //   1mb limit
   limits: {
@@ -33,4 +33,4 @@ const uploadImage = multer({
   },
 });
 
-module.exports = uploadImage;
+module.exports = uploadDriverImage;

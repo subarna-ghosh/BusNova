@@ -17,7 +17,7 @@ app.use(
   helmet({
     contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
-  })
+  }),
 );
 // Request Logger
 app.use(morgan("dev"));
@@ -42,10 +42,19 @@ app.use(
 
 // Global Variables for EJS
 app.use((req, res, next) => {
-  res.locals.errors = {};
-  res.locals.old = {};
+  res.locals.errors = req.session.errors || {};
+  res.locals.old = req.session.old || {};
+  res.locals.success = req.session.success || null;
+
+  res.locals.currentPath = req.path;
+
+  // Clear flash data after one request
+  req.session.errors = null;
+  req.session.old = null;
+  req.session.success = null;
+
   next();
-});   
+});
 
 // View Engine
 app.set("view engine", "ejs");

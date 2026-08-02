@@ -16,159 +16,15 @@
       href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./admin.css" />
+    <link rel="stylesheet" href="/assets/css/admin_dashboard.css" />
   </head>
   <body>
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
-    <aside class="admin-sidebar" id="adminSidebar">
-      <div class="sidebar-brand">
-        <span class="brand-mark">B</span>
-        <span>BusNova</span>
-        <button
-          class="sidebar-close d-lg-none"
-          id="sidebarClose"
-          aria-label="Close menu"
-        >
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </div>
-
-      <nav class="sidebar-nav">
-        <div class="nav-group-label">Overview</div>
-        <a href="dashboard.html" class="nav-link-item">
-          <i class="bi bi-speedometer2"></i><span>Dashboard</span>
-        </a>
-        <div class="nav-group-label">Fleet</div>
-        <a href="buses.html" class="nav-link-item active">
-          <i class="bi bi-bus-front"></i><span>Bus Management</span>
-        </a>
-        <a href="seats.html" class="nav-link-item">
-          <i class="bi bi-grid-3x3-gap"></i><span>Seat Layout Management</span>
-        </a>
-        <a href="routes.html" class="nav-link-item">
-          <i class="bi bi-signpost-split"></i><span>Route Management</span>
-        </a>
-        <a href="trips.html" class="nav-link-item">
-          <i class="bi bi-calendar2-week"></i><span>Trip Scheduling</span>
-        </a>
-        <a href="fares.html" class="nav-link-item">
-          <i class="bi bi-tag"></i><span>Fare Management</span>
-        </a>
-        <a href="drivers.html" class="nav-link-item">
-          <i class="bi bi-person-badge"></i><span>Driver Management</span>
-        </a>
-        <div class="nav-group-label">Sales</div>
-        <a href="bookings.html" class="nav-link-item">
-          <i class="bi bi-ticket-perforated"></i><span>Booking Management</span>
-        </a>
-        <a href="customers.html" class="nav-link-item">
-          <i class="bi bi-people"></i><span>Customer Management</span>
-        </a>
-        <a href="coupons.html" class="nav-link-item">
-          <i class="bi bi-percent"></i><span>Coupon Management</span>
-        </a>
-        <a href="payments.html" class="nav-link-item">
-          <i class="bi bi-credit-card"></i><span>Payment Management</span>
-        </a>
-        <div class="nav-group-label">System</div>
-        <a href="reports.html" class="nav-link-item">
-          <i class="bi bi-bar-chart-line"></i><span>Reports & Analytics</span>
-        </a>
-        <a href="notifications.html" class="nav-link-item">
-          <i class="bi bi-bell"></i><span>Notification Management</span>
-        </a>
-        <a href="settings.html" class="nav-link-item">
-          <i class="bi bi-gear"></i><span>Website Settings</span>
-        </a>
-      </nav>
-
-      <div class="sidebar-foot">
-        <a href="index.html" class="nav-link-item">
-          <i class="bi bi-box-arrow-left"></i><span>Back to site</span>
-        </a>
-      </div>
-    </aside>
+    <%- include('../../layouts/admin_sidebar') %>
 
     <div class="admin-main">
-      <header class="admin-topbar">
-        <button
-          class="icon-btn d-lg-none"
-          id="sidebarToggle"
-          aria-label="Open menu"
-        >
-          <i class="bi bi-list"></i>
-        </button>
-
-        <div class="topbar-search">
-          <i class="bi bi-search"></i>
-          <input type="text" placeholder="Search bookings, buses, customers…" />
-        </div>
-
-        <div class="topbar-actions">
-          <button
-            class="icon-btn"
-            aria-label="Notifications"
-            data-bs-toggle="dropdown"
-          >
-            <i class="bi bi-bell"></i>
-            <span class="icon-dot"></span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end notif-menu">
-            <li class="notif-item">
-              <i class="bi bi-ticket-perforated text-brand"></i>
-              <div>
-                <strong>New booking</strong
-                ><span>Seat 4B on Kolkata → Digha</span>
-              </div>
-            </li>
-            <li class="notif-item">
-              <i class="bi bi-exclamation-triangle text-danger"></i>
-              <div>
-                <strong>Trip delayed</strong
-                ><span>BN-04 NV running 20 min late</span>
-              </div>
-            </li>
-            <li class="notif-item">
-              <i class="bi bi-cash-coin text-success"></i>
-              <div>
-                <strong>Payment received</strong
-                ><span>₹1,300 for booking #10493</span>
-              </div>
-            </li>
-          </ul>
-
-          <div class="dropdown">
-            <button
-              class="admin-profile"
-              data-bs-toggle="dropdown"
-              aria-label="Admin menu"
-            >
-              <span class="avatar-initials">RA</span>
-              <span class="d-none d-md-inline">Riya Agarwal</span>
-              <i class="bi bi-chevron-down small"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li>
-                <a class="dropdown-item" href="#"
-                  ><i class="bi bi-person me-2"></i>My profile</a
-                >
-              </li>
-              <li>
-                <a class="dropdown-item" href="#"
-                  ><i class="bi bi-gear me-2"></i>Account settings</a
-                >
-              </li>
-              <li><hr class="dropdown-divider" /></li>
-              <li>
-                <a class="dropdown-item" href="#"
-                  ><i class="bi bi-box-arrow-right me-2"></i>Sign out</a
-                >
-              </li>
-            </ul>
-          </div>
-        </div>
-      </header>
+      <%- include('../../layouts/admin_navbar') %>
 
       <main class="admin-content">
         <section class="admin-page">
@@ -185,74 +41,93 @@
               <i class="bi bi-plus-lg me-1"></i>Add Bus
             </button>
           </div>
+
+          <% if (success) { %>
+              <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                  <i class="bi bi-check-circle-fill me-2"></i>
+                  <%= success %>
+                  <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="alert"
+                  ></button>
+              </div>
+              <% } %>
+
+              <% if (errors && errors.bus) { %>
+              <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                  <%= errors.bus %>
+                  <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="alert"
+                  ></button>
+              </div>
+        <% } %>
+
           <div class="panel">
             <div class="table-responsive">
               <table class="table admin-table align-middle">
                 <thead>
                   <tr>
                     <th>Bus No.</th>
+                    <th>Reg No.</th>
                     <th>Type</th>
                     <th>Capacity</th>
                     <th>Amenities</th>
                     <th>Status</th>
-                    <th></th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody id="busesTableBody">
-                  <tr>
-                    <td class="mono">BN-04 NV</td>
-                    <td>Sleeper A/C</td>
-                    <td>32</td>
-                    <td>
-                      <i class="bi bi-wifi me-1"></i><i class="bi bi-plug"></i>
-                    </td>
-                    <td><span class="badge badge-success">Active</span></td>
-                    <td>
-                      <button class="icon-btn-sm">
-                        <i class="bi bi-pencil"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="mono">BN-11 NV</td>
-                    <td>2×2 Push-back</td>
-                    <td>44</td>
-                    <td><i class="bi bi-wifi me-1"></i></td>
-                    <td><span class="badge badge-success">Active</span></td>
-                    <td>
-                      <button class="icon-btn-sm">
-                        <i class="bi bi-pencil"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="mono">BN-22 NV</td>
-                    <td>Sleeper A/C</td>
-                    <td>30</td>
-                    <td>
-                      <i class="bi bi-wifi me-1"></i><i class="bi bi-plug"></i>
-                    </td>
-                    <td>
-                      <span class="badge badge-warning">Maintenance</span>
-                    </td>
-                    <td>
-                      <button class="icon-btn-sm">
-                        <i class="bi bi-pencil"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="mono">BN-07 NV</td>
-                    <td>2×1 Semi-sleeper</td>
-                    <td>36</td>
-                    <td><i class="bi bi-plug"></i></td>
-                    <td><span class="badge badge-muted">Inactive</span></td>
-                    <td>
-                      <button class="icon-btn-sm">
-                        <i class="bi bi-pencil"></i>
-                      </button>
-                    </td>
-                  </tr>
+                  <% if (typeof buses !== 'undefined' && buses.length > 0) { %>
+                    <% buses.forEach((bus) => { %>
+                      <tr>
+                        <td class="mono fw-bold"><%= bus.busNumber %></td>
+                        <td class="mono"><%= bus.registrationNumber %></td>
+                        <td class="text-capitalize"><%= bus.busType.replace('_', ' ') %></td>
+                        <td><%= bus.totalSeats %></td>
+                        <td>
+                          <% if (bus.amenities && bus.amenities.length > 0) { %>
+                            <% if (bus.amenities.includes('wifi')) { %><i class="bi bi-wifi me-2" title="WiFi"></i><% } %>
+                            <% if (bus.amenities.includes('charging_point')) { %><i class="bi bi-plug me-2" title="Charging Point"></i><% } %>
+                            <% if (bus.amenities.includes('water_bottle')) { %><i class="bi bi-droplet me-2" title="Water Bottle"></i><% } %>
+                            <% if (bus.amenities.includes('blanket')) { %><i class="bi bi-box-seam me-2" title="Blanket"></i><% } %>
+                          <% } else { %>
+                            <span class="text-muted small">None</span>
+                          <% } %>
+                        </td>
+                        <td>
+                          <% if (bus.status === 'active') { %>
+                            <span class="badge badge-success">Active</span>
+                          <% } else if (bus.status === 'maintenance') { %>
+                            <span class="badge badge-warning">Maintenance</span>
+                          <% } else { %>
+                            <span class="badge badge-muted">Inactive</span>
+                          <% } %>
+                        </td>
+                        <td>
+                          <!-- Pass the bus data inside data-bus attribute -->
+                          <button 
+                            class="icon-btn-sm edit-bus-btn" 
+                            title="Edit Bus"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editBusModal"
+                            data-bus='<%= JSON.stringify(bus) %>'
+                          >
+                            <i class="bi bi-pencil"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  <% } else { %>
+                    <tr>
+                      <td colspan="7" class="text-center text-muted py-4">
+                        No buses added yet. Click <strong>Add Bus</strong> to get started.
+                      </td>
+                    </tr>
+                  <% } %>
                 </tbody>
               </table>
             </div>
@@ -261,41 +136,273 @@
       </main>
     </div>
 
-    <div class="modal fade" id="addBusModal" tabindex="-1">
+    <!-- Add Bus Modal -->
+    <div class="modal fade" id="addBusModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Add Bus</h5>
-            <button class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label class="form-label small">Bus number</label
-              ><input class="form-control" placeholder="BN-15 NV" />
+          <form method="POST" action="/web/admin/buses/save">
+            <div class="modal-header">
+              <h5 class="modal-title">Add Bus</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="mb-3">
-              <label class="form-label small">Type</label
-              ><select class="form-select">
-                <option>Sleeper A/C</option>
-                <option>2×2 Push-back</option>
-                <option>2×1 Semi-sleeper</option>
-              </select>
+            
+            <div class="modal-body">
+              <!-- Bus Number -->
+              <div class="mb-3">
+                <label class="form-label small">Bus Number</label>
+                <input 
+                  type="text" 
+                  name="busNumber" 
+                  class="form-control" 
+                  placeholder="e.g. BN-15 NV" 
+                  required 
+                />
+              </div>
+
+              <!-- Registration Number -->
+              <div class="mb-3">
+                <label class="form-label small">Registration Number</label>
+                <input 
+                  type="text" 
+                  name="registrationNumber" 
+                  class="form-control" 
+                  placeholder="e.g. MH-12-AB-1234" 
+                  required 
+                />
+              </div>
+
+              <!-- Bus Type -->
+              <div class="mb-3">
+                <label class="form-label small">Type</label>
+                <select name="busType" class="form-select" required>
+                  <option value="seater">Seater</option>
+                  <option value="semi_sleeper">Semi-Sleeper</option>
+                  <option value="sleeper">Sleeper</option>
+                  <option value="sleeper_ac">Sleeper A/C</option>
+                </select>
+              </div>
+
+              <!-- Seat Capacity -->
+              <div class="mb-3">
+                <label class="form-label small">Seat Capacity</label>
+                <input 
+                  type="number" 
+                  name="totalSeats" 
+                  class="form-control" 
+                  placeholder="40" 
+                  min="1" 
+                  required 
+                />
+              </div>
+
+              <!-- Seat Layout Selection (Optional) -->
+              <div class="mb-3">
+                <label class="form-label small">Seat Layout (Optional)</label>
+                <select name="seatLayoutId" class="form-select">
+                  <option value="">-- Select Layout --</option>
+                  <% if (typeof seatLayouts !== 'undefined' && seatLayouts.length > 0) { %>
+                    <% seatLayouts.forEach((layout) => { %>
+                      <option value="<%= layout._id %>"><%= layout.name %></option>
+                    <% }) %>
+                  <% } %>
+                </select>
+              </div>
+
+              <!-- Status -->
+              <div class="mb-3">
+                <label class="form-label small">Status</label>
+                <select name="status" class="form-select">
+                  <option value="active" selected>Active</option>
+                  <option value="maintenance">Maintenance</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+
+              <!-- Amenities -->
+              <div class="mb-3">
+                <label class="form-label small d-block">Amenities</label>
+                <div class="d-flex flex-wrap gap-3">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="amenities" value="wifi" id="wifi">
+                    <label class="form-check-label small" for="wifi">WiFi</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="amenities" value="charging_point" id="charging">
+                    <label class="form-check-label small" for="charging">Charging Point</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="amenities" value="water_bottle" id="water">
+                    <label class="form-check-label small" for="water">Water Bottle</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="amenities" value="blanket" id="blanket">
+                    <label class="form-check-label small" for="blanket">Blanket</label>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label small">Seat capacity</label
-              ><input class="form-control" placeholder="40" />
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-brand" data-bs-dismiss="modal">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-brand">
+                Add Bus
+              </button>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-outline-brand" data-bs-dismiss="modal">
-              Cancel</button
-            ><button class="btn btn-brand">Add bus</button>
-          </div>
+          </form>
         </div>
       </div>
     </div>
 
+    <!-- Edit Bus Modal -->
+      <div class="modal fade" id="editBusModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form id="editBusForm" method="POST" action="">
+              <div class="modal-header">
+                <h5 class="modal-title">Edit Bus</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+        
+              <div class="modal-body">
+                <!-- Bus Number -->
+                <div class="mb-3">
+                  <label class="form-label small">Bus Number</label>
+                 <input 
+                   type="text" 
+                    name="busNumber" 
+                    id="editBusNumber"
+                    class="form-control" 
+                    required 
+                  />
+               </div>
+
+                <!-- Registration Number -->
+                <div class="mb-3">
+                  <label class="form-label small">Registration Number</label>
+                  <input 
+                    type="text" 
+                    name="registrationNumber" 
+                    id="editRegistrationNumber"
+                    class="form-control" 
+                    required 
+                  />
+                </div>
+
+                <!-- Bus Type -->
+                <div class="mb-3">
+                  <label class="form-label small">Type</label>
+                  <select name="busType" id="editBusType" class="form-select" required>
+                    <option value="seater">Seater</option>
+                    <option value="semi_sleeper">Semi-Sleeper</option>
+                    <option value="sleeper">Sleeper</option>
+                    <option value="sleeper_ac">Sleeper A/C</option>
+                  </select>
+                </div>
+
+                <!-- Seat Capacity -->
+                <div class="mb-3">
+                  <label class="form-label small">Seat Capacity</label>
+                  <input 
+                    type="number" 
+                    name="totalSeats" 
+                    id="editTotalSeats"
+                    class="form-control" 
+                    min="1" 
+                    required 
+                  />
+                </div>
+
+                <!-- Seat Layout Selection -->
+               <div class="mb-3">
+                 <label class="form-label small">Seat Layout (Optional)</label>
+                  <select name="seatLayoutId" id="editSeatLayoutId" class="form-select">
+                    <option value="">-- Select Layout --</option>
+                    <% if (typeof seatLayouts !== 'undefined' && seatLayouts.length > 0) { %>
+                      <% seatLayouts.forEach((layout) => { %>
+                        <option value="<%= layout._id %>"><%= layout.name %></option>
+                      <% }) %>
+                    <% } %>
+                  </select>
+                </div>
+
+                <!-- Status -->
+                <div class="mb-3">
+                 <label class="form-label small">Status</label>
+                  <select name="status" id="editStatus" class="form-select">
+                    <option value="active">Active</option>
+                    <option value="maintenance">Maintenance</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                </div>
+
+                <!-- Amenities -->
+                <div class="mb-3">
+                  <label class="form-label small d-block">Amenities</label>
+                  <div class="d-flex flex-wrap gap-3">
+                    <div class="form-check">
+                      <input class="form-check-input edit-amenity" type="checkbox" name="amenities" value="wifi" id="editWifi">
+                      <label class="form-check-label small" for="editWifi">WiFi</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input edit-amenity" type="checkbox" name="amenities" value="charging_point" id="editCharging">
+                      <label class="form-check-label small" for="editCharging">Charging Point</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input edit-amenity" type="checkbox" name="amenities" value="water_bottle" id="editWater">
+                      <label class="form-check-label small" for="editWater">Water Bottle</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input edit-amenity" type="checkbox" name="amenities" value="blanket" id="editBlanket">
+                      <label class="form-check-label small" for="editBlanket">Blanket</label>
+                   </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-brand" data-bs-dismiss="modal">
+                  Cancel
+                </button>
+                <button type="submit" class="btn btn-brand">
+                  Update Bus
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="./admin.js"></script>
+    <script src="/assets/js/admin_dashboard.js"></script>
+    <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const editBtns = document.querySelectorAll(".edit-bus-btn");
+    const editForm = document.getElementById("editBusForm");
+
+    editBtns.forEach((btn) => {
+      btn.addEventListener("click", function () {
+        const bus = JSON.parse(this.getAttribute("data-bus"));
+
+        // Set Form Action Route with Bus ID
+        editForm.action = `/web/admin/buses/edit/${bus._id}`;
+
+        // Populate Simple Text & Select Inputs
+        document.getElementById("editBusNumber").value = bus.busNumber || "";
+        document.getElementById("editRegistrationNumber").value = bus.registrationNumber || "";
+        document.getElementById("editBusType").value = bus.busType || "seater";
+        document.getElementById("editTotalSeats").value = bus.totalSeats || 0;
+        document.getElementById("editSeatLayoutId").value = bus.seatLayoutId || "";
+        document.getElementById("editStatus").value = bus.status || "active";
+
+        // Reset and Check Amenities Checkboxes
+        document.querySelectorAll(".edit-amenity").forEach((cb) => {
+          cb.checked = bus.amenities && bus.amenities.includes(cb.value);
+        });
+      });
+    });
+  });
+</script>
   </body>
 </html>

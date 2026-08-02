@@ -187,17 +187,7 @@ class AuthController {
   }
 
   viewLogin(req, res) {
-    const errors = req.session.errors || {};
-    const old = req.session.old || {};
-
-    // Clear after reading
-    req.session.errors = null;
-    req.session.old = null;
-
-    return res.render("admin/auth/login", {
-      errors,
-      old,
-    });
+    return res.render("admin/auth/login");
   }
 
   async saveLogin(req, res) {

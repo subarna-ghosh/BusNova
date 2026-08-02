@@ -185,27 +185,122 @@ function previewDriverImage(event) {
 }
 
 // ---------- Seat layout editor (only present on seats.html) ----------
-function buildSeatEditor() {
+document.addEventListener("DOMContentLoaded", () => {
   const grid = document.getElementById("seatEditorGrid");
-  if (!grid) return;
-  const layout = ["A", "B", "", "C", "D"];
-  const premiumSeats = new Set(["1A", "1B", "1C", "1D"]);
-  for (let r = 1; r <= 5; r++) {
-    layout.forEach((col) => {
-      const cell = document.createElement("div");
-      if (col === "") {
-        cell.className = "seat-cell gap";
+  const rowInput = document.getElementById("rowCountInput");
+  const layoutSelect = document.getElementById("layoutTypeSelect");
+  const form = document.getElementById("seatLayoutForm");
+  const seatsDataInput = document.getElementById("seatsDataInput");
+
+  // In-memory array of seat objects generated for the grid
+  let seatMap = [];
+
+  // Map layout configs to column patterns
+  // '2x2' = [A, B, AISLE, C, D] (5 total columns)
+  // '2x1' = [A, B, AISLE, C]    (4 total columns)
+  const layoutConfigs = {
+    "2x2": ["A", "B", "", "C", "D"],
+    "2x1": ["A", "B", "", "C"],
+    sleeper: ["L1", "L2", "", "U1"],
+  };
+
+  function renderGrid() {
+    if (!grid) return;
+    grid.innerHTML = "";
+    seatMap = [];
+
+    const rows = parseInt(rowInput.value) || 5;
+    const selectedLayout = layoutSelect.value;
+    const columnsPattern =
+      layoutConfigs[selectedLayout] || layoutConfigs["2x2"];
+
+    // Set CSS grid template columns dynamically
+    grid.style.gridTemplateColumns = `repeat(${columnsPattern.length}, minmax(40px, 1fr))`;
+
+    for (let r = 1; r <= rows; r++) {
+      columnsPattern.forEach((colCode, colIdx) => {
+        const cell = document.createElement("div");
+
+        // If pattern indicates an aisle gap
+        if (colCode === "") {
+          cell.className = "seat-cell gap";
+          grid.appendChild(cell);
+          // Store aisle representation for schema logic
+          seatMap.push({
+            seatNumber: `GAP_${r}_${colIdx + 1}`,
+            row: r,
+            column: colIdx + 1,
+            deck: "lower",
+            seatType: selectedLayout === "sleeper" ? "sleeper" : "seater",
+            isPremium: false,
+            isAisle: true,
+          });
+          return;
+        }
+
+        const seatId = `${r}${colCode}`;
+        cell.className = "seat-cell";
+        cell.textContent = seatId;
+
+        const seatObj = {
+          seatNumber: seatId,
+          row: r,
+          column: colIdx + 1,
+          deck: selectedLayout === "sleeper" ? "lower" : "lower",
+          seatType: selectedLayout === "sleeper" ? "sleeper" : "seater",
+          isPremium: false,
+          isAisle: false,
+        };
+
+        // Interactive State Handler: Regular -> Premium -> Aisle -> Regular
+        cell.addEventListener("click", () => {
+          if (!seatObj.isPremium && !seatObj.isAisle) {
+            // --- STATE 1: Make Premium ---
+            seatObj.isPremium = true;
+            seatObj.isAisle = false;
+            cell.classList.remove("gap");
+            cell.classList.add("premium");
+            cell.textContent = seatId;
+          } else if (seatObj.isPremium) {
+            // --- STATE 2: Make Aisle / Empty Gap ---
+            seatObj.isPremium = false;
+            seatObj.isAisle = true;
+            cell.classList.remove("premium");
+            cell.classList.add("gap");
+            cell.textContent = ""; // Hide label for empty aisle
+          } else {
+            // --- STATE 3: Reset Back to Regular Seat ---
+            seatObj.isPremium = false;
+            seatObj.isAisle = false;
+            cell.classList.remove("premium", "gap"); // <-- REMOVE BOTH CLASSES!
+            cell.textContent = seatId; // Restore seat number label
+          }
+        });
+
+        seatMap.push(seatObj);
         grid.appendChild(cell);
-        return;
-      }
-      const id = `${r}${col}`;
-      cell.className = "seat-cell" + (premiumSeats.has(id) ? " premium" : "");
-      cell.textContent = id;
-      cell.addEventListener("click", () => cell.classList.toggle("premium"));
-      grid.appendChild(cell);
-    });
+      });
+    }
   }
-}
+
+  // Re-render when layout parameters are modified
+  rowInput.addEventListener("input", renderGrid);
+  layoutSelect.addEventListener("change", renderGrid);
+
+  // Serialize grid state to JSON for Mongoose backend ingestion
+  form.addEventListener("submit", (e) => {
+    const layout = layoutSelect.value;
+    const pattern = layoutConfigs[layout];
+
+    // Filter out non-essential gap objects if you only want active seats in the seats array
+    const activeSeats = seatMap.filter((s) => !s.seatNumber.startsWith("GAP_"));
+
+    seatsDataInput.value = JSON.stringify(activeSeats);
+  });
+
+  // Initial Boot Render
+  renderGrid();
+});
 
 // ---------- Example: load Bus Management table data (only on buses.html) ----------
 // Replace the mock array + setTimeout below with a real fetch() call to your

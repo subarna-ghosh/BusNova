@@ -16,159 +16,15 @@
       href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./admin.css" />
+    <link rel="stylesheet" href="/assets/css/admin_dashboard.css" />
   </head>
   <body>
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
-    <aside class="admin-sidebar" id="adminSidebar">
-      <div class="sidebar-brand">
-        <span class="brand-mark">B</span>
-        <span>BusNova</span>
-        <button
-          class="sidebar-close d-lg-none"
-          id="sidebarClose"
-          aria-label="Close menu"
-        >
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </div>
-
-      <nav class="sidebar-nav">
-        <div class="nav-group-label">Overview</div>
-        <a href="dashboard.html" class="nav-link-item">
-          <i class="bi bi-speedometer2"></i><span>Dashboard</span>
-        </a>
-        <div class="nav-group-label">Fleet</div>
-        <a href="buses.html" class="nav-link-item">
-          <i class="bi bi-bus-front"></i><span>Bus Management</span>
-        </a>
-        <a href="seats.html" class="nav-link-item">
-          <i class="bi bi-grid-3x3-gap"></i><span>Seat Layout Management</span>
-        </a>
-        <a href="routes.html" class="nav-link-item active">
-          <i class="bi bi-signpost-split"></i><span>Route Management</span>
-        </a>
-        <a href="trips.html" class="nav-link-item">
-          <i class="bi bi-calendar2-week"></i><span>Trip Scheduling</span>
-        </a>
-        <a href="fares.html" class="nav-link-item">
-          <i class="bi bi-tag"></i><span>Fare Management</span>
-        </a>
-        <a href="drivers.html" class="nav-link-item">
-          <i class="bi bi-person-badge"></i><span>Driver Management</span>
-        </a>
-        <div class="nav-group-label">Sales</div>
-        <a href="bookings.html" class="nav-link-item">
-          <i class="bi bi-ticket-perforated"></i><span>Booking Management</span>
-        </a>
-        <a href="customers.html" class="nav-link-item">
-          <i class="bi bi-people"></i><span>Customer Management</span>
-        </a>
-        <a href="coupons.html" class="nav-link-item">
-          <i class="bi bi-percent"></i><span>Coupon Management</span>
-        </a>
-        <a href="payments.html" class="nav-link-item">
-          <i class="bi bi-credit-card"></i><span>Payment Management</span>
-        </a>
-        <div class="nav-group-label">System</div>
-        <a href="reports.html" class="nav-link-item">
-          <i class="bi bi-bar-chart-line"></i><span>Reports & Analytics</span>
-        </a>
-        <a href="notifications.html" class="nav-link-item">
-          <i class="bi bi-bell"></i><span>Notification Management</span>
-        </a>
-        <a href="settings.html" class="nav-link-item">
-          <i class="bi bi-gear"></i><span>Website Settings</span>
-        </a>
-      </nav>
-
-      <div class="sidebar-foot">
-        <a href="index.html" class="nav-link-item">
-          <i class="bi bi-box-arrow-left"></i><span>Back to site</span>
-        </a>
-      </div>
-    </aside>
+    <%- include('../../layouts/admin_sidebar') %>
 
     <div class="admin-main">
-      <header class="admin-topbar">
-        <button
-          class="icon-btn d-lg-none"
-          id="sidebarToggle"
-          aria-label="Open menu"
-        >
-          <i class="bi bi-list"></i>
-        </button>
-
-        <div class="topbar-search">
-          <i class="bi bi-search"></i>
-          <input type="text" placeholder="Search bookings, buses, customers…" />
-        </div>
-
-        <div class="topbar-actions">
-          <button
-            class="icon-btn"
-            aria-label="Notifications"
-            data-bs-toggle="dropdown"
-          >
-            <i class="bi bi-bell"></i>
-            <span class="icon-dot"></span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end notif-menu">
-            <li class="notif-item">
-              <i class="bi bi-ticket-perforated text-brand"></i>
-              <div>
-                <strong>New booking</strong
-                ><span>Seat 4B on Kolkata → Digha</span>
-              </div>
-            </li>
-            <li class="notif-item">
-              <i class="bi bi-exclamation-triangle text-danger"></i>
-              <div>
-                <strong>Trip delayed</strong
-                ><span>BN-04 NV running 20 min late</span>
-              </div>
-            </li>
-            <li class="notif-item">
-              <i class="bi bi-cash-coin text-success"></i>
-              <div>
-                <strong>Payment received</strong
-                ><span>₹1,300 for booking #10493</span>
-              </div>
-            </li>
-          </ul>
-
-          <div class="dropdown">
-            <button
-              class="admin-profile"
-              data-bs-toggle="dropdown"
-              aria-label="Admin menu"
-            >
-              <span class="avatar-initials">RA</span>
-              <span class="d-none d-md-inline">Riya Agarwal</span>
-              <i class="bi bi-chevron-down small"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li>
-                <a class="dropdown-item" href="#"
-                  ><i class="bi bi-person me-2"></i>My profile</a
-                >
-              </li>
-              <li>
-                <a class="dropdown-item" href="#"
-                  ><i class="bi bi-gear me-2"></i>Account settings</a
-                >
-              </li>
-              <li><hr class="dropdown-divider" /></li>
-              <li>
-                <a class="dropdown-item" href="#"
-                  ><i class="bi bi-box-arrow-right me-2"></i>Sign out</a
-                >
-              </li>
-            </ul>
-          </div>
-        </div>
-      </header>
+      <%- include('../../layouts/admin_navbar') %>
 
       <main class="admin-content">
         <section class="admin-page">
@@ -185,6 +41,31 @@
               <i class="bi bi-plus-lg me-1"></i>Add Route
             </button>
           </div>
+
+          <% if (success) { %>
+              <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                  <i class="bi bi-check-circle-fill me-2"></i>
+                  <%= success %>
+                  <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="alert"
+                  ></button>
+              </div>
+              <% } %>
+
+              <% if (errors && errors.route) { %>
+              <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                  <%= errors.route%>
+                  <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="alert"
+                  ></button>
+              </div>
+          <% } %>
+
           <div class="panel">
             <div class="table-responsive">
               <table class="table admin-table align-middle">
@@ -195,58 +76,54 @@
                     <th>Duration</th>
                     <th>Stops</th>
                     <th>Status</th>
-                    <th></th>
+                    <th class="text-end">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Kolkata → Digha</td>
-                    <td>185 km</td>
-                    <td>4h 30m</td>
-                    <td>3</td>
-                    <td><span class="badge badge-success">Active</span></td>
-                    <td>
-                      <button class="icon-btn-sm">
-                        <i class="bi bi-pencil"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Kolkata → Puri</td>
-                    <td>500 km</td>
-                    <td>9h 45m</td>
-                    <td>5</td>
-                    <td><span class="badge badge-success">Active</span></td>
-                    <td>
-                      <button class="icon-btn-sm">
-                        <i class="bi bi-pencil"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Bangalore → Hyderabad</td>
-                    <td>570 km</td>
-                    <td>9h 10m</td>
-                    <td>4</td>
-                    <td><span class="badge badge-success">Active</span></td>
-                    <td>
-                      <button class="icon-btn-sm">
-                        <i class="bi bi-pencil"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Kolkata → Siliguri</td>
-                    <td>565 km</td>
-                    <td>10h 20m</td>
-                    <td>6</td>
-                    <td><span class="badge badge-muted">Paused</span></td>
-                    <td>
-                      <button class="icon-btn-sm">
-                        <i class="bi bi-pencil"></i>
-                      </button>
-                    </td>
-                  </tr>
+                  <% if (typeof routes !== 'undefined' && routes.length > 0) { %>
+                    <% routes.forEach((route) => { %>
+                      <tr>
+                        <td class="fw-semibold">
+                          <%= route.originStop ? route.originStop.name : 'Unknown' %> 
+                          <i class="bi bi-arrow-right text-muted mx-1"></i> 
+                          <%= route.destinationStop ? route.destinationStop.name : 'Unknown' %>
+                        </td>
+                        <td><%= route.distanceKm %> km</td>
+                        <td>
+                          <% 
+                            const hours = Math.floor(route.durationMinutes / 60);
+                            const mins = route.durationMinutes % 60;
+                          %>
+                          <%= hours > 0 ? hours + 'h ' : '' %><%= mins %>m
+                        </td>
+                        <td><%= route.stops ? route.stops.length : 0 %></td>
+                        <td>
+                          <% if (route.status === 'active') { %>
+                            <span class="badge badge-success">Active</span>
+                          <% } else { %>
+                            <span class="badge badge-muted">Paused</span>
+                          <% } %>
+                        </td>
+                        <td class="text-end">
+                          <button 
+                            class="icon-btn-sm edit-route-btn" 
+                            title="Edit Route"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editRouteModal"
+                            data-route='<%= JSON.stringify(route) %>'
+                          >
+                            <i class="bi bi-pencil"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  <% } else { %>
+                    <tr>
+                      <td colspan="6" class="text-center text-muted py-4">
+                        No routes available. Click <strong>Add Route</strong> to get started.
+                      </td>
+                    </tr>
+                  <% } %>
                 </tbody>
               </table>
             </div>
@@ -255,45 +132,275 @@
       </main>
     </div>
 
-    <div class="modal fade" id="addRouteModal" tabindex="-1">
-      <div class="modal-dialog">
+    <!-- ADD ROUTE MODAL -->
+    <div class="modal fade" id="addRouteModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Add Route</h5>
-            <button class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <div class="row g-2 mb-3">
-              <div class="col-6">
-                <label class="form-label small">Origin</label
-                ><input class="form-control" placeholder="Kolkata" />
+          <form method="POST" action="/web/admin/routes/add">
+            <div class="modal-header">
+              <h5 class="modal-title">Add Route</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body">
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <label class="form-label small">Origin Stop</label>
+                  <select name="originStopId" class="form-select" required>
+                    <option value="">-- Select Origin --</option>
+                    <% if (typeof stops !== 'undefined') { %>
+                      <% stops.forEach((stop) => { %>
+                        <option value="<%= stop._id %>"><%= stop.name %> (<%= stop.city %>)</option>
+                      <% }) %>
+                    <% } %>
+                  </select>
+                </div>
+                <div class="col-6">
+                  <label class="form-label small">Destination Stop</label>
+                  <select name="destinationStopId" class="form-select" required>
+                    <option value="">-- Select Destination --</option>
+                    <% if (typeof stops !== 'undefined') { %>
+                      <% stops.forEach((stop) => { %>
+                        <option value="<%= stop._id %>"><%= stop.name %> (<%= stop.city %>)</option>
+                      <% }) %>
+                    <% } %>
+                  </select>
+                </div>
               </div>
-              <div class="col-6">
-                <label class="form-label small">Destination</label
-                ><input class="form-control" placeholder="Digha" />
+
+              <div class="row g-2 mb-3">
+                <div class="col-4">
+                  <label class="form-label small">Distance (km)</label>
+                  <input type="number" name="distanceKm" class="form-control" placeholder="185" required min="1" />
+                </div>
+                <div class="col-4">
+                  <label class="form-label small">Duration (minutes)</label>
+                  <input type="number" name="durationMinutes" class="form-control" placeholder="270" required min="1" />
+                </div>
+                <div class="col-4">
+                  <label class="form-label small">Status</label>
+                  <select name="status" class="form-select">
+                    <option value="active" selected>Active</option>
+                    <option value="paused">Paused</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Intermediate Stops Section -->
+              <div class="border-top pt-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <label class="form-label small mb-0 fw-bold">Intermediate Stops</label>
+                  <button type="button" class="btn btn-sm btn-outline-brand" id="addStopRowBtn">
+                    <i class="bi bi-plus me-1"></i>Add Stop
+                  </button>
+                </div>
+                <div id="addStopsContainer" class="d-flex flex-column gap-2"></div>
               </div>
             </div>
-            <div class="row g-2">
-              <div class="col-6">
-                <label class="form-label small">Distance (km)</label
-                ><input class="form-control" placeholder="185" />
-              </div>
-              <div class="col-6">
-                <label class="form-label small">Duration</label
-                ><input class="form-control" placeholder="4h 30m" />
-              </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-brand" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-brand">Add Route</button>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-outline-brand" data-bs-dismiss="modal">
-              Cancel</button
-            ><button class="btn btn-brand">Add route</button>
-          </div>
+          </form>
         </div>
       </div>
     </div>
 
+    <!-- EDIT ROUTE MODAL -->
+    <div class="modal fade" id="editRouteModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <form id="editRouteForm" method="POST" action="">
+            <div class="modal-header">
+              <h5 class="modal-title">Edit Route</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body">
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <label class="form-label small">Origin Stop</label>
+                  <select name="originStopId" id="editOriginStopId" class="form-select" required>
+                    <option value="">-- Select Origin --</option>
+                    <% if (typeof stops !== 'undefined') { %>
+                      <% stops.forEach(stop => { %>
+                        <option value="<%= stop._id %>"><%= stop.name %> (<%= stop.city %>)</option>
+                      <% }) %>
+                    <% } %>
+                  </select>
+                </div>
+                <div class="col-6">
+                  <label class="form-label small">Destination Stop</label>
+                  <select name="destinationStopId" id="editDestinationStopId" class="form-select" required>
+                    <option value="">-- Select Destination --</option>
+                    <% if (typeof stops !== 'undefined') { %>
+                      <% stops.forEach(stop => { %>
+                        <option value="<%= stop._id %>"><%= stop.name %> (<%= stop.city %>)</option>
+                      <% }) %>
+                    <% } %>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row g-2 mb-3">
+                <div class="col-4">
+                  <label class="form-label small">Distance (km)</label>
+                  <input type="number" name="distanceKm" id="editDistanceKm" class="form-control" required min="1" />
+                </div>
+                <div class="col-4">
+                  <label class="form-label small">Duration (minutes)</label>
+                  <input type="number" name="durationMinutes" id="editDurationMinutes" class="form-control" required min="1" />
+                </div>
+                <div class="col-4">
+                  <label class="form-label small">Status</label>
+                  <select name="status" id="editStatus" class="form-select">
+                    <option value="active">Active</option>
+                    <option value="paused">Paused</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Intermediate Stops Section -->
+              <div class="border-top pt-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <label class="form-label small mb-0 fw-bold">Intermediate Stops</label>
+                  <button type="button" class="btn btn-sm btn-outline-brand" id="addEditStopRowBtn">
+                    <i class="bi bi-plus me-1"></i>Add Stop
+                  </button>
+                </div>
+                <div id="editStopsContainer" class="d-flex flex-column gap-2"></div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-brand" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-brand">Update Route</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. Store stops JSON safely inside a data attribute -->
+    <!-- CHANGE THIS LINE: -->
+    <div id="stopsData" data-stops='<%- JSON.stringify(typeof stops !== "undefined" ? stops : []).replace(/'/g, "&#39;") %>' style="display: none;"></div>
+
+    <!-- 2. Read it cleanly in script without syntax errors -->
+    <script>
+      const stopsElement = document.getElementById("stopsData");
+      const availableStops = JSON.parse(stopsElement.dataset.stops || "[]");
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="./admin.js"></script>
+    <script src="/assets/js/admin_dashboard.js"></script>
+    
+    <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // 1. Safely parse stops from DOM
+    const stopsElement = document.getElementById("stopsData");
+    let availableStops = [];
+    try {
+      availableStops = JSON.parse(stopsElement.getAttribute("data-stops") || "[]");
+    } catch (err) {
+      console.error("Failed to parse availableStops:", err);
+    }
+
+    // Dynamic stop row element generator
+    function createStopRow(container, stopId = "", offset = 0) {
+      const index = container.querySelectorAll(".stop-row").length;
+      const row = document.createElement("div");
+      row.className = "row g-2 align-items-center stop-row mb-2";
+
+      let optionsHtml = '<option value="">-- Select Intermediate Stop --</option>';
+      availableStops.forEach((s) => {
+        const sId = typeof s === "object" ? s._id : s;
+        const selected = String(sId) === String(stopId) ? "selected" : "";
+        optionsHtml += `<option value="${sId}" ${selected}>${s.name} (${s.city})</option>`;
+      });
+
+      row.innerHTML = `
+        <div class="col-6">
+          <select name="stops[${index}][stopId]" class="form-select" required>
+            ${optionsHtml}
+          </select>
+        </div>
+        <div class="col-4">
+          <input type="number" name="stops[${index}][arrivalOffsetMinutes]" class="form-control" placeholder="Offset (mins)" value="${offset}" required min="0" />
+        </div>
+        <div class="col-2">
+          <button type="button" class="btn btn-outline-danger btn-sm w-100 remove-stop-btn">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      `;
+
+      row.querySelector(".remove-stop-btn").addEventListener("click", () => {
+        row.remove();
+        reindexStopRows(container);
+      });
+
+      container.appendChild(row);
+    }
+
+    // Keep form field indexes sequential [0], [1], [2] when a row is deleted
+    function reindexStopRows(container) {
+      const rows = container.querySelectorAll(".stop-row");
+      rows.forEach((row, idx) => {
+        const select = row.querySelector("select");
+        const input = row.querySelector("input[type='number']");
+        if (select) select.name = `stops[${idx}][stopId]`;
+        if (input) input.name = `stops[${idx}][arrivalOffsetMinutes]`;
+      });
+    }
+
+    document.getElementById("addStopRowBtn").addEventListener("click", () => {
+      createStopRow(document.getElementById("addStopsContainer"));
+    });
+
+    document.getElementById("addEditStopRowBtn").addEventListener("click", () => {
+      createStopRow(document.getElementById("editStopsContainer"));
+    });
+
+    // Edit route modal handler
+    const editBtns = document.querySelectorAll(".edit-route-btn");
+    const editForm = document.getElementById("editRouteForm");
+    const editStopsContainer = document.getElementById("editStopsContainer");
+
+    editBtns.forEach((btn) => {
+      btn.addEventListener("click", function () {
+        try {
+          const rawRouteData = this.getAttribute("data-route");
+          const route = JSON.parse(rawRouteData);
+
+          editForm.action = `/web/admin/routes/edit/${route._id}`;
+
+          // Set Origin Stop ID
+          const originId = route.originStop ? (route.originStop._id || route.originStop) : (route.originStopId ? (route.originStopId._id || route.originStopId) : "");
+          document.getElementById("editOriginStopId").value = originId;
+
+          // Set Destination Stop ID
+          const destId = route.destinationStop ? (route.destinationStop._id || route.destinationStop) : (route.destinationStopId ? (route.destinationStopId._id || route.destinationStopId) : "");
+          document.getElementById("editDestinationStopId").value = destId;
+
+          document.getElementById("editDistanceKm").value = route.distanceKm || 0;
+          document.getElementById("editDurationMinutes").value = route.durationMinutes || 0;
+          document.getElementById("editStatus").value = route.status || "active";
+
+          // Populate intermediate stops
+          editStopsContainer.innerHTML = "";
+          if (Array.isArray(route.stops) && route.stops.length > 0) {
+            route.stops.forEach((s) => {
+              const sId = s.stopId ? (s.stopId._id || s.stopId) : "";
+              createStopRow(editStopsContainer, sId, s.arrivalOffsetMinutes || 0);
+            });
+          }
+        } catch (err) {
+          console.error("Error parsing route data for editing:", err);
+        }
+      });
+    });
+  });
+</script>
   </body>
 </html>
