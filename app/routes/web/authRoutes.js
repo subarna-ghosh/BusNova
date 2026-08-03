@@ -11,9 +11,6 @@ const {
 const validateWeb = require("../../middlewares/validateWebMiddleware");
 const webProtect = require("../../middlewares/webProtect");
 
-// landing page
-Router.get("/view/landing/page", AuthController.viewLandingPage);
-
 // register
 Router.get("/view/register", AuthController.viewRegister);
 Router.post(

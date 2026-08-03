@@ -13,10 +13,6 @@ const {
 } = require("../../utils/createToken");
 const activityLogger = require("../../helpers/activityLogger");
 class AuthController {
-  viewLandingPage(req, res) {
-    return res.render("frontend/landing_page");
-  }
-
   viewRegister(req, res) {
     return res.render("admin/auth/register");
   }

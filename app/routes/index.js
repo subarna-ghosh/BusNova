@@ -12,6 +12,10 @@ const webDriverRoutes = require("./web/driverRoutes");
 Router.use("/web/driver", webDriverRoutes);
 const webStaffRoutes = require("./web/staffRoutes");
 Router.use("/web/staff", webStaffRoutes);
+const webHomeRoutes = require("./web/homeRoutes");
+Router.use("/web/home", webHomeRoutes);
+const webSearchResultRoutes = require("./web/searchRoutes");
+Router.use("/web/search", webSearchResultRoutes);
 
 // api routes
 // const apiAuthRoutes = require("./api/authRoutes");

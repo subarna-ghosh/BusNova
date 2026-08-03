@@ -1,0 +1,342 @@
+:root {
+  --bn-orange: #ff9e2c;
+  --bn-orange-dark: #e8850d;
+  --bn-orange-soft: #fff2de;
+  --bn-ink: #171310;
+  --bn-ink-soft: #2b251e;
+  --bn-muted: #726a5c;
+  --bn-line: rgba(23, 19, 16, 0.1);
+  --bg-cream: #fbf9f1;
+  --border-color: #e5dfd3;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  color: var(--bn-ink);
+  background-color: var(--bg-cream);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h5,
+.navbar-brand {
+  font-family: "Baloo 2", sans-serif;
+}
+
+/* ---------- NAVBAR (FROM ORIGINAL CODE) ---------- */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.5rem;
+  color: var(--bn-ink) !important;
+}
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--bn-orange), #ffc46b);
+  color: var(--bn-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  transform: rotate(-6deg);
+}
+.btn-brand {
+  background: var(--bn-orange);
+  border: none;
+  color: var(--bn-ink);
+  font-weight: 600;
+  border-radius: 50px;
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+  box-shadow: 0 10px 22px -10px rgba(255, 158, 44, 0.6);
+}
+.btn-brand:hover {
+  background: var(--bn-orange-dark);
+  color: var(--bn-ink);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px -10px rgba(232, 133, 13, 0.55);
+}
+.text-brand {
+  color: var(--bn-orange) !important;
+}
+.navbar .nav-link {
+  font-weight: 500;
+  color: var(--bn-ink-soft);
+}
+.navbar .nav-link:hover {
+  color: var(--bn-orange-dark);
+}
+
+/* ---------- SEARCH BAR ---------- */
+.search-wrapper {
+  background: var(--bg-cream);
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.search-form {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.2fr 1.2fr 120px;
+  gap: 12px;
+}
+
+.search-input-group {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 6px 14px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.search-input-group label {
+  font-size: 10px;
+  font-weight: bold;
+  color: #888;
+  position: absolute;
+  top: 4px;
+  left: 16px;
+  text-transform: uppercase;
+}
+
+.search-input-group select,
+.search-input-group input[type="date"] {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--bn-ink);
+  padding-top: 12px;
+  cursor: pointer;
+}
+
+.search-input-group select {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 14px;
+  pointer-events: none;
+  font-size: 12px;
+  color: #666;
+}
+
+.btn-search {
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background 0.2s;
+}
+
+.btn-search:hover {
+  background: #333;
+}
+
+/* ---------- RESULTS CONTAINER ---------- */
+.results-container {
+  max-width: 1280px;
+  margin: 20px auto 60px auto;
+  padding: 0 20px;
+  flex: 1;
+  width: 100%;
+  overflow-x: auto;
+  font-family: "Roboto", sans-serif;
+}
+
+.results-header {
+  display: grid;
+  grid-template-columns: 120px 140px 1.5fr 120px 100px 120px 120px 130px;
+  gap: 10px;
+  padding: 12px 15px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #333;
+  border-bottom: 1px solid #ccc;
+  min-width: 900px;
+}
+
+.bus-row {
+  display: grid;
+  grid-template-columns: 120px 140px 1.5fr 120px 100px 120px 120px 130px;
+  gap: 10px;
+  align-items: center;
+  padding: 20px 15px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 13px;
+  min-width: 900px;
+}
+
+.bus-img-placeholder {
+  width: 100px;
+  height: 60px;
+  background: #e9e9e9;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+}
+
+.service-code {
+  font-weight: 700;
+}
+.icon-bar {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  color: #666;
+  font-size: 12px;
+}
+.bus-title {
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.time-large {
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.sub-text {
+  font-size: 11px;
+  color: #666;
+  margin-top: 2px;
+}
+.point-link {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 11px;
+}
+.duration-arrow {
+  text-align: center;
+  color: #777;
+  font-size: 12px;
+}
+.seats-count {
+  font-weight: 700;
+  text-align: center;
+}
+.fare-price {
+  font-size: 16px;
+  font-weight: 700;
+}
+.btn-view-seats {
+  background: var(--bn-orange);
+  color: var(--bn-ink);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s;
+}
+.btn-view-seats:hover {
+  background: var(--bn-orange-dark);
+}
+.sold-out-text {
+  color: #d9534f;
+  font-weight: 700;
+}
+
+/* ---------- FOOTER (FROM ORIGINAL CODE) ---------- */
+.footer {
+  background: var(--bn-ink);
+  margin-top: auto;
+}
+.footer .brand-mark {
+  transform: rotate(-6deg);
+}
+.social-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+.social-icon:hover {
+  border-color: var(--bn-orange);
+  color: var(--bn-orange);
+}
+
+/* WHATSAPP BUTTON */
+.whatsapp-btn {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background-color: #25d366;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  z-index: 100;
+}
+
+.text-white {
+  color: #ffff !important;
+}
+
+/* Make mobile navbar overlay content instead of pushing it down */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    position: absolute;
+    top: 100%; /* Positions it right below the top bar */
+    left: 0;
+    width: 100%;
+    background-color: #ffffff; /* Solid background so text doesn't overlap */
+    padding: 15px 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Adds depth */
+    z-index: 1000; /* Ensures it sits above search bar & content */
+  }
+
+  .navbar-nav {
+    align-items: flex-start !important; /* Fixes alignment for mobile links */
+    gap: 8px;
+  }
+}
+
+@media (max-width: 900px) {
+  .search-form {
+    grid-template-columns: 1fr;
+  }
+}

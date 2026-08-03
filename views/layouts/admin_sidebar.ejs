@@ -51,9 +51,6 @@
     >
       <i class="bi bi-calendar2-week"></i><span>Trip Scheduling</span>
     </a>
-    <a href="fares.html" class="nav-link-item">
-      <i class="bi bi-tag"></i><span>Fare Management</span>
-    </a>
     <a
       href="/web/admin/view/drivers"
       class="nav-link-item <%= currentPath === '/web/admin/view/drivers' ? 'active' : '' %>"
@@ -67,7 +64,10 @@
     <a href="customers.html" class="nav-link-item">
       <i class="bi bi-people"></i><span>Customer Management</span>
     </a>
-    <a href="coupons.html" class="nav-link-item">
+    <a
+      href="/web/admin/view/coupons"
+      class="nav-link-item <%= currentPath === '/web/admin/view/coupons' ? 'active' : '' %>"
+    >
       <i class="bi bi-percent"></i><span>Coupon Management</span>
     </a>
     <a href="payments.html" class="nav-link-item">
@@ -86,7 +86,7 @@
   </nav>
 
   <div class="sidebar-foot">
-    <a href="/web/auth/view/landing/page" class="nav-link-item">
+    <a href="/web/home/view/landing/page" class="nav-link-item">
       <i class="bi bi-box-arrow-left"></i><span>Back to site</span>
     </a>
   </div>

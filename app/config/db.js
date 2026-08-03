@@ -9,8 +9,8 @@ const db = async () => {
     } else {
       logger.error("Database not connected");
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    logger.error("Error connecting to database:", error);
   }
 };
 

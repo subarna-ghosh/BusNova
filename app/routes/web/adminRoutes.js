@@ -7,6 +7,7 @@ const RouteController = require("../../controllers/admin/RouteController");
 const TripController = require("../../controllers/admin/TripController");
 const DriverController = require("../../controllers/admin/DriverController");
 const StopController = require("../../controllers/admin/StopController");
+const CouponController = require("../../controllers/admin/CouponController");
 const validateWeb = require("../../middlewares/validateWebMiddleware");
 const webProtect = require("../../middlewares/webProtect");
 const roleCheck = require("../../middlewares/roleCheck");
@@ -115,6 +116,20 @@ Router.get(
   TripController.viewTrips,
 );
 
+Router.post(
+  "/trip/save",
+  webProtect,
+  roleCheck("Admin"),
+  TripController.createTrip,
+);
+
+Router.post(
+  "/trip/update/:id",
+  webProtect,
+  roleCheck("Admin"),
+  TripController.updateTrip,
+);
+
 // driver management routes
 Router.get(
   "/view/drivers",
@@ -135,8 +150,37 @@ Router.post(
   "/driver/update/:id",
   webProtect,
   roleCheck("Admin"),
- uploadDriverImage.single("profileImage"),
+  uploadDriverImage.single("profileImage"),
   DriverController.updateDriver,
+);
+
+// coupon management routes
+Router.get(
+  "/view/coupons",
+  webProtect,
+  roleCheck("Admin"),
+  CouponController.viewCoupons,
+);
+
+Router.post(
+  "/coupon/save",
+  webProtect,
+  roleCheck("Admin"),
+  CouponController.createCoupon,
+);
+
+Router.post(
+  "/coupon/update/:id",
+  webProtect,
+  roleCheck("Admin"),
+  CouponController.updateCoupon,
+);
+
+Router.post(
+  "/coupon/delete/:id",
+  webProtect,
+  roleCheck("Admin"),
+  CouponController.updateCoupon,
 );
 
 module.exports = Router;
