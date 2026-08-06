@@ -8,6 +8,15 @@
   --bn-line: rgba(23, 19, 16, 0.1);
   --bg-cream: #fbf9f1;
   --border-color: #e5dfd3;
+  --orange-main: #f58220;
+  --orange-dark: #d96e14;
+  --bg-cream: #fbf9f1;
+  --border-color: #e5dfd3;
+  --seat-available: #e9e9e9;
+  --seat-selected: #28a745;
+  --seat-booked: #888888;
+  --seat-premium: #ffc107;
+  --seat-ladies: #e83e8c;
 }
 
 body {
@@ -338,5 +347,600 @@ h5,
 @media (max-width: 900px) {
   .search-form {
     grid-template-columns: 1fr;
+  }
+}
+
+/* SEARCH BAR FORM (RESPONSIVE) */
+.search-wrapper {
+  width: 100%;
+  max-width: 1240px;
+  margin: 25px auto;
+  padding: 0 15px;
+}
+
+.search-form {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) minmax(150px, auto);
+  gap: 15px;
+  align-items: center;
+  background: #ffffff;
+  padding: 20px 24px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border-color);
+}
+
+.search-input-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #f8f9fa;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  transition: all 0.2s ease-in-out;
+}
+
+.search-input-group:focus-within {
+  border-color: var(--orange-main);
+  box-shadow: 0 0 0 3px rgba(245, 130, 32, 0.15);
+  background: #ffffff;
+}
+
+.search-input-group label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--orange-main);
+  margin-bottom: 2px;
+}
+
+.search-input-group select,
+.search-input-group input {
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2d3748;
+  width: 100%;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.search-input-group .dropdown-icon {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  font-size: 12px;
+  color: #a0aec0;
+  pointer-events: none;
+}
+
+.btn-search {
+  height: 100%;
+  min-height: 52px;
+  background: var(--orange-main);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-search:hover {
+  background: var(--orange-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 130, 32, 0.3);
+}
+
+/* RESULTS CONTAINER & DESKTOP ROW */
+.results-container {
+  max-width: 1240px;
+  margin: 0 auto 40px auto;
+  padding: 0 15px;
+}
+
+.bus-card {
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.bus-row {
+  display: grid;
+  grid-template-columns: 70px 1.2fr 1.8fr 1fr 1fr 1fr 1fr 1.2fr;
+  align-items: center;
+  padding: 18px 20px;
+  gap: 12px;
+}
+
+.btn-view-seats {
+  background: var(--orange-main);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+}
+
+.btn-view-seats:hover {
+  background: var(--orange-dark);
+}
+
+/* ACCORDION & SEAT SELECTION PANEL */
+.seat-accordion-panel {
+  display: none;
+  background: #fffdf5;
+  border-top: 1px solid var(--border-color);
+  padding: 25px;
+  position: relative;
+}
+
+.seat-accordion-panel.active {
+  display: block;
+}
+
+.accordion-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 20px;
+  color: #dc3545;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.seat-layout-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 30px;
+  margin-top: 10px;
+}
+
+.seat-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 15px;
+  font-size: 11px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.box {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.box.available {
+  background: var(--seat-available);
+  border: 1px solid #ccc;
+}
+.box.selected {
+  background: var(--seat-selected);
+}
+.box.booked {
+  background: var(--seat-booked);
+}
+.box.premium {
+  background: var(--seat-premium);
+}
+
+.bus-deck-wrapper {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  background: #fff;
+  max-width: 280px;
+}
+
+.steering-wheel-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 10px;
+  border-bottom: 2px dashed #e5dfd3;
+  margin-bottom: 12px;
+  font-size: 18px;
+  color: #6c757d;
+}
+
+.bus-deck {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.seat {
+  width: 38px;
+  height: 38px;
+  background: var(--seat-available);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.seat.booked {
+  background: var(--seat-booked);
+  color: #fff;
+  cursor: not-allowed;
+}
+.seat.premium {
+  background: var(--seat-premium);
+  color: #000;
+}
+.seat.selected {
+  background: var(--seat-selected);
+  color: #fff;
+  border-color: green;
+}
+.seat.aisle-gap {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.booking-details-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.fare-breakdown {
+  background: #fff;
+  padding: 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.fare-breakdown h4,
+.section-heading {
+  font-size: 14px;
+  color: var(--orange-main);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.fare-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 6px;
+  gap: 10px;
+}
+
+.fare-row.total {
+  font-weight: 700;
+  border-top: 1px solid #eee;
+  margin-top: 8px;
+  padding-top: 6px;
+  font-size: 14px;
+}
+
+.route-dropdowns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.dropdown-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--orange-main);
+  margin-bottom: 4px;
+}
+
+.dropdown-group select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  font-size: 12px;
+  outline: none;
+}
+
+.form-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+  outline: none;
+}
+
+.btn-action {
+  background: var(--orange-main);
+  color: white;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+.btn-action:hover {
+  background: var(--orange-dark);
+}
+.btn-action:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+.btn-secondary {
+  background: #6c757d;
+}
+.btn-secondary:hover {
+  background: #5a6268;
+}
+
+/* Passenger row — grid now lives in CSS (not inline) so it can respond to media queries */
+.passenger-row {
+  display: grid;
+  grid-template-columns: 60px 75px 1fr 65px;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.passenger-row .p-seat-label {
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.bus-img-placeholder {
+  width: auto;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.fare-price {
+  text-align: end;
+}
+
+/* ============================================================ */
+/* TABLET (≤ 991px)                                              */
+/* ============================================================ */
+@media (max-width: 991px) {
+  /* Search bar becomes a stacked, full-width form instead of vanishing */
+  .search-form {
+    grid-template-columns: 1fr 1fr;
+    padding: 16px;
+  }
+
+  .btn-search {
+    grid-column: 1 / -1;
+  }
+
+  /* Hide desktop tabular header, cards take over */
+  .results-header {
+    display: none !important;
+  }
+
+  /* Wrap bus row cleanly into card layout */
+  .bus-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px;
+    position: relative;
+  }
+
+  /* Top Bar: Icon + Bus Details */
+  .bus-row > div:nth-child(1) {
+    order: 1;
+    flex: 0 0 auto;
+  }
+  .bus-row > div:nth-child(2) {
+    order: 2;
+    flex: 1;
+  }
+  .bus-row > div:nth-child(3) {
+    order: 3;
+    flex: 0 0 100%;
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 10px;
+  }
+
+  /* Departure, Duration, Arrival timing flow */
+  .bus-row > div:nth-child(4) {
+    order: 4;
+    flex: none;
+    text-align: left;
+  }
+  .bus-row > div:nth-child(5) {
+    order: 5;
+    flex: 0 0 auto;
+    text-align: center;
+  }
+  .bus-row > div:nth-child(6) {
+    order: 6;
+    flex: none;
+    text-align: right;
+  }
+
+  /* Seats & Fare row */
+  .bus-row > div:nth-child(7) {
+    order: 7;
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background: #fdfbf7;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-top: 5px;
+  }
+
+  /* Action / Price Section */
+  .bus-row > div:nth-child(8) {
+    order: 8;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 5px;
+  }
+
+  .bus-img-placeholder {
+    width: 100px;
+  }
+
+  .fare-price {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--orange-dark);
+    margin-bottom: 0;
+  }
+
+  .btn-view-seats {
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Seat Layout Responsiveness */
+  .seat-layout-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bus-deck-wrapper {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .route-dropdowns {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================ */
+/* PHONE (≤ 575px)                                               */
+/* ============================================================ */
+@media (max-width: 575px) {
+  .search-wrapper {
+    margin: 15px auto;
+  }
+
+  .search-form {
+    grid-template-columns: 1fr;
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .search-input-group {
+    padding: 8px 12px;
+  }
+
+  .btn-search {
+    min-height: 46px;
+    font-size: 14px;
+  }
+
+  .bus-row {
+    padding: 12px;
+  }
+
+  .service-code {
+    font-size: 13px;
+  }
+
+  .time-large {
+    font-size: 13px;
+  }
+
+  .sub-text {
+    font-size: 11px;
+  }
+
+  .seat-accordion-panel {
+    padding: 15px;
+  }
+
+  .seat-legend {
+    font-size: 9px;
+    gap: 7px;
+  }
+
+  /* Slightly smaller seats so 4 columns comfortably fit narrow phones */
+  .seat {
+    width: 32px;
+    height: 32px;
+    font-size: 10px;
+  }
+
+  .bus-deck {
+    gap: 6px;
+  }
+
+  .fare-breakdown {
+    padding: 12px;
+  }
+
+  /* Contact info fields stack instead of squeezing into 2 columns */
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Passenger row collapses to 2 columns: seat label / title stacked over name / age */
+  .passenger-row {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 6px;
+  }
+
+  .passenger-row .p-seat-label {
+    grid-column: 1 / -1;
+  }
+
+  .passenger-row .p-name {
+    grid-column: 1 / -1;
+  }
+
+  .btn-view-seats {
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+
+  .fare-price {
+    font-size: 16px;
   }
 }

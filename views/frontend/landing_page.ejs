@@ -41,51 +41,46 @@
           data-aos-delay="150"
         >
           <!-- search buses -->
-          <form action="/buses/search" method="GET">
+          <form action="/web/search/view/result" method="GET">
             <div class="row g-2 align-items-end">
               <!-- From (Origin) Select Dropdown -->
               <div class="col-md-3 text-start">
-                <label for="origin" class="form-label small text-dark mb-1"
-                  >From</label
-                >
-                <select class="form-select" id="origin" name="origin" required>
-                  <option value="" disabled>Select origin city</option>
-                  <option value="Kolkata" selected>Kolkata</option>
-                  <option value="Digha">Digha</option>
-                  <option value="Siliguri">Siliguri</option>
-                  <option value="Asansol">Asansol</option>
+                <label for="origin" class="form-label small text-dark mb-1">From</label>
+                <select class="form-select" id="origin" name="from" required>
+                  <option value="" selected disabled>Select origin</option>
+                  <% if (typeof destination !== 'undefined' && destination.length > 0) { %>
+                    <% destination.forEach((o) => { %>
+                      <option value="<%= o.originStop._id %>">
+                        <%= o.originStop.city %>
+                      </option>
+                    <% }) %>
+                  <% } %>
                 </select>
               </div>
 
               <!-- To (Destination) Select Dropdown -->
               <div class="col-md-3 text-start">
-                <label for="destination" class="form-label small text-dark mb-1"
-                  >To</label
-                >
-                <select
-                  class="form-select"
-                  id="destination"
-                  name="destination"
-                  required
-                >
-                  <option value="" disabled>Select destination city</option>
-                  <option value="Kolkata">Kolkata</option>
-                  <option value="Digha" selected>Digha</option>
-                  <option value="Siliguri">Siliguri</option>
-                  <option value="Asansol">Asansol</option>
+                <label for="destination" class="form-label small text-dark mb-1">To</label>
+                <select class="form-select" id="destination" name="to" required>
+                  <option value="" selected disabled>Select destination</option>
+                  <% if (typeof destination !== 'undefined' && destination.length > 0) { %>
+                    <% destination.forEach((d) => { %>
+                      <option value="<%= d.destinationStop._id %>">
+                        <%= d.destinationStop.city %>
+                      </option>
+                    <% }) %>
+                  <% } %>
                 </select>
               </div>
 
               <!-- Departure Date -->
               <div class="col-md-3 text-start">
-                <label for="travelDate" class="form-label small text-dark mb-1"
-                  >Departure</label
-                >
+                <label for="travelDate" class="form-label small text-dark mb-1">Departure</label>
                 <input
                   type="date"
                   class="form-control"
                   id="travelDate"
-                  name="date"
+                  name="departDate"
                   required
                 />
               </div>

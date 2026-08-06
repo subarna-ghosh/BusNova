@@ -5,69 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>BusNova — Search Results</title>
 
-    <!-- Bootstrap CSS & Icons (From original code) -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-      rel="stylesheet"
-    />
-    <!-- Fonts -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <!-- FontAwesome (For Search Results Icons) -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link rel="stylesheet" href="/assets/css/search_result.css">
+    <!-- Bootstrap CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/css/search_result.css" />
   </head>
   <body>
-    <!-- ORIGINAL NAVBAR -->
+    <!-- NAVBAR -->
     <%- include('../layouts/frontend_navbar') %>
 
-    <!-- SEARCH BAR -->
+    <!-- SEARCH BAR FORM -->
     <div class="search-wrapper">
-      <form class="search-form" onsubmit="event.preventDefault()">
+      <form class="search-form" action="/web/search/view/result" method="GET" id="searchFilterForm">
         <div class="search-input-group">
           <label for="fromCity">From</label>
-          <select id="fromCity">
-            <option value="kolkata" selected>Kolkata</option>
-            <option value="puri">Puri</option>
-            <option value="digha">Digha</option>
-            <option value="bhubaneswar">Bhubaneswar</option>
-            <option value="siliguri">Siliguri</option>
+          <select id="fromCity" name="from">
+            <% if (typeof destination !== 'undefined' && destination.length > 0) { %>
+              <% destination.forEach((o) => { %>
+                <option value="<%= o.originStop._id %>" <%= queryParams && queryParams.from == o.originStop._id ? 'selected' : '' %>>
+                  <%= o.originStop.city %>
+                </option>
+              <% }) %>
+            <% } %>
           </select>
           <i class="fa-solid fa-chevron-down dropdown-icon"></i>
         </div>
 
         <div class="search-input-group">
           <label for="toCity">To</label>
-          <select id="toCity">
-            <option value="puri" selected>Puri</option>
-            <option value="kolkata">Kolkata</option>
-            <option value="digha">Digha</option>
-            <option value="bhubaneswar">Bhubaneswar</option>
-            <option value="siliguri">Siliguri</option>
+          <select id="toCity" name="to">
+            <% if (typeof destination !== 'undefined' && destination.length > 0) { %>
+              <% destination.forEach((d) => { %>
+                <option value="<%= d.destinationStop._id %>" <%= queryParams && queryParams.to == d.destinationStop._id ? 'selected' : '' %>>
+                  <%= d.destinationStop.city %>
+                </option>
+              <% }) %>
+            <% } %>
           </select>
           <i class="fa-solid fa-chevron-down dropdown-icon"></i>
         </div>
 
         <div class="search-input-group">
           <label for="departDate">Depart Date</label>
-          <input type="date" id="departDate" value="2026-07-24" />
+          <input type="date" id="departDate" name="departDate" value="<%= queryParams && queryParams.departDate ? queryParams.departDate : '' %>" />
         </div>
 
-        <div class="search-input-group">
-          <label for="returnDate">Return Date</label>
-          <input type="date" id="returnDate" />
-        </div>
-
-        <button type="submit" class="btn-search">Search</button>
+        <button type="submit" class="btn-search">
+          <i class="fa-solid fa-magnifying-glass"></i> Search
+        </button>
       </form>
     </div>
 
@@ -84,118 +71,355 @@
         <div>Fare</div>
       </div>
 
-      <!-- BUS ROW 1 -->
-      <div class="bus-row">
-        <div>
-          <div class="bus-img-placeholder">
-            <i class="fa-solid fa-bus-simple fa-2x"></i>
-          </div>
-        </div>
-        <div>
-          <div class="service-code">KP-1107</div>
-          <div class="icon-bar">
-            <i class="fa-solid fa-info-circle"></i>
-            <i class="fa-solid fa-mobile-screen"></i>
-            <i class="fa-solid fa-plug"></i>
-            <span style="font-weight: bold; color: #007bff">+12</span>
-          </div>
-        </div>
-        <div>
-          <div class="bus-title">
-            <i class="fa-solid fa-bus" style="color: #007bff"></i>
-            2+1, VOLVO MULTI AXLE
-          </div>
-          <div class="sub-text">B11R SEATER/ SLEEPER (2+1), AC (58 seats)</div>
-        </div>
-        <div>
-          <div class="time-large">
-            <i class="fa-regular fa-clock"></i> 20:00
-          </div>
-          <div class="sub-text">Fri, 24 Jul</div>
-          <a href="#" class="point-link">Boarding Points</a>
-        </div>
-        <div class="duration-arrow">
-          <i class="fa-solid fa-arrow-right"></i>
-          <div>10h 00m Hrs</div>
-        </div>
-        <div>
-          <div class="time-large">
-            <i class="fa-regular fa-clock"></i> 06:00
-          </div>
-          <div class="sub-text">Sat, 25 Jul</div>
-          <a href="#" class="point-link">Dropping Points</a>
-        </div>
-        <div class="seats-count">
-          <div>0</div>
-          <div class="sub-text">Seats available</div>
-        </div>
-        <div>
-          <div class="fare-price">₹ 1852/-</div>
-          <div class="sold-out-text">Sold Out!</div>
-        </div>
-      </div>
+      <% if (typeof trips !== 'undefined' && trips.length > 0) { %>
+        <% trips.forEach((trip) => { %>
+          <div class="bus-card mb-3" id="trip-card-<%= trip._id %>">
+            <div class="bus-row">
+              <div>
+                <div class="bus-img-placeholder">
+                  <i class="fa-solid fa-bus-simple fa-2x"></i>
+                </div>
+              </div>
+              <div>
+                <div class="service-code"><%= (trip && trip.bus && trip.bus.busNumber) ? trip.bus.busNumber : 'N/A' %></div>
+                <div class="icon-bar">
+                  <% if (trip.bus.amenities && trip.bus.amenities.length > 0) { %>
+                    <% if (trip.bus.amenities.includes('wifi')) { %><i class="bi bi-wifi me-2" title="WiFi"></i><% } %>
+                    <% if (trip.bus.amenities.includes('charging_point')) { %><i class="bi bi-plug me-2" title="Charging Point"></i><% } %>
+                    <% if (trip.bus.amenities.includes('water_bottle')) { %><i class="bi bi-droplet me-2" title="Water Bottle"></i><% } %>
+                    <% if (trip.bus.amenities.includes('blanket')) { %><i class="bi bi-box-seam me-2" title="Blanket"></i><% } %>
+                  <% } else { %>
+                    <span class="text-muted small">None</span>
+                  <% } %>
+                </div>
+              </div>
+              <div>
+                <div class="bus-title">
+                  <i class="fa-solid fa-bus" style="color: #007bff"></i>
+                  <div class="service-code"><%= (trip && trip.bus && trip.bus.busType) ? trip.bus.busType : 'N/A' %></div>
+                </div>
+                <div class="sub-text"><%= trip.bus ? trip.bus.category : 'AC Seater/Sleeper' %></div>
+              </div>
+              <div>
+                <div class="time-large">
+                  <i class="fa-regular fa-clock"></i>
+                  <%= new Date(trip.departureAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false }) %>
+                </div>
+                <div class="sub-text"><%= new Date(trip.departureAt).toLocaleDateString('en-IN', { weekday: 'short', day: '2-digit', month: 'short' }) %></div>
+              </div>
+              <div class="duration-arrow">
+                <i class="fa-solid fa-arrow-right"></i>
+                <div>
+                  <% 
+                    const dep = new Date(trip.departureAt);
+                    const arr = new Date(trip.arrivalAt);
+                    const diffMs = arr - dep;
+                    const totalMinutes = Math.floor(diffMs / (1000 * 60));
+                    const hours = Math.floor(totalMinutes / 60);
+                    const mins = totalMinutes % 60;
+                  %>
+                  <%= hours %>h <%= mins.toString().padStart(2, '0') %>m
+                </div>
+              </div>
+              <div>
+                <div class="time-large">
+                  <i class="fa-regular fa-clock"></i>
+                  <%= new Date(trip.arrivalAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false }) %>
+                </div>
+                <div class="sub-text"><%= new Date(trip.arrivalAt).toLocaleDateString('en-IN', { weekday: 'short', day: '2-digit', month: 'short' }) %></div>
+              </div>
+              <div class="seats-count">
+                <div class="sub-text">Available Seats:</div>
+                <div style="font-weight: bold; color: var(--orange-main);"><%= trip.availableSeats %> Seats</div>
+              </div>
+              <div>
+                <div class="fare-price">₹ <%= trip.baseFare %>/-</div>
+                <% if (trip.availableSeats > 0) { %>
+                  <button
+                    class="btn-view-seats"
+                    data-trip-id="<%= trip._id %>"
+                    data-base-fare="<%= trip.baseFare %>"
+                    data-total-seats="<%= trip.bus ? trip.bus.totalSeats : 20 %>"
+                    data-bus-layout='<%- JSON.stringify((trip.bus && trip.bus.seatlayoutid) ? trip.bus.seatlayoutid : null) %>'
+                    onclick="handleViewSeatsClick(this)">
+                    VIEW SEATS
+                  </button>
+                <% } else { %>
+                  <div class="sold-out-text">Sold Out!</div>
+                <% } %>
+              </div>
+            </div>
 
-      <!-- BUS ROW 2 -->
-      <div class="bus-row">
-        <div>
-          <div class="bus-img-placeholder">
-            <i class="fa-solid fa-bus-simple fa-2x"></i>
+            <!-- IN-LINE SEAT ACCORDION PANEL -->
+            <div class="seat-accordion-panel" id="seatAccordion-<%= trip._id %>">
+              <button class="accordion-close-btn" type="button" onclick="toggleSeatPanel('<%= trip._id %>')">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+
+              <div class="seat-layout-grid">
+                <!-- SEAT MAP & LEGEND -->
+                <div>
+                  <div class="seat-legend">
+                    <div class="legend-item"><div class="box available"></div> Regular</div>
+                    <div class="legend-item"><div class="box premium"></div> Premium</div>
+                    <div class="legend-item"><div class="box selected"></div> Selected</div>
+                    <div class="legend-item"><div class="box booked"></div> Booked</div>
+                  </div>
+
+                  <div class="bus-deck-wrapper">
+                    <div class="steering-wheel-bar">
+                      <i class="bi bi-gear"></i>
+                    </div>
+                    <div class="bus-deck" id="seatDeck-<%= trip._id %>"></div>
+                  </div>
+                </div>
+
+                <!-- FARE DETAILS & PASSENGER FORM -->
+                <div class="booking-details-panel">
+                  <div id="step1-fare-view-<%= trip._id %>">
+                    <div class="fare-breakdown">
+                      <h4>Fare Details</h4>
+                      <div class="fare-row"><span>Seats Selected:</span> <strong id="lblSeats-<%= trip._id %>">-</strong></div>
+                      <div class="fare-row"><span>Ticket Fare:</span> <span>₹ <span id="lblBaseFare-<%= trip._id %>">0</span></span></div>
+                      <div class="fare-row"><span>GST (5%):</span> <span>₹ <span id="lblGst-<%= trip._id %>">0</span></span></div>
+                      <div class="fare-row total"><span>Total Payable:</span> <span>₹ <span id="lblTotal-<%= trip._id %>">0</span></span></div>
+                    </div>
+
+                    <div class="route-dropdowns">
+                      <div class="dropdown-group">
+                        <label for="boardingPoint-<%= trip._id %>">Boarding Point</label>
+                        <select id="boardingPoint-<%= trip._id %>" name="boardingPoint">
+                          <option value="<%= trip.originStop ? trip.originStop.name : 'Origin Terminal' %>">
+                            <%= trip.originStop ? trip.originStop.name : 'Origin Terminal' %>
+                          </option>
+                        </select>
+                      </div>
+                      <div class="dropdown-group">
+                        <label for="dropoffPoint-<%= trip._id %>">Dropoff Point</label>
+                        <select id="dropoffPoint-<%= trip._id %>" name="dropoffPoint">
+                          <option value="<%= trip.destinationStop ? trip.destinationStop.name : 'Destination Terminal' %>">
+                            <%= trip.destinationStop ? trip.destinationStop.name : 'Destination Terminal' %>
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <button class="btn-action" id="btnContinue-<%= trip._id %>" type="button" disabled onclick="goToPassengerStep('<%= trip._id %>')">Continue</button>
+                  </div>
+
+                  <!-- STEP 2: STANDARD FORM SUBMISSION TO BACKEND -->
+                  <div id="step2-passenger-view-<%= trip._id %>" style="display: none;">
+                    <form action="/web/booking/initiate" method="POST">
+                      <input type="hidden" name="tripId" value="<%= trip._id %>" />
+                      <input type="hidden" name="seats" id="inputSeats-<%= trip._id %>" />
+                      <input type="hidden" name="totalAmount" id="inputTotalAmount-<%= trip._id %>" />
+                      <input type="hidden" name="boardingPoint" id="inputBoarding-<%= trip._id %>" />
+                      <input type="hidden" name="dropoffPoint" id="inputDropoff-<%= trip._id %>" />
+
+                      <div class="section-heading">Passenger Details</div>
+                      <div id="passengerFormsContainer-<%= trip._id %>" style="margin-bottom: 15px;"></div>
+
+                      <div class="section-heading">Contact Information</div>
+                      <div class="contact-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                        <div>
+                          <input type="email" name="contactEmail" class="form-input" placeholder="Email Address" value="<%= (typeof user !== 'undefined' && user) ? user.email : '' %>" required />
+                        </div>
+                        <div>
+                          <input type="text" name="contactPhone" class="form-input" placeholder="Mobile Number" value="<%= (typeof user !== 'undefined' && user) ? user.phone : '' %>" required />
+                        </div>
+                      </div>
+
+                      <div style="display: flex; gap: 10px;">
+                        <button class="btn-action btn-secondary" type="button" onclick="backToSeatStep('<%= trip._id %>')">Back</button>
+                        <button class="btn-action" type="submit">
+                          Proceed to Pay (<span id="btnPayAmount-<%= trip._id %>">₹0</span>)
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+        <% }) %>
+      <% } else { %>
+        <div class="text-center py-5 bg-white rounded">
+          <i class="fa-solid fa-bus-simple fa-3x text-muted mb-3"></i>
+          <h5>No trips found matching your criteria.</h5>
+          <p class="text-muted small">Try searching for a different date or route.</p>
         </div>
-        <div>
-          <div class="service-code">KP-1101 special</div>
-          <div class="icon-bar">
-            <i class="fa-solid fa-info-circle"></i>
-            <i class="fa-solid fa-mobile-screen"></i>
-            <i class="fa-solid fa-plug"></i>
-            <span style="font-weight: bold; color: #007bff">+12</span>
-          </div>
-        </div>
-        <div>
-          <div class="bus-title">
-            <i class="fa-solid fa-bus" style="color: #007bff"></i>
-            2+1, VOLVO MULTI AXLE
-          </div>
-          <div class="sub-text">B11R SEATER/ SLEEPER (2+1), AC (58 seats)</div>
-        </div>
-        <div>
-          <div class="time-large">
-            <i class="fa-regular fa-clock"></i> 20:30
-          </div>
-          <div class="sub-text">Fri, 24 Jul</div>
-          <a href="#" class="point-link">Boarding Points</a>
-        </div>
-        <div class="duration-arrow">
-          <i class="fa-solid fa-arrow-right"></i>
-          <div>10h 30m Hrs</div>
-        </div>
-        <div>
-          <div class="time-large">
-            <i class="fa-regular fa-clock"></i> 07:00
-          </div>
-          <div class="sub-text">Sat, 25 Jul</div>
-          <a href="#" class="point-link">Dropping Points</a>
-        </div>
-        <div class="seats-count">
-          <div>31</div>
-          <div class="sub-text">Seats available</div>
-        </div>
-        <div>
-          <div class="fare-price">₹ 1540/-</div>
-          <button class="btn-view-seats">VIEW SEATS</button>
-        </div>
-      </div>
+      <% } %>
     </div>
 
-    <!-- WHATSAPP FLOATING BUTTON -->
-    <a href="#" class="whatsapp-btn">
-      <i class="fa-brands fa-whatsapp"></i>
-    </a>
-
-    <!--FOOTER -->
+    <!-- FOOTER -->
     <%- include('../layouts/frontend_footer') %>
 
-    <!-- Bootstrap JS (Needed for Navbar Toggler) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      const GST_RATE = 0.05;
+      const tripStateMap = {};
+
+      function toggleSeatPanel(tripId, baseFare = 0, busLayout = null, defaultSeats = 20) {
+        const accordion = document.getElementById(`seatAccordion-${tripId}`);
+        const isActive = accordion.classList.contains('active');
+
+        document.querySelectorAll('.seat-accordion-panel').forEach(panel => panel.classList.remove('active'));
+
+        if (!isActive) {
+          accordion.classList.add('active');
+          if (!tripStateMap[tripId]) {
+            tripStateMap[tripId] = {
+              selectedSeats: [],
+              baseFare: baseFare,
+              busLayout: busLayout,
+              defaultSeats: defaultSeats
+            };
+            renderSeats(tripId);
+          }
+
+          if (window.innerWidth <= 991) {
+            setTimeout(() => accordion.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+          }
+        }
+      }
+
+      function handleViewSeatsClick(btn) {
+        const tripId = btn.getAttribute('data-trip-id');
+        const baseFare = parseFloat(btn.getAttribute('data-base-fare')) || 0;
+        const totalSeats = parseInt(btn.getAttribute('data-total-seats'), 10) || 20;
+
+        let busLayout = null;
+        try {
+          busLayout = JSON.parse(btn.getAttribute('data-bus-layout'));
+        } catch (err) {
+          busLayout = null;
+        }
+
+        toggleSeatPanel(tripId, baseFare, busLayout, totalSeats);
+      }
+
+      function renderSeats(tripId) {
+        const deck = document.getElementById(`seatDeck-${tripId}`);
+        deck.innerHTML = "";
+        const state = tripStateMap[tripId];
+
+        if (state.busLayout && Array.isArray(state.busLayout.seats) && state.busLayout.seats.length > 0) {
+          deck.style.display = "grid";
+          deck.style.gridTemplateRows = `repeat(${state.busLayout.totalRows || 10}, minmax(40px, auto))`;
+          deck.style.gridTemplateColumns = `repeat(${state.busLayout.totalColumns || 5}, minmax(40px, auto))`;
+          deck.style.gap = "8px";
+
+          state.busLayout.seats.forEach((seatData) => {
+            const seatEl = document.createElement("div");
+            seatEl.classList.add("seat");
+
+            if (seatData.row && seatData.column) {
+              seatEl.style.gridRow = seatData.row;
+              seatEl.style.gridColumn = seatData.column;
+            }
+
+            if (seatData.isAisle || seatData.type === "gap") {
+              seatEl.classList.add("aisle-gap");
+              seatEl.style.pointerEvents = "none";
+            } else {
+              seatEl.innerText = seatData.seatNumber || seatData.label;
+
+              if (seatData.isPremium || seatData.seatType === "sleeper") {
+                seatEl.classList.add("premium");
+              } else {
+                seatEl.classList.add("available");
+              }
+
+              if (seatData.isBooked) {
+                seatEl.classList.add("booked");
+              } else {
+                seatEl.onclick = () => selectSeat(tripId, seatData.seatNumber || seatData.label, seatEl);
+              }
+            }
+            deck.appendChild(seatEl);
+          });
+        } else {
+          deck.style.display = "grid";
+          deck.style.gridTemplateColumns = "repeat(4, minmax(40px, 1fr))";
+          deck.style.gap = "8px";
+
+          for (let i = 1; i <= state.defaultSeats; i++) {
+            const seatEl = document.createElement("div");
+            seatEl.classList.add("seat", "available");
+            seatEl.innerText = i;
+            seatEl.onclick = () => selectSeat(tripId, String(i), seatEl);
+            deck.appendChild(seatEl);
+          }
+        }
+      }
+
+      function selectSeat(tripId, seatId, element) {
+        const state = tripStateMap[tripId];
+        if (state.selectedSeats.includes(seatId)) {
+          state.selectedSeats = state.selectedSeats.filter(id => id !== seatId);
+          element.classList.remove("selected");
+        } else {
+          state.selectedSeats.push(seatId);
+          element.classList.add("selected");
+        }
+        updateBilling(tripId);
+      }
+
+      function updateBilling(tripId) {
+        const state = tripStateMap[tripId];
+        const count = state.selectedSeats.length;
+        const totalBase = count * state.baseFare;
+        const gst = totalBase * GST_RATE;
+        const total = totalBase + gst;
+
+        document.getElementById(`lblSeats-${tripId}`).innerText = count > 0 ? state.selectedSeats.join(", ") : "-";
+        document.getElementById(`lblBaseFare-${tripId}`).innerText = totalBase.toFixed(2);
+        document.getElementById(`lblGst-${tripId}`).innerText = gst.toFixed(2);
+        document.getElementById(`lblTotal-${tripId}`).innerText = total.toFixed(2);
+        document.getElementById(`btnPayAmount-${tripId}`).innerText = `₹${total.toFixed(2)}`;
+        document.getElementById(`btnContinue-${tripId}`).disabled = count === 0;
+
+        // Populate hidden form inputs for step 2 submission
+        document.getElementById(`inputSeats-${tripId}`).value = state.selectedSeats.join(",");
+        document.getElementById(`inputTotalAmount-${tripId}`).value = total.toFixed(2);
+        document.getElementById(`inputBoarding-${tripId}`).value = document.getElementById(`boardingPoint-${tripId}`).value;
+        document.getElementById(`inputDropoff-${tripId}`).value = document.getElementById(`dropoffPoint-${tripId}`).value;
+      }
+
+      function goToPassengerStep(tripId) {
+        document.getElementById(`step1-fare-view-${tripId}`).style.display = "none";
+        document.getElementById(`step2-passenger-view-${tripId}`).style.display = "block";
+
+        const container = document.getElementById(`passengerFormsContainer-${tripId}`);
+        container.innerHTML = "";
+        const state = tripStateMap[tripId];
+
+        state.selectedSeats.forEach((seatId, idx) => {
+          container.innerHTML += `
+            <div class="passenger-row" data-seat="${seatId}">
+              <span class="p-seat-label">Seat ${seatId}</span>
+              <input type="hidden" name="passengers[${idx}][seatNo]" value="${seatId}" />
+              <select name="passengers[${idx}][title]" class="form-input p-title">
+                <option value="Mr">Mr</option>
+                <option value="Ms">Ms</option>
+                <option value="Mrs">Mrs</option>
+              </select>
+              <input type="text" name="passengers[${idx}][name]" class="form-input p-name" placeholder="Full Name" required />
+              <input type="number" name="passengers[${idx}][age]" class="form-input p-age" placeholder="Age" required />
+            </div>
+          `;
+        });
+
+        if (window.innerWidth <= 991) {
+          setTimeout(() => container.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+        }
+      }
+
+      function backToSeatStep(tripId) {
+        document.getElementById(`step2-passenger-view-${tripId}`).style.display = "none";
+        document.getElementById(`step1-fare-view-${tripId}`).style.display = "block";
+      }
+    </script>
   </body>
 </html>
