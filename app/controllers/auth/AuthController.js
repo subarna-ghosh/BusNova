@@ -189,7 +189,7 @@ class AuthController {
   async saveLogin(req, res) {
     try {
       const { email, password } = req.body;
-
+      // Find active user
       const isPresent = await User.findOne({
         email,
         isDeleted: false,
@@ -204,15 +204,24 @@ class AuthController {
         req.session.old = {
           email,
         };
-
         return res.redirect("/web/auth/view/login");
       }
 
+      // Check email verification
       if (!isPresent.isVerified) {
         logger.warn(`Please verify your email first: ${email}`);
+
+        req.session.errors = {
+          login: "Please verify your email first.",
+        };
+
+        req.session.old = {
+          email,
+        };
         return res.redirect("/web/auth/view/login");
       }
 
+      // Check password
       const isMatch = await bcrypt.compare(password, isPresent.password);
       if (!isMatch) {
         logger.warn(`Invalid password for ${email}`);
@@ -224,17 +233,41 @@ class AuthController {
         req.session.old = {
           email,
         };
-
         return res.redirect("/web/auth/view/login");
       }
 
-      const role = await Role.findById(isPresent.roleId);
+      // Find role
+      const role = await Role.findOne({
+        _id: isPresent.roleId,
+        isDeleted: false,
+      });
       if (!role) {
         logger.warn(`Role not found for ${email}`);
+
+        req.session.errors = {
+          login: "Invalid account configuration.",
+        };
+
         return res.redirect("/web/auth/view/login");
       }
 
-      // Access Token
+      // If booking is waiting, only Customer can continue
+      if (req.session.bookingData && role.roleName !== "Customer") {
+        logger.warn(
+          `${email} attempted to continue a booking with ${role.roleName} account`,
+        );
+
+        req.session.errors = {
+          login: "Only a Customer account can continue with a booking.",
+        };
+
+        req.session.old = {
+          email,
+        };
+        return res.redirect("/web/auth/view/login");
+      }
+
+      // Create Access Token
       const accessToken = createAccessToken({
         id: isPresent._id,
         name: isPresent.name,
@@ -242,7 +275,7 @@ class AuthController {
         role: role.roleName,
       });
 
-      // Refresh Token
+      // Create Refresh Token
       const refreshToken = createRefreshToken({
         id: isPresent._id,
         name: isPresent.name,
@@ -250,13 +283,13 @@ class AuthController {
         role: role.roleName,
       });
 
-      // Update User
+      // Update user
       isPresent.lastLoginAt = new Date();
       isPresent.refreshToken = refreshToken;
 
       await isPresent.save();
 
-      // Cookies
+      // Store tokens in cookies
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
@@ -281,6 +314,25 @@ class AuthController {
 
       logger.info(`${role.roleName} Login : ${isPresent.email}`);
 
+      // Booking flow
+      if (req.session.bookingData) {
+        req.session.bookingData.userId = isPresent._id;
+
+        const redirectUrl = req.session.redirectAfterLogin || "/web/customer/view/booking/checkout";
+
+        delete req.session.redirectAfterLogin;
+
+        return req.session.save((error) => {
+          if (error) {
+            logger.error(`Booking Session Save Error: ${error.message}`);
+
+            return res.redirect("/web/auth/view/login");
+          }
+          return res.redirect(redirectUrl);
+        });
+      }
+
+      // Normal role-based login
       const redirectMap = {
         Admin: "/web/admin/view/dashboard",
         "Booking Staff": "/web/staff/view/dashboard",

@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>BusNova — Checkout</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="/assets/css/admin_dashboard.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/assets/css/customer_dashboard.css"
+    />
+  </head>
+  <body>
+    <div
+      class="sidebar-backdrop"
+      id="sidebarBackdrop"
+    ></div>
+
+    <%- include('../layouts/customer_sidebar') %>
+    <div class="admin-main">
+      <%- include('../layouts/customer_navbar') %>
+      <main class="admin-content">
+        <section class="admin-page">
+          <!-- =========================================
+               PAGE HEADER
+          ========================================== -->
+
+          <div class="page-head">
+            <div>
+              <h1>Checkout</h1>
+              <p>
+                Review your trip and complete payment
+                to confirm your booking.
+              </p>
+            </div>
+          </div>
+
+          <!-- =========================================
+               PAYMENT ERROR
+          ========================================== -->
+
+          <% if (paymentError) { %>
+
+            <div
+              class="alert alert-danger d-flex align-items-center gap-2 mb-4"
+            >
+
+              <i class="bi bi-exclamation-triangle-fill"></i>
+
+              <span>
+                <%= paymentError %>
+              </span>
+
+            </div>
+
+          <% } %>
+
+
+          <div class="row g-3">
+
+
+            <!-- =========================================
+                 LEFT COLUMN
+            ========================================== -->
+
+            <div class="col-lg-8">
+
+              <div class="panel">
+
+
+                <!-- =====================================
+                     TRIP DETAILS
+                ====================================== -->
+
+                <div class="panel-head">
+
+                  <h2>
+                    <i class="bi bi-signpost-split me-2 text-brand"></i>
+                    Trip Details
+                  </h2>
+
+                </div>
+
+
+                <!-- ROUTE -->
+
+                <div
+                  class="d-flex flex-wrap justify-content-between align-items-center mb-3"
+                >
+
+                  <div class="route-pill">
+
+                    <span>
+                      <%= trip.originStop?.name || "Origin" %>
+                    </span>
+
+                    <i class="bi bi-arrow-right"></i>
+
+                    <span>
+                      <%= trip.destinationStop?.name || "Destination" %>
+                    </span>
+
+                  </div>
+
+
+                  <span class="text-muted small">
+
+                    <i class="bi bi-calendar2-week me-1"></i>
+
+                    <%= new Date(
+                      trip.departureAt
+                    ).toLocaleDateString(
+                      "en-IN",
+                      {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric"
+                      }
+                    ) %>
+
+                  </span>
+
+                </div>
+
+
+                <!-- BOARDING / DROPOFF -->
+
+                <div class="row g-3">
+
+                  <div class="col-md-6">
+
+                    <label class="text-muted small d-block">
+                      Boarding Point
+                    </label>
+
+                    <strong class="d-block">
+                      <%= bookingData.boardingPoint %>
+                    </strong>
+
+                    <small class="text-muted">
+
+                      Departs:
+
+                      <%= new Date(
+                        trip.departureAt
+                      ).toLocaleTimeString(
+                        "en-IN",
+                        {
+                          hour: "2-digit",
+                          minute: "2-digit"
+                        }
+                      ) %>
+
+                    </small>
+
+                  </div>
+
+
+                  <div class="col-md-6">
+
+                    <label class="text-muted small d-block">
+                      Dropoff Point
+                    </label>
+
+                    <strong class="d-block">
+                      <%= bookingData.dropoffPoint %>
+                    </strong>
+
+                    <small class="text-muted">
+
+                      Arrives:
+
+                      <%= new Date(
+                        trip.arrivalAt
+                      ).toLocaleTimeString(
+                        "en-IN",
+                        {
+                          hour: "2-digit",
+                          minute: "2-digit"
+                        }
+                      ) %>
+
+                    </small>
+
+                  </div>
+
+                </div>
+
+
+                <hr class="my-4" />
+
+
+                <!-- =====================================
+                     PASSENGER DETAILS
+                ====================================== -->
+
+                <div class="panel-head">
+
+                  <h2>
+
+                    <i class="bi bi-people me-2 text-brand"></i>
+
+                    Passenger Details
+
+                  </h2>
+
+                </div>
+
+
+                <div class="table-responsive">
+
+                  <table
+                    class="table admin-table align-middle mb-0"
+                  >
+
+                    <thead>
+
+                      <tr>
+
+                        <th>Seat</th>
+
+                        <th>Name</th>
+
+                        <th>Title / Age</th>
+
+                      </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                      <% if (
+                        bookingData.passengers &&
+                        bookingData.passengers.length
+                      ) { %>
+
+
+                        <% bookingData.passengers.forEach(
+                          (passenger) => {
+                        %>
+
+                          <tr>
+
+                            <td>
+
+                              <span
+                                class="badge badge-muted"
+                              >
+                                <%= passenger.seatNo %>
+                              </span>
+
+                            </td>
+
+
+                            <td>
+
+                              <%= passenger.name %>
+
+                            </td>
+
+
+                            <td>
+
+                              <%= passenger.title %>
+                              /
+                              <%= passenger.age %> Yrs
+
+                            </td>
+
+                          </tr>
+
+                        <% }) %>
+
+
+                      <% } else { %>
+
+                        <tr>
+
+                          <td
+                            colspan="3"
+                            class="text-muted text-center"
+                          >
+                            No passenger details found.
+                          </td>
+
+                        </tr>
+
+                      <% } %>
+
+                    </tbody>
+
+                  </table>
+
+                </div>
+
+
+                <hr class="my-4" />
+
+
+                <!-- =====================================
+                     CONTACT DETAILS
+                ====================================== -->
+
+                <div class="panel-head">
+
+                  <h2>
+
+                    <i
+                      class="bi bi-envelope-paper me-2 text-brand"
+                    ></i>
+
+                    Contact Details
+
+                  </h2>
+
+                </div>
+
+
+                <div class="row g-3">
+
+                  <div class="col-md-6">
+
+                    <span
+                      class="text-muted small d-block"
+                    >
+                      Contact Email
+                    </span>
+
+                    <strong>
+                      <%= bookingData.contactEmail %>
+                    </strong>
+
+                  </div>
+
+
+                  <div class="col-md-6">
+
+                    <span
+                      class="text-muted small d-block"
+                    >
+                      Contact Phone
+                    </span>
+
+                    <strong>
+                      +91 <%= bookingData.contactPhone %>
+                    </strong>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 RIGHT COLUMN
+            ========================================== -->
+
+            <div class="col-lg-4">
+
+              <div class="panel">
+
+                <div class="panel-head">
+
+                  <h2>
+
+                    <i
+                      class="bi bi-receipt me-2 text-brand"
+                    ></i>
+
+                    Payment Summary
+
+                  </h2>
+
+                </div>
+
+
+                <%
+                  const totalAmount =
+                    Number(bookingData.totalAmount || 0);
+
+                  const baseAmount =
+                    Number(
+                      bookingData.baseAmount ||
+                      totalAmount
+                    );
+
+                  const discountAmount =
+                    Number(
+                      bookingData.discountAmount || 0
+                    );
+
+                  const serviceFee =
+                    Math.max(
+                      0,
+                      totalAmount -
+                      baseAmount +
+                      discountAmount
+                    );
+
+                  const seatCount =
+                    bookingData.seats
+                      ? bookingData.seats.length
+                      : 0;
+                %>
+
+
+                <!-- SEAT FARE -->
+
+                <div class="price-row">
+
+                  <span>
+
+                    Seat(s) Fare
+                    (<%= seatCount %>
+                    seat<%= seatCount !== 1 ? "s" : "" %>)
+
+                  </span>
+
+                  <span>
+                    ₹ <%= baseAmount.toFixed(2) %>
+                  </span>
+
+                </div>
+
+
+                <!-- DISCOUNT -->
+
+                <% if (discountAmount > 0) { %>
+
+                  <div class="price-row">
+
+                    <span>
+                      Discount
+                    </span>
+
+                    <span class="text-success">
+
+                      - ₹
+                      <%= discountAmount.toFixed(2) %>
+
+                    </span>
+
+                  </div>
+
+                <% } %>
+
+
+                <!-- SERVICE FEE -->
+
+                <% if (serviceFee > 0) { %>
+
+                  <div class="price-row">
+
+                    <span>
+                      GST &amp; Service Fee
+                    </span>
+
+                    <span>
+                      ₹ <%= serviceFee.toFixed(2) %>
+                    </span>
+
+                  </div>
+
+                <% } %>
+
+
+                <!-- TOTAL -->
+
+                <div class="price-row total">
+
+                  <span>
+                    Total Payable
+                  </span>
+
+                  <span class="text-brand">
+
+                    ₹ <%= totalAmount.toFixed(2) %>
+
+                  </span>
+
+                </div>
+
+
+                <!-- =====================================
+                     PAYMENT BUTTON
+                ====================================== -->
+
+                <div class="mt-4">
+
+
+                  <% if (!paymentData) { %>
+
+                    <form
+                      action="/web/customer/create-order"
+                      method="POST"
+                    >
+
+                      <button
+                        type="submit"
+                        class="btn btn-brand w-100"
+                      >
+
+                        <i
+                          class="bi bi-lock-fill me-2"
+                        ></i>
+
+                        Create Payment Order
+
+                      </button>
+
+                    </form>
+
+
+                  <% } else { %>
+
+
+                    <button
+                      type="button"
+                      class="btn btn-brand w-100"
+                      id="payButton"
+                    >
+
+                      <i
+                        class="bi bi-lock-fill me-2"
+                      ></i>
+
+                      Pay ₹
+                      <%= totalAmount.toFixed(2) %>
+
+                    </button>
+
+
+                  <% } %>
+
+
+                </div>
+
+
+                <!-- SECURITY -->
+
+                <div
+                  class="text-muted small d-flex align-items-center justify-content-center gap-2 mt-3"
+                >
+
+                  <i
+                    class="bi bi-shield-check text-success"
+                  ></i>
+
+                  Secured by Razorpay
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+
+
+    <!-- =========================================
+         RAZORPAY SDK
+    ========================================== -->
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    ></script>
+
+    <script
+      src="/assets/js/customer_dashboard.js"
+    ></script>
+
+
+    <!-- =========================================
+         RAZORPAY
+    ========================================== -->
+
+    <% if (paymentData) { %>
+
+      <script>
+
+        document.addEventListener(
+          "DOMContentLoaded",
+          function () {
+
+            const payButton =
+              document.getElementById("payButton");
+
+            if (!payButton) {
+              return;
+            }
+
+
+            payButton.addEventListener(
+              "click",
+              function () {
+
+                const options = {
+
+                  key:
+                    "<%= razorpayKeyId %>",
+
+
+                  // Razorpay amount = paise
+
+                  amount:
+                    Number(
+                      "<%= Math.round(Number(bookingData.totalAmount) * 100) %>"
+                    ),
+
+
+                  currency: "INR",
+
+                  name: "BusNova",
+
+                  description:
+                    "Bus Ticket Booking",
+
+
+                  order_id:
+                    "<%= paymentData.razorpayOrderId %>",
+
+
+                  handler:
+                    function (response) {
+
+                      const form =
+                        document.createElement(
+                          "form"
+                        );
+
+                      form.method = "POST";
+
+                      form.action =
+                        "/web/customer/payment/verify";
+
+
+                      // ORDER ID
+
+                      const orderInput =
+                        document.createElement(
+                          "input"
+                        );
+
+                      orderInput.type = "hidden";
+
+                      orderInput.name =
+                        "razorpay_order_id";
+
+                      orderInput.value =
+                        response.razorpay_order_id;
+
+
+                      // PAYMENT ID
+
+                      const paymentInput =
+                        document.createElement(
+                          "input"
+                        );
+
+                      paymentInput.type = "hidden";
+
+                      paymentInput.name =
+                        "razorpay_payment_id";
+
+                      paymentInput.value =
+                        response.razorpay_payment_id;
+
+
+                      // SIGNATURE
+
+                      const signatureInput =
+                        document.createElement(
+                          "input"
+                        );
+
+                      signatureInput.type =
+                        "hidden";
+
+                      signatureInput.name =
+                        "razorpay_signature";
+
+                      signatureInput.value =
+                        response.razorpay_signature;
+
+
+                      form.appendChild(
+                        orderInput
+                      );
+
+                      form.appendChild(
+                        paymentInput
+                      );
+
+                      form.appendChild(
+                        signatureInput
+                      );
+
+
+                      document.body.appendChild(
+                        form
+                      );
+
+
+                      form.submit();
+
+                    },
+
+
+                  prefill: {
+
+                    name:
+                      "<%= bookingData.passengers?.[0]?.name || '' %>",
+
+                    email:
+                      "<%= bookingData.contactEmail || '' %>",
+
+                    contact:
+                      "<%= bookingData.contactPhone || '' %>"
+
+                  },
+
+
+                  theme: {
+
+                    color: "#ff9e2c"
+
+                  }
+
+                };
+
+
+                const razorpay =
+                  new Razorpay(options);
+
+
+                razorpay.on(
+                  "payment.failed",
+                  function (response) {
+
+                    console.error(
+                      "Payment failed:",
+                      response.error
+                    );
+
+
+                    window.location.href =
+                      "/web/customer/payment/failed";
+
+                  }
+                );
+
+
+                razorpay.open();
+
+              });
+
+          });
+
+      </script>
+
+    <% } %>
+
+  </body>
+</html>

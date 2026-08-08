@@ -141,6 +141,7 @@
                     data-base-fare="<%= trip.baseFare %>"
                     data-total-seats="<%= trip.bus ? trip.bus.totalSeats : 20 %>"
                     data-bus-layout='<%- JSON.stringify((trip.bus && trip.bus.seatlayoutid) ? trip.bus.seatlayoutid : null) %>'
+                    data-booked-seats='<%- JSON.stringify(trip.bookedSeatNumbers || []) %>'
                     onclick="handleViewSeatsClick(this)">
                     VIEW SEATS
                   </button>
@@ -209,7 +210,7 @@
 
                   <!-- STEP 2: STANDARD FORM SUBMISSION TO BACKEND -->
                   <div id="step2-passenger-view-<%= trip._id %>" style="display: none;">
-                    <form action="/web/booking/initiate" method="POST">
+                    <form action="/web/customer/booking/initiate" method="POST">
                       <input type="hidden" name="tripId" value="<%= trip._id %>" />
                       <input type="hidden" name="seats" id="inputSeats-<%= trip._id %>" />
                       <input type="hidden" name="totalAmount" id="inputTotalAmount-<%= trip._id %>" />
@@ -260,7 +261,7 @@
       const GST_RATE = 0.05;
       const tripStateMap = {};
 
-      function toggleSeatPanel(tripId, baseFare = 0, busLayout = null, defaultSeats = 20) {
+      function toggleSeatPanel(tripId, baseFare = 0, busLayout = null, defaultSeats = 20,bookedSeats = []) {
         const accordion = document.getElementById(`seatAccordion-${tripId}`);
         const isActive = accordion.classList.contains('active');
 
@@ -273,7 +274,8 @@
               selectedSeats: [],
               baseFare: baseFare,
               busLayout: busLayout,
-              defaultSeats: defaultSeats
+              defaultSeats: defaultSeats,
+              bookedSeats: bookedSeats
             };
             renderSeats(tripId);
           }
@@ -285,18 +287,40 @@
       }
 
       function handleViewSeatsClick(btn) {
-        const tripId = btn.getAttribute('data-trip-id');
-        const baseFare = parseFloat(btn.getAttribute('data-base-fare')) || 0;
-        const totalSeats = parseInt(btn.getAttribute('data-total-seats'), 10) || 20;
+        const tripId = btn.getAttribute("data-trip-id");
+
+        const baseFare =
+          parseFloat(btn.getAttribute("data-base-fare")) || 0;
+
+        const totalSeats =
+          parseInt(btn.getAttribute("data-total-seats"), 10) || 20;
 
         let busLayout = null;
+        let bookedSeats = [];
+
         try {
-          busLayout = JSON.parse(btn.getAttribute('data-bus-layout'));
+          busLayout = JSON.parse(
+            btn.getAttribute("data-bus-layout")
+          );
         } catch (err) {
           busLayout = null;
         }
 
-        toggleSeatPanel(tripId, baseFare, busLayout, totalSeats);
+        try {
+          bookedSeats = JSON.parse(
+            btn.getAttribute("data-booked-seats")
+          );
+        } catch (err) {
+          bookedSeats = [];
+        }
+
+        toggleSeatPanel(
+          tripId,
+          baseFare,
+          busLayout,
+          totalSeats,
+          bookedSeats
+        );
       }
 
       function renderSeats(tripId) {
@@ -311,34 +335,74 @@
           deck.style.gap = "8px";
 
           state.busLayout.seats.forEach((seatData) => {
-            const seatEl = document.createElement("div");
-            seatEl.classList.add("seat");
 
-            if (seatData.row && seatData.column) {
-              seatEl.style.gridRow = seatData.row;
-              seatEl.style.gridColumn = seatData.column;
-            }
+          const seatEl = document.createElement("div");
 
-            if (seatData.isAisle || seatData.type === "gap") {
-              seatEl.classList.add("aisle-gap");
-              seatEl.style.pointerEvents = "none";
+          seatEl.classList.add("seat");
+
+          if (seatData.row && seatData.column) {
+            seatEl.style.gridRow = seatData.row;
+            seatEl.style.gridColumn = seatData.column;
+          }
+
+          // -----------------------------------------
+          // Aisle / Gap
+          // -----------------------------------------
+
+          if (seatData.isAisle || seatData.type === "gap") {
+
+            seatEl.classList.add("aisle-gap");
+
+            seatEl.style.pointerEvents = "none";
+
+          } else {
+
+            const seatNumber =
+              seatData.seatNumber || seatData.label;
+
+            seatEl.innerText = seatNumber;
+
+            // -----------------------------------------
+            // Premium / Regular
+            // -----------------------------------------
+
+            if (
+              seatData.isPremium ||
+              seatData.seatType === "sleeper"
+            ) {
+              seatEl.classList.add("premium");
             } else {
-              seatEl.innerText = seatData.seatNumber || seatData.label;
-
-              if (seatData.isPremium || seatData.seatType === "sleeper") {
-                seatEl.classList.add("premium");
-              } else {
-                seatEl.classList.add("available");
-              }
-
-              if (seatData.isBooked) {
-                seatEl.classList.add("booked");
-              } else {
-                seatEl.onclick = () => selectSeat(tripId, seatData.seatNumber || seatData.label, seatEl);
-              }
+              seatEl.classList.add("available");
             }
-            deck.appendChild(seatEl);
-          });
+
+            // -----------------------------------------
+            // CHECK BOOKED STATUS
+            // -----------------------------------------
+
+            const isBooked =
+              state.bookedSeats.includes(seatNumber);
+
+            if (isBooked) {
+
+              seatEl.classList.add("booked");
+
+              // Prevent selecting booked seat
+              seatEl.style.pointerEvents = "none";
+
+            } else {
+
+              seatEl.onclick = () =>
+                selectSeat(
+                  tripId,
+                  seatNumber,
+                  seatEl
+                );
+            }
+          }
+
+          deck.appendChild(seatEl);
+        });
+          
         } else {
           deck.style.display = "grid";
           deck.style.gridTemplateColumns = "repeat(4, minmax(40px, 1fr))";

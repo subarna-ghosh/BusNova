@@ -1,0 +1,258 @@
+/* ============================================================
+   Customer dashboard — extends admin.css design tokens.
+   Load admin.css BEFORE this file; these rules reuse its
+   :root variables (--bn-orange, --bn-ink, --bn-muted, --bn-line, --bn-bg …).
+   ============================================================ */
+
+/* ================= Profile summary card ================= */
+.profile-summary-card {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-avatar {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--bn-orange-soft);
+  color: var(--bn-orange-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Baloo 2", sans-serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+  margin-bottom: 14px;
+}
+
+.profile-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 2px;
+}
+
+.profile-since {
+  color: var(--bn-muted);
+  font-size: 0.82rem;
+  margin: 0 0 14px;
+}
+
+.profile-verify {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+/* ================= Filter pills (booking history) ================= */
+#bookingFilterPills {
+  flex-wrap: wrap;
+}
+
+/* ================= Upcoming trip cards ================= */
+.trip-list-cards li {
+  flex-wrap: wrap;
+  gap: 10px 14px;
+}
+
+.trip-actions {
+  display: flex;
+  gap: 8px;
+  flex: none;
+  margin-left: auto;
+}
+
+@media (max-width: 575.98px) {
+  .trip-list-cards li {
+    align-items: flex-start;
+  }
+  .trip-actions {
+    margin-left: 0;
+    order: 5;
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* ================= Favorite route cards ================= */
+.route-card {
+  position: relative;
+  background: #fff;
+  border: 1px solid var(--bn-line);
+  border-radius: 16px;
+  padding: 20px;
+  height: 100%;
+}
+
+.route-remove-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--bn-orange-dark);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.route-remove-btn:hover {
+  background: var(--bn-orange-soft);
+}
+
+.route-path {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: "Baloo 2", sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding-right: 40px;
+}
+.route-path i {
+  color: var(--bn-muted);
+  font-size: 0.9rem;
+}
+
+.route-meta {
+  color: var(--bn-muted);
+  font-size: 0.82rem;
+  margin-top: 6px;
+}
+
+/* ================= Checkout / payment summary ================= */
+.route-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bn-orange-soft);
+  color: var(--bn-orange-dark);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+.route-pill i {
+  font-size: 0.75rem;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  margin-bottom: 10px;
+  color: var(--bn-ink-soft);
+}
+.price-row.total {
+  border-top: 2px dashed var(--bn-line);
+  padding-top: 12px;
+  margin-top: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--bn-ink);
+}
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--bn-line);
+  gap: 10px;
+}
+.meta-row:last-child {
+  border-bottom: none;
+}
+.meta-row span:first-child {
+  color: var(--bn-muted);
+}
+.meta-row span:last-child {
+  font-weight: 600;
+  text-align: right;
+}
+
+.success-banner {
+  background: #e4f5eb;
+  border: 1px solid #bfe6cf;
+  border-radius: 16px;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+.success-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #1c7a4d;
+  color: #fff;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.success-banner h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 2px;
+}
+.success-banner p {
+  font-size: 0.82rem;
+  color: var(--bn-muted);
+  margin: 0;
+}
+
+/* ================= Saved passenger cards ================= */
+.passenger-card {
+  background: #fff;
+  border: 1px solid var(--bn-line);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 100%;
+}
+
+.passenger-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bn-bg);
+  color: var(--bn-ink-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex: none;
+}
+
+.passenger-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.passenger-name {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.passenger-meta {
+  font-size: 0.78rem;
+  color: var(--bn-muted);
+}
+
+.passenger-actions {
+  display: flex;
+  gap: 6px;
+  flex: none;
+}

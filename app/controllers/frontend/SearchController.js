@@ -13,9 +13,18 @@ class SearchController {
     try {
       const { from, to, departDate } = req.query;
 
-      // 1. Fetch all distinct origin and destination options for the top search bar dropdowns
+      // -----------------------------------------
+      // 1. Fetch origin/destination options
+      // -----------------------------------------
+
       const listDestination = await Trip.aggregate([
-        { $match: { isDeleted: false, status: "scheduled" } },
+        {
+          $match: {
+            isDeleted: false,
+            status: "scheduled",
+          },
+        },
+
         {
           $lookup: {
             from: "routes",
@@ -24,7 +33,9 @@ class SearchController {
             as: "route",
           },
         },
+
         { $unwind: "$route" },
+
         {
           $lookup: {
             from: "stops",
@@ -33,7 +44,9 @@ class SearchController {
             as: "originStop",
           },
         },
+
         { $unwind: "$originStop" },
+
         {
           $lookup: {
             from: "stops",
@@ -42,23 +55,45 @@ class SearchController {
             as: "destinationStop",
           },
         },
+
         { $unwind: "$destinationStop" },
       ]);
 
-      // 2. Build filter matching criteria if user filtered by search parameters
-      const matchCriteria = { isDeleted: false };
+      // -----------------------------------------
+      // 2. Build search filter
+      // -----------------------------------------
+
+      const matchCriteria = {
+        isDeleted: false,
+        status: "scheduled",
+      };
 
       if (departDate) {
         const start = new Date(departDate);
         start.setHours(0, 0, 0, 0);
+
         const end = new Date(departDate);
         end.setHours(23, 59, 59, 999);
-        matchCriteria.departureAt = { $gte: start, $lte: end };
+
+        matchCriteria.departureAt = {
+          $gte: start,
+          $lte: end,
+        };
       }
 
-      // 3. Fetch matching trips with populated Route, Bus, and Stop details
+      // -----------------------------------------
+      // 3. Fetch matching trips
+      // -----------------------------------------
+
       const trips = await Trip.aggregate([
-        { $match: matchCriteria },
+        {
+          $match: matchCriteria,
+        },
+
+        // -----------------------------------------
+        // Trip → Route
+        // -----------------------------------------
+
         {
           $lookup: {
             from: "routes",
@@ -67,7 +102,15 @@ class SearchController {
             as: "route",
           },
         },
-        { $unwind: "$route" },
+
+        {
+          $unwind: "$route",
+        },
+
+        // -----------------------------------------
+        // Trip → Bus
+        // -----------------------------------------
+
         {
           $lookup: {
             from: "buses",
@@ -76,7 +119,15 @@ class SearchController {
             as: "bus",
           },
         },
-        { $unwind: "$bus" },
+
+        {
+          $unwind: "$bus",
+        },
+
+        // -----------------------------------------
+        // Bus → Seat Layout
+        // -----------------------------------------
+
         {
           $lookup: {
             from: "seatlayouts",
@@ -85,12 +136,18 @@ class SearchController {
             as: "bus.seatlayoutid",
           },
         },
+
         {
           $unwind: {
             path: "$bus.seatlayoutid",
             preserveNullAndEmptyArrays: true,
           },
         },
+
+        // -----------------------------------------
+        // Route → Origin Stop
+        // -----------------------------------------
+
         {
           $lookup: {
             from: "stops",
@@ -99,7 +156,15 @@ class SearchController {
             as: "originStop",
           },
         },
-        { $unwind: "$originStop" },
+
+        {
+          $unwind: "$originStop",
+        },
+
+        // -----------------------------------------
+        // Route → Destination Stop
+        // -----------------------------------------
+
         {
           $lookup: {
             from: "stops",
@@ -108,17 +173,110 @@ class SearchController {
             as: "destinationStop",
           },
         },
-        { $unwind: "$destinationStop" },
+
+        {
+          $unwind: "$destinationStop",
+        },
+
+        // -----------------------------------------
+        // Trip → Bookings
+        // -----------------------------------------
+
+        {
+          $lookup: {
+            from: "bookings",
+            let: { tripId: "$_id" },
+
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$tripId", "$$tripId"],
+                  },
+
+                  // Only confirmed bookings
+                  bookingStatus: "confirmed",
+
+                  isDeleted: false,
+                },
+              },
+
+              {
+                $project: {
+                  seatNumbers: 1,
+                },
+              },
+            ],
+
+            as: "bookings",
+          },
+        },
+
+        // -----------------------------------------
+        // Collect all booked seats
+        // -----------------------------------------
+
+        {
+          $addFields: {
+            bookedSeatNumbers: {
+              $reduce: {
+                input: "$bookings",
+                initialValue: [],
+                in: {
+                  $concatArrays: ["$$value", "$$this.seatNumbers"],
+                },
+              },
+            },
+          },
+        },
+
+        // -----------------------------------------
+        // Calculate available seats
+        // -----------------------------------------
+
+        {
+          $addFields: {
+            availableSeats: {
+              $subtract: [
+                "$bus.totalSeats",
+                {
+                  $size: "$bookedSeatNumbers",
+                },
+              ],
+            },
+          },
+        },
+
+        // -----------------------------------------
+        // Remove unnecessary bookings data
+        // -----------------------------------------
+
+        {
+          $project: {
+            bookings: 0,
+          },
+        },
       ]);
+
+      // -----------------------------------------
+      // 4. Render
+      // -----------------------------------------
 
       return res.render("frontend/search_result", {
         destination: listDestination,
-        trips: trips,
-        queryParams: { from, to, departDate },
+        trips,
+        queryParams: {
+          from,
+          to,
+          departDate,
+        },
       });
     } catch (error) {
       console.error("Error in viewSearches:", error);
-      return res.status(500).render("error", { message: "Server Error" });
+
+      return res.status(500).render("error", {
+        message: "Server Error",
+      });
     }
   }
 }

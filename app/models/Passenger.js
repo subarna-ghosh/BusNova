@@ -8,6 +8,11 @@ const passengerSchema = new Schema(
       ref: "Booking",
       required: true,
     },
+    title: {
+      type: String,
+      enum: ["Mr", "Ms", "Mrs"],
+      required: true,
+    },
     name: {
       type: String,
       required: true,
@@ -15,22 +20,11 @@ const passengerSchema = new Schema(
     age: {
       type: Number,
       required: true,
-    },
-    gender: {
-      type: String,
-      enum: ["male", "female", "other"],
-      required: true,
+      min: 1,
     },
     seatNumber: {
       type: String,
       required: true,
-    },
-    idProofType: {
-      type: String,
-      enum: ["aadhaar", "passport", "voter_id", "driving_license"],
-    },
-    idProofNumber: {
-      type: String,
     },
     isDeleted: {
       type: Boolean,
@@ -43,5 +37,5 @@ const passengerSchema = new Schema(
   },
 );
 
-const PassengerModel = mongoose.model("Passenger", passengerSchema);
-module.exports = PassengerModel;
+const Passenger = mongoose.model("Passenger", passengerSchema);
+module.exports = Passenger;

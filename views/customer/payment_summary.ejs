@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  />
+  <title>BusNova — Payment Summary</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="/assets/css/admin_dashboard.css"
+  />
+  <link
+    rel="stylesheet"
+    href="/assets/css/customer_dashboard.css"
+  />
+</head>
+<body>
+  <div
+    class="sidebar-backdrop"
+    id="sidebarBackdrop"
+  ></div>
+  <!-- SIDEBAR -->
+  <%- include('../layouts/customer_sidebar') %>
+  <div class="admin-main">
+    <!-- NAVBAR -->
+    <%- include('../layouts/customer_navbar') %>
+    <main class="admin-content">
+      <section class="admin-page">
+        <!-- =========================================
+             PAGE HEADER
+        ========================================== -->
+
+        <div class="page-head">
+          <div>
+            <h1>
+              Payment Summary
+            </h1>
+            <p>
+              Your booking is confirmed. Below are your
+              booking and payment details.
+            </p>
+          </div>
+        </div>
+
+        <!-- ========================================
+             SUCCESS MESSAGE
+        ========================================== -->
+
+        <div
+          class="alert alert-success d-flex align-items-center gap-3 mb-4 rounded-3 p-3"
+        >
+          <div class="fs-3 lh-1 text-success">
+            <i
+              class="bi bi-check-circle-fill"
+            ></i>
+          </div>
+          <div>
+            <strong class="d-block">
+
+              Booking Confirmed —
+              Payment Received!
+
+            </strong>
+
+            <span class="small text-muted">
+
+              Your bus ticket has been successfully
+              booked.
+
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="row g-3">
+
+
+          <!-- =========================================
+               LEFT COLUMN
+          ========================================== -->
+
+          <div class="col-lg-8">
+
+            <div class="panel">
+
+
+              <!-- =====================================
+                   TRIP DETAILS
+              ====================================== -->
+
+              <div class="panel-head">
+
+                <h2>
+
+                  <i
+                    class="bi bi-signpost-split me-2 text-brand"
+                  ></i>
+
+                  Trip Details
+
+                </h2>
+
+              </div>
+
+
+              <!-- ROUTE -->
+
+              <div
+                class="d-flex flex-wrap justify-content-between align-items-center mb-3"
+              >
+
+                <div class="route-pill">
+
+                  <span>
+
+                    <%= trip.originStop?.name ||
+                        "Origin" %>
+
+                  </span>
+
+
+                  <i
+                    class="bi bi-arrow-right"
+                  ></i>
+
+
+                  <span>
+
+                    <%= trip.destinationStop?.name ||
+                        "Destination" %>
+
+                  </span>
+
+                </div>
+
+
+                <span
+                  class="text-muted small"
+                >
+
+                  <i
+                    class="bi bi-calendar2-week me-1"
+                  ></i>
+
+
+                  <%= new Date(
+                    trip.departureAt
+                  ).toLocaleDateString(
+                    "en-IN",
+                    {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric"
+                    }
+                  ) %>
+
+                </span>
+
+              </div>
+
+
+              <!-- BOARDING / DROPOFF -->
+
+              <div class="row g-3">
+
+
+                <div class="col-md-6">
+
+                  <label
+                    class="text-muted small d-block"
+                  >
+                    Boarding Point
+                  </label>
+
+                  <strong class="d-block">
+
+                    <%= booking.boardingPoint ||
+                        "Selected Boarding Point" %>
+
+                  </strong>
+
+
+                  <small
+                    class="text-muted"
+                  >
+
+                    Departs:
+
+                    <%= new Date(
+                      trip.departureAt
+                    ).toLocaleTimeString(
+                      "en-IN",
+                      {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                      }
+                    ) %>
+
+                  </small>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                  <label
+                    class="text-muted small d-block"
+                  >
+                    Dropoff Point
+                  </label>
+
+                  <strong class="d-block">
+
+                    <%= booking.dropoffPoint ||
+                        "Selected Dropoff Point" %>
+
+                  </strong>
+
+
+                  <small
+                    class="text-muted"
+                  >
+
+                    Arrives:
+
+                    <%= new Date(
+                      trip.arrivalAt
+                    ).toLocaleTimeString(
+                      "en-IN",
+                      {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                      }
+                    ) %>
+
+                  </small>
+
+                </div>
+
+              </div>
+
+
+              <hr class="my-4" />
+
+
+              <!-- =====================================
+                   PASSENGERS
+              ====================================== -->
+
+              <div class="panel-head">
+
+                <h2>
+
+                  <i
+                    class="bi bi-people me-2 text-brand"
+                  ></i>
+
+                  Passenger Details
+
+                </h2>
+
+              </div>
+
+
+              <div class="table-responsive">
+
+                <table
+                  class="table admin-table align-middle mb-0"
+                >
+
+                  <thead>
+
+                    <tr>
+
+                      <th>
+                        Seat
+                      </th>
+
+                      <th>
+                        Name
+                      </th>
+
+                      <th>
+                        Title / Age
+                      </th>
+
+                    </tr>
+
+                  </thead>
+
+
+                  <tbody>
+
+
+                    <% if (
+                      passengers &&
+                      passengers.length
+                    ) { %>
+
+
+                      <% passengers.forEach(
+                        (passenger) => {
+                      %>
+
+                        <tr>
+
+
+                          <td>
+
+                            <span
+                              class="badge badge-muted"
+                            >
+
+                              <%= passenger.seatNumber %>
+
+                            </span>
+
+                          </td>
+
+
+                          <td>
+
+                            <%= passenger.name %>
+
+                          </td>
+
+
+                          <td>
+
+                            <%= passenger.title %>
+                            /
+                            <%= passenger.age %>
+                            Yrs
+
+                          </td>
+
+
+                        </tr>
+
+
+                      <% }) %>
+
+
+                    <% } else { %>
+
+
+                      <tr>
+
+                        <td
+                          colspan="3"
+                          class="text-muted text-center"
+                        >
+
+                          No passenger details
+                          found.
+
+                        </td>
+
+                      </tr>
+
+
+                    <% } %>
+
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+
+              <hr class="my-4" />
+
+
+              <!-- =====================================
+                   CONTACT DETAILS
+              ====================================== -->
+
+              <div class="panel-head">
+
+                <h2>
+
+                  <i
+                    class="bi bi-envelope-paper me-2 text-brand"
+                  ></i>
+
+                  Contact Details
+
+                </h2>
+
+              </div>
+
+
+              <div class="row g-3">
+
+
+                <div class="col-md-6">
+
+                  <span
+                    class="text-muted small d-block"
+                  >
+                    Contact Email
+                  </span>
+
+                  <strong>
+
+                    <%= booking.contactEmail ||
+                        "Not available" %>
+
+                  </strong>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                  <span
+                    class="text-muted small d-block"
+                  >
+                    Contact Phone
+                  </span>
+
+                  <strong>
+
+                    <%= booking.contactPhone ||
+                        "Not available" %>
+
+                  </strong>
+
+                </div>
+
+
+              </div>
+
+
+            </div>
+
+          </div>
+
+
+          <!-- =========================================
+               RIGHT COLUMN
+          ========================================== -->
+
+          <div class="col-lg-4">
+
+            <div class="panel">
+
+
+              <div class="panel-head">
+
+                <h2>
+
+                  <i
+                    class="bi bi-receipt me-2 text-brand"
+                  ></i>
+
+                  Payment Receipt
+
+                </h2>
+
+              </div>
+
+
+              <!-- =====================================
+                   PRICE DETAILS
+              ====================================== -->
+
+              <div class="price-row">
+
+                <span>
+                  Seat(s) Fare
+                </span>
+
+                <span>
+
+                  ₹
+                  <%= Number(
+                    booking.baseAmount
+                  ).toFixed(2) %>
+
+                </span>
+
+              </div>
+
+
+              <% if (
+                Number(booking.discountAmount) > 0
+              ) { %>
+
+
+                <div class="price-row">
+
+                  <span>
+                    Discount
+                  </span>
+
+                  <span class="text-success">
+
+                    - ₹
+                    <%= Number(
+                      booking.discountAmount
+                    ).toFixed(2) %>
+
+                  </span>
+
+                </div>
+
+
+              <% } %>
+
+
+              <!-- TOTAL -->
+
+              <div class="price-row total">
+
+                <span>
+                  Total Paid
+                </span>
+
+                <span class="text-brand">
+
+                  ₹
+                  <%= Number(
+                    booking.totalAmount
+                  ).toFixed(2) %>
+
+                </span>
+
+              </div>
+
+
+              <!-- PAYMENT STATUS -->
+
+              <div class="mt-3 mb-3">
+
+                <span
+                  class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1"
+                >
+
+                  <i
+                    class="bi bi-check-circle-fill me-1"
+                  ></i>
+
+                  Payment Successful
+
+                </span>
+
+              </div>
+
+
+              <!-- =====================================
+                   TRANSACTION DETAILS
+              ====================================== -->
+
+              <div
+                class="border-top pt-3"
+              >
+
+
+                <!-- BOOKING CODE -->
+
+                <div
+                  class="d-flex justify-content-between py-1 small"
+                >
+
+                  <span class="text-muted">
+
+                    Booking ID
+
+                  </span>
+
+                  <strong
+                    class="font-monospace"
+                  >
+
+                    <%= booking.bookingCode %>
+
+                  </strong>
+
+                </div>
+
+
+                <!-- RAZORPAY PAYMENT ID -->
+
+                <div
+                  class="d-flex justify-content-between py-1 small"
+                >
+
+                  <span class="text-muted">
+
+                    Transaction ID
+
+                  </span>
+
+                  <span
+                    class="font-monospace text-break ms-3 text-end"
+                  >
+
+                    <%= payment.razorpayPaymentId %>
+
+                  </span>
+
+                </div>
+
+
+                <!-- PAYMENT METHOD -->
+
+                <div
+                  class="d-flex justify-content-between py-1 small"
+                >
+
+                  <span class="text-muted">
+
+                    Payment Method
+
+                  </span>
+
+                  <strong>
+
+                    Razorpay /
+                    <%= payment.paymentMethod %>
+
+                  </strong>
+
+                </div>
+
+
+                <!-- PAID ON -->
+
+                <div
+                  class="d-flex justify-content-between py-1 small"
+                >
+                  <span class="text-muted">
+                    Paid On
+                  </span>
+                  <span>
+
+                    <%= new Date(
+                      payment.updatedAt
+                    ).toLocaleString(
+                      "en-IN",
+                      {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                      }
+                    ) %>
+
+                  </span>
+                </div>
+              </div>
+
+
+              <!-- =====================================
+                   ACTIONS
+              ====================================== -->
+
+              <div
+                class="d-grid gap-2 mt-4"
+              >
+                <button
+                  type="button"
+                  class="btn btn-brand"
+                  onclick="window.print()"
+                >
+                  <i
+                    class="bi bi-printer me-2"
+                  ></i>
+                  Print E-Ticket
+                </button>
+
+                <a
+                  href="/web/customer/view/upcoming/trip"
+                  class="btn btn-outline-secondary"
+                >
+                  <i
+                    class="bi bi-ticket-perforated me-2"
+                  ></i>
+                  Go to My Trips
+                </a>
+
+              </div>
+
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  ></script>
+
+  <script
+    src="/assets/js/customer_dashboard.js"
+  ></script>
+
+</body>
+
+</html>

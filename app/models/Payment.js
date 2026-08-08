@@ -1,4 +1,3 @@
-// models/Payment.js
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -54,10 +53,6 @@ const paymentSchema = new Schema(
       default: "created",
     },
 
-    // Optional: Full raw response for auditing/debugging
-    rawResponse: {
-      type: Schema.Types.Mixed,
-    },
   },
   {
     versionKey: false,
@@ -65,4 +60,5 @@ const paymentSchema = new Schema(
   },
 );
 
-module.exports = mongoose.model("Payment", paymentSchema);
+const Payment = mongoose.model("Payment", paymentSchema);
+module.exports = Payment;
