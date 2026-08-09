@@ -58,10 +58,16 @@
       <i class="bi bi-person-badge"></i><span>Driver Management</span>
     </a>
     <div class="nav-group-label">Sales</div>
-    <a href="bookings.html" class="nav-link-item">
+    <a
+      href="/web/admin/view/bookings/list"
+      class="nav-link-item <%= currentPath === '/web/admin/view/bookings/list' ? 'active' : '' %>"
+    >
       <i class="bi bi-ticket-perforated"></i><span>Booking Management</span>
     </a>
-    <a href="customers.html" class="nav-link-item">
+    <a
+      href="/web/admin/view/customers/list"
+      class="nav-link-item <%= currentPath === '/web/admin/view/customers/list' ? 'active' : '' %>"
+    >
       <i class="bi bi-people"></i><span>Customer Management</span>
     </a>
     <a

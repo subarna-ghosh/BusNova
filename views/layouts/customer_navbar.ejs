@@ -46,13 +46,20 @@
         data-bs-toggle="dropdown"
         aria-label="Account menu"
       >
-        <span class="avatar-initials">AR</span>
-        <span class="d-none d-md-inline">Ankita Roy</span>
+        <span class="avatar-initials">
+          <%= username
+            .split(" ")
+            .map(word => word.charAt(0))
+            .join("")
+            .toUpperCase()
+          %>
+        </span>
+        <span class="d-none d-md-inline"><%=username%></span>
         <i class="bi bi-chevron-down small"></i>
       </button>
       <ul class="dropdown-menu dropdown-menu-end">
         <li>
-          <a class="dropdown-item" href="profile.html"
+          <a class="dropdown-item" href="/web/customer/view/dashboard"
             ><i class="bi bi-person me-2"></i>My profile</a
           >
         </li>

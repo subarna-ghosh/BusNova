@@ -45,8 +45,15 @@
         data-bs-toggle="dropdown"
         aria-label="Admin menu"
       >
-        <span class="avatar-initials">RA</span>
-        <span class="d-none d-md-inline">Riya Agarwal</span>
+        <span class="avatar-initials">
+          <%= findAdmin.name
+            .split(" ")
+            .map(word => word.charAt(0))
+            .join("")
+            .toUpperCase()
+          %>
+        </span>
+        <span class="d-none d-md-inline"><%=findAdmin.name%></span>
         <i class="bi bi-chevron-down small"></i>
       </button>
       <ul class="dropdown-menu dropdown-menu-end">

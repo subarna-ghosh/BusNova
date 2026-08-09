@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const crypto = require("crypto");
 const Role = require("../../models/Role");
 const User = require("../../models/User");
@@ -12,33 +13,75 @@ const logger = require("../../utils/logger");
 const activityLogger = require("../../helpers/activityLogger");
 const razorpay = require("../../config/razorpay");
 class PaymentController {
-  viewPaymentHistory(req, res) {
-    return res.render("customer/payment_history");
+  async viewPaymentHistory(req, res) {
+    try {
+      const userId = new mongoose.Types.ObjectId(req.user.id);
+      const listPayment = await Payment.aggregate([
+        {
+          $match: {
+            userId: userId,
+          },
+        },
+        {
+          $lookup: {
+            from: "bookings",
+            localField: "bookingId",
+            foreignField: "_id",
+            as: "booking",
+          },
+        },
+        {
+          $unwind: {
+            path: "$booking",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+      ]);
+
+      return res.render("customer/payment_history", {
+        username: req.user.name,
+        listPayment,
+      });
+    } catch (error) {
+      logger.error(`Booking History Error: ${error.message}`);
+    }
   }
 
   async viewPaymentSummary(req, res) {
     try {
-      const summaryData = req.session.paymentSummary;
+      // Get booking ID from URL first,
+      // otherwise get it from session after payment
+      const bookingId =
+        req.params.bookingId || req.session.paymentSummary?.bookingId;
 
-      if (!summaryData || !summaryData.bookingId) {
+      if (!bookingId) {
         return res.redirect("/web/customer/view/upcoming/trip");
       }
 
       const userId = req.user.id;
 
       // -----------------------------------------
+      // User Details
+      // -----------------------------------------
+
+      const user = await User.findOne({
+        _id: userId,
+        isDeleted: false,
+      }).select("name email phone");
+
+      // -----------------------------------------
       // Get confirmed booking
       // -----------------------------------------
 
       const booking = await Booking.findOne({
-        _id: summaryData.bookingId,
+        _id: bookingId,
         userId,
         bookingStatus: "confirmed",
         isDeleted: false,
       });
 
       if (!booking) {
-        logger.warn(`Confirmed booking not found: ${summaryData.bookingId}`);
+        logger.warn(`Confirmed booking not found: ${bookingId}`);
 
         return res.redirect("/web/customer/view/upcoming/trip");
       }
@@ -60,7 +103,7 @@ class PaymentController {
       }
 
       // -----------------------------------------
-      // Get passengers for this booking
+      // Get passengers
       // -----------------------------------------
 
       const passengers = await Passenger.find({
@@ -148,6 +191,8 @@ class PaymentController {
         payment,
         passengers,
         trip,
+        user,
+        username: req.user.name,
       });
     } catch (error) {
       logger.error(`Payment summary error: ${error.message}`);
@@ -157,35 +202,17 @@ class PaymentController {
   }
 
   async createOrder(req, res) {
+    let reservedTripId = null;
+    let reservedSeatNumbers = [];
+
     try {
       const bookingData = req.session.bookingData;
       if (!bookingData) {
         return res.redirect("/web/search/view/result");
       }
 
-      const existingBooking = await Booking.findOne({
-        tripId: bookingData.tripId,
-        seatNumbers: { $in: bookingData.seats },
-        bookingStatus: {
-          $in: ["pending", "confirmed"],
-        },
-        isDeleted: false,
-      });
-
-      if (existingBooking) {
-        return res.redirect("/web/customer/view/booking/checkout");
-      }
-
       // -----------------------------------------
-      // Prevent duplicate order creation
-      // -----------------------------------------
-
-      if (req.session.paymentId) {
-        return res.redirect("/web/customer/view/booking/checkout");
-      }
-
-      // -----------------------------------------
-      // Get logged-in user ID
+      // Get logged-in user
       // -----------------------------------------
 
       const userId = req.user.id;
@@ -195,7 +222,29 @@ class PaymentController {
         return res.redirect("/web/auth/view/login");
       }
 
-      logger.info(`Creating booking for user ${userId}`);
+      // -----------------------------------------
+      // Convert seats into array
+      // -----------------------------------------
+
+      const seatNumbers = Array.isArray(bookingData.seats)
+        ? bookingData.seats
+        : bookingData.seats.split(",").map((seat) => seat.trim());
+
+      if (!seatNumbers.length) {
+        req.session.paymentError = "Please select at least one seat.";
+
+        return req.session.save(() => {
+          return res.redirect("/web/customer/view/booking/checkout");
+        });
+      }
+
+      // -----------------------------------------
+      // Prevent duplicate order creation
+      // -----------------------------------------
+
+      if (req.session.paymentId) {
+        return res.redirect("/web/customer/view/booking/checkout");
+      }
 
       // -----------------------------------------
       // Amount
@@ -210,7 +259,56 @@ class PaymentController {
       }
 
       // -----------------------------------------
-      // 1. Create Razorpay Order
+      // 1. Reserve seats atomically
+      // -----------------------------------------
+
+      const trip = await Trip.findOneAndUpdate(
+        {
+          _id: bookingData.tripId,
+          bookedSeatNumbers: {
+            $nin: seatNumbers,
+          },
+          availableSeats: {
+            $gte: seatNumbers.length,
+          },
+        },
+        {
+          $inc: {
+            availableSeats: -seatNumbers.length,
+          },
+
+          $addToSet: {
+            bookedSeatNumbers: {
+              $each: seatNumbers,
+            },
+          },
+        },
+        {
+          new: true,
+        },
+      );
+
+      if (!trip) {
+        logger.warn(`Seat reservation failed for trip ${bookingData.tripId}`);
+
+        req.session.paymentError =
+          "One or more selected seats are no longer available.";
+
+        return req.session.save(() => {
+          return res.redirect("/web/customer/view/booking/checkout");
+        });
+      }
+
+      // Remember what we reserved.
+      reservedTripId = trip._id;
+      reservedSeatNumbers = seatNumbers;
+
+      logger.info(
+        `Seats reserved: ${seatNumbers.join(", ")} for trip ${trip._id}`,
+      );
+
+      // -----------------------------------------
+      // 2. Create Razorpay Order
       // -----------------------------------------
 
       const razorpayOrder = await razorpay.orders.create({
@@ -222,44 +320,39 @@ class PaymentController {
       logger.info(`Razorpay order created: ${razorpayOrder.id}`);
 
       // -----------------------------------------
-      // 2. Generate Booking Code
+      // 3. Generate Booking Code
       // -----------------------------------------
 
       const bookingCode =
         "BN-" + crypto.randomBytes(3).toString("hex").toUpperCase();
 
       // -----------------------------------------
-      // 3. Create Pending Booking
+      // 4. Create Pending Booking
       // -----------------------------------------
 
       const booking = await Booking.create({
         bookingCode,
-
-        // IMPORTANT
-        // JWT contains "id", not "_id"
         userId,
-
         tripId: bookingData.tripId,
-
-        seatNumbers: Array.isArray(bookingData.seats)
-          ? bookingData.seats
-          : bookingData.seats.split(",").map((seat) => seat.trim()),
-
+        seatNumbers,
         couponId: bookingData.couponId || null,
-
         baseAmount: Number(bookingData.baseAmount || totalAmount),
-
         discountAmount: Number(bookingData.discountAmount || 0),
-
         totalAmount,
-
         bookingStatus: "pending",
       });
 
       logger.info(`Pending booking created: ${booking._id}`);
 
       // -----------------------------------------
-      // 4. Create Passenger Documents
+      // IMPORTANT
+      // Store booking ID for failure cleanup
+      // -----------------------------------------
+
+      req.session.paymentBookingId = booking._id.toString();
+
+      // -----------------------------------------
+      // 5. Create Passenger Documents
       // -----------------------------------------
 
       if (
@@ -268,13 +361,9 @@ class PaymentController {
       ) {
         const passengers = bookingData.passengers.map((passenger) => ({
           bookingId: booking._id,
-
           title: passenger.title,
-
           name: passenger.name,
-
           age: Number(passenger.age),
-
           seatNumber: passenger.seatNo,
         }));
 
@@ -284,27 +373,22 @@ class PaymentController {
       }
 
       // -----------------------------------------
-      // 5. Create Payment
+      // 6. Create Payment
       // -----------------------------------------
 
       const payment = await Payment.create({
         bookingId: booking._id,
-
         userId,
-
         razorpayOrderId: razorpayOrder.id,
-
         amount: totalAmount,
-
         currency: "INR",
-
         status: "created",
       });
 
       logger.info(`Payment record created: ${payment._id}`);
 
       // -----------------------------------------
-      // 6. Attach Payment to Booking
+      // 7. Attach Payment to Booking
       // -----------------------------------------
 
       booking.paymentId = payment._id;
@@ -312,19 +396,15 @@ class PaymentController {
       await booking.save();
 
       // -----------------------------------------
-      // 7. Store payment ID in session
+      // 8. Store Payment ID in Session
       // -----------------------------------------
 
-      req.session.paymentId = payment._id;
-
-      // -----------------------------------------
-      // 8. Clear any old payment error
-      // -----------------------------------------
+      req.session.paymentId = payment._id.toString();
 
       delete req.session.paymentError;
 
       // -----------------------------------------
-      // 9. Save session before redirect
+      // 9. Save Session
       // -----------------------------------------
 
       return req.session.save((error) => {
@@ -338,6 +418,30 @@ class PaymentController {
       });
     } catch (error) {
       logger.error(`Create Razorpay Order Error: ${error.message}`);
+
+      // -----------------------------------------
+      // IMPORTANT:
+      // If seats were already reserved,
+      // release them.
+      // -----------------------------------------
+
+      if (reservedTripId && reservedSeatNumbers.length) {
+        await Trip.findByIdAndUpdate(reservedTripId, {
+          $inc: {
+            availableSeats: reservedSeatNumbers.length,
+          },
+
+          $pull: {
+            bookedSeatNumbers: {
+              $in: reservedSeatNumbers,
+            },
+          },
+        });
+
+        logger.info(
+          `Released reserved seats after createOrder failure: ${reservedSeatNumbers.join(", ")}`,
+        );
+      }
 
       req.session.paymentError =
         "Unable to create the payment order. Please try again.";
@@ -363,20 +467,51 @@ class PaymentController {
         .digest("hex");
 
       if (expectedSignature !== razorpay_signature) {
-        await Payment.findOneAndUpdate(
+        const payment = await Payment.findOneAndUpdate(
           {
             razorpayOrderId: razorpay_order_id,
           },
           {
             status: "failed",
           },
+          {
+            new: true,
+          },
         );
+
+        // Release seats
+        if (payment) {
+          const booking = await Booking.findById(payment.bookingId);
+
+          if (booking && booking.bookingStatus === "pending") {
+            await Trip.findByIdAndUpdate(booking.tripId, {
+              $inc: {
+                availableSeats: booking.seatNumbers.length,
+              },
+
+              $pull: {
+                bookedSeatNumbers: {
+                  $in: booking.seatNumbers,
+                },
+              },
+            });
+
+            booking.bookingStatus = "cancelled";
+
+            await booking.save();
+          }
+        }
 
         logger.warn(
           `Invalid Razorpay signature for order ${razorpay_order_id}`,
         );
 
-        return res.redirect("/web/customer/view/booking/checkout");
+        req.session.paymentError =
+          "Payment verification failed. Please try again.";
+
+        return req.session.save(() => {
+          return res.redirect("/web/customer/payment/failed");
+        });
       }
 
       // -----------------------------------------
@@ -412,6 +547,8 @@ class PaymentController {
           `Payment not found for Razorpay order ${razorpay_order_id}`,
         );
 
+        req.session.paymentError = "Payment record could not be found.";
+
         return res.redirect("/web/customer/payment/failed");
       }
 
@@ -432,6 +569,8 @@ class PaymentController {
       if (!booking) {
         logger.warn(`Booking not found for payment ${payment._id}`);
 
+        req.session.paymentError = "Booking could not be confirmed.";
+
         return res.redirect("/web/customer/payment/failed");
       }
 
@@ -444,19 +583,32 @@ class PaymentController {
       };
 
       // -----------------------------------------
-      // 6. Clear temporary checkout data
+      // IMPORTANT
+      // Remove failure-cleanup session data
+      // -----------------------------------------
+
+      delete req.session.paymentBookingId;
+
+      // -----------------------------------------
+      // 6. Clear checkout data
       // -----------------------------------------
 
       delete req.session.bookingData;
       delete req.session.paymentId;
+      delete req.session.paymentError;
 
       // -----------------------------------------
       // 7. Go to Payment Summary
       // -----------------------------------------
 
-      return res.redirect("/web/customer/view/payment/summary");
+      return req.session.save(() => {
+        return res.redirect("/web/customer/view/payment/summary");
+      });
     } catch (error) {
       logger.error(`Payment verification error: ${error.message}`);
+
+      req.session.paymentError =
+        "Payment verification failed. Please try again.";
 
       return res.redirect("/web/customer/payment/failed");
     }
@@ -468,15 +620,202 @@ class PaymentController {
         req.session.paymentError ||
         "Payment could not be completed. Please try again.";
 
+      const bookingId = req.session.paymentBookingId;
+
+      if (bookingId) {
+        const booking = await Booking.findById(bookingId);
+
+        if (booking && booking.bookingStatus === "pending") {
+          // -----------------------------------------
+          // Release seats
+          // -----------------------------------------
+
+          await Trip.findByIdAndUpdate(booking.tripId, {
+            $inc: {
+              availableSeats: booking.seatNumbers.length,
+            },
+
+            $pull: {
+              bookedSeatNumbers: {
+                $in: booking.seatNumbers,
+              },
+            },
+          });
+
+          // -----------------------------------------
+          // Cancel booking
+          // -----------------------------------------
+
+          booking.bookingStatus = "cancelled";
+
+          await booking.save();
+
+          logger.info(`Seats released for failed booking ${booking._id}`);
+        }
+      }
+
+      // -----------------------------------------
+      // Clear session
+      // -----------------------------------------
+
       delete req.session.paymentError;
+      delete req.session.paymentBookingId;
 
       return res.render("customer/payment_failed", {
         message,
+        username: req.user.name,
       });
     } catch (error) {
       logger.error(`Payment failed page error: ${error.message}`);
 
       return res.redirect("/web/customer/view/booking/checkout");
+    }
+  }
+
+  async viewRefundedPayment(req, res) {
+    try {
+      const { bookingId } = req.params;
+      const userId = req.user.id;
+
+      // -----------------------------------------
+      // 1. Find cancelled booking
+      // -----------------------------------------
+
+      const booking = await Booking.findOne({
+        _id: bookingId,
+        userId,
+        bookingStatus: "cancelled",
+        isDeleted: false,
+      });
+
+      if (!booking) {
+        logger.warn(`Cancelled booking not found: ${bookingId}`);
+
+        return res.redirect("/web/customer/view/payment/history");
+      }
+
+      // -----------------------------------------
+      // 2. Get payment
+      // -----------------------------------------
+
+      const payment = await Payment.findOne({
+        bookingId: booking._id,
+        userId,
+      });
+
+      if (!payment) {
+        logger.warn(`Payment not found for cancelled booking: ${booking._id}`);
+
+        return res.redirect("/web/customer/view/payment/history");
+      }
+
+      // -----------------------------------------
+      // 3. Get user details
+      // -----------------------------------------
+
+      const user = await User.findOne({
+        _id: userId,
+        isDeleted: false,
+      }).select("name email phone");
+
+      // -----------------------------------------
+      // 4. Get trip + route + stops
+      // -----------------------------------------
+
+      const tripResult = await Trip.aggregate([
+        {
+          $match: {
+            _id: booking.tripId,
+          },
+        },
+
+        // Trip → Route
+        {
+          $lookup: {
+            from: "routes",
+            localField: "routeId",
+            foreignField: "_id",
+            as: "route",
+          },
+        },
+
+        {
+          $unwind: {
+            path: "$route",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+
+        // Route → Origin
+        {
+          $lookup: {
+            from: "stops",
+            localField: "route.originStopId",
+            foreignField: "_id",
+            as: "originStop",
+          },
+        },
+
+        {
+          $unwind: {
+            path: "$originStop",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+
+        // Route → Destination
+        {
+          $lookup: {
+            from: "stops",
+            localField: "route.destinationStopId",
+            foreignField: "_id",
+            as: "destinationStop",
+          },
+        },
+
+        {
+          $unwind: {
+            path: "$destinationStop",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+      ]);
+
+      if (!tripResult.length) {
+        logger.warn(`Trip not found: ${booking.tripId}`);
+
+        return res.redirect("/web/customer/view/payment/history");
+      }
+
+      const trip = tripResult[0];
+
+      // -----------------------------------------
+      // 5. Get passengers
+      // -----------------------------------------
+
+      const passengers = await Passenger.find({
+        bookingId: booking._id,
+        isDeleted: false,
+      }).sort({
+        seatNumber: 1,
+      });
+
+      // -----------------------------------------
+      // 6. Render refund page
+      // -----------------------------------------
+
+      return res.render("customer/payment_refunded", {
+        booking,
+        payment,
+        trip,
+        passengers,
+        user,
+        username: req.user.name,
+      });
+    } catch (error) {
+      logger.error(`Refund details page error: ${error.message}`);
+
+      return res.redirect("/web/customer/view/payment/history");
     }
   }
 }

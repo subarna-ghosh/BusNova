@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  />
+  <title>BusNova — Refund Details</title>
+  <!-- Bootstrap -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <!-- Bootstrap Icons -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    rel="stylesheet"
+  />
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+    rel="stylesheet"
+  />
+  <!-- Dashboard CSS -->
+  <link
+    rel="stylesheet"
+    href="/assets/css/admin_dashboard.css"
+  />
+  <link
+    rel="stylesheet"
+    href="/assets/css/customer_dashboard.css"
+  />
+</head>
+<body>
+  <!-- Sidebar Backdrop -->
+  <div
+    class="sidebar-backdrop"
+    id="sidebarBackdrop"
+  ></div>
+  <!-- Sidebar -->
+
+  <%- include('../layouts/customer_sidebar') %>
+  <div class="admin-main">
+
+    <!-- Navbar -->
+    <%- include('../layouts/customer_navbar') %>
+    <main class="admin-content">
+      <section class="admin-page">
+        <!-- =========================================
+             PAGE HEADER
+        ========================================== -->
+
+        <div class="page-head">
+          <div>
+            <h1>
+              Refund Details
+            </h1>
+            <p>
+              Your cancelled booking and refund information.
+            </p>
+          </div>
+        </div>
+
+
+        <!-- =========================================
+             REFUND SUCCESS
+        ========================================== -->
+        <div
+          class="alert alert-success d-flex align-items-center gap-3 mb-4 rounded-3 p-3"
+        >
+          <div class="fs-3 lh-1">
+            <i
+              class="bi bi-check-circle-fill"
+            ></i>
+          </div>
+          <div>
+            <strong class="d-block">
+              Booking Cancelled
+            </strong>
+            <span class="small">
+              Your cancellation has been processed.
+            </span>
+          </div>
+        </div>
+        <div class="row g-3">
+          <!-- =========================================
+               LEFT
+          ========================================== -->
+          <div class="col-lg-8">
+            <div class="panel">
+              <!-- Trip Details -->
+              <div class="panel-head">
+                <h2>
+                  <i
+                    class="bi bi-bus-front me-2 text-brand"
+                  ></i>
+                  Trip Details
+                </h2>
+              </div>
+              <!-- Route -->
+              <div class="mb-3">
+                <div class="route-pill">
+                  <span>
+
+                    <%= trip.originStop?.city ||
+                        trip.originStop?.name ||
+                        "Origin" %>
+
+                  </span>
+
+                  <i class="bi bi-arrow-right"></i>
+
+                  <span>
+
+                    <%= trip.destinationStop?.city ||
+                        trip.destinationStop?.name ||
+                        "Destination" %>
+
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <!-- Date -->
+
+              <div class="row g-3">
+
+                <div class="col-md-6">
+
+                  <span class="text-muted small d-block">
+                    Departure
+                  </span>
+
+                  <strong>
+
+                    <%= new Date(
+                      trip.departureAt
+                    ).toLocaleString(
+                      "en-IN",
+                      {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                      }
+                    ) %>
+
+                  </strong>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                  <span class="text-muted small d-block">
+                    Arrival
+                  </span>
+
+                  <strong>
+
+                    <%= new Date(
+                      trip.arrivalAt
+                    ).toLocaleString(
+                      "en-IN",
+                      {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                      }
+                    ) %>
+
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <hr class="my-4" />
+
+
+              <!-- Booking -->
+
+              <div class="panel-head">
+
+                <h2>
+
+                  <i
+                    class="bi bi-ticket-perforated me-2 text-brand"
+                  ></i>
+
+                  Booking Details
+
+                </h2>
+
+              </div>
+
+
+              <div class="row g-3">
+
+                <div class="col-md-6">
+
+                  <span class="text-muted small d-block">
+                    Booking ID
+                  </span>
+
+                  <strong class="font-monospace">
+                    <%= booking.bookingCode %>
+                  </strong>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                  <span class="text-muted small d-block">
+                    Status
+                  </span>
+
+                  <span class="badge bg-danger">
+                    Cancelled
+                  </span>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                  <span class="text-muted small d-block">
+                    Seats
+                  </span>
+
+                  <strong>
+
+                    <% if (
+                      Array.isArray(
+                        booking.seatNumbers
+                      )
+                    ) { %>
+
+                      <%= booking.seatNumbers.join(", ") %>
+
+                    <% } else { %>
+
+                      N/A
+
+                    <% } %>
+
+                  </strong>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                  <span class="text-muted small d-block">
+                    Booking Amount
+                  </span>
+
+                  <strong>
+                    ₹<%= Number(
+                      booking.totalAmount
+                    ).toFixed(2) %>
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <hr class="my-4" />
+
+
+              <!-- Passenger Details -->
+
+              <div class="panel-head">
+
+                <h2>
+
+                  <i
+                    class="bi bi-people me-2 text-brand"
+                  ></i>
+
+                  Passenger Details
+
+                </h2>
+
+              </div>
+
+
+              <div class="table-responsive">
+
+                <table
+                  class="table admin-table align-middle"
+                >
+
+                  <thead>
+
+                    <tr>
+
+                      <th>
+                        Seat
+                      </th>
+
+                      <th>
+                        Name
+                      </th>
+
+                      <th>
+                        Age
+                      </th>
+
+                    </tr>
+
+                  </thead>
+
+
+                  <tbody>
+
+                    <% if (
+                      passengers &&
+                      passengers.length
+                    ) { %>
+
+
+                      <% passengers.forEach(
+                        (passenger) => {
+                      %>
+
+                        <tr>
+
+                          <td>
+
+                            <span
+                              class="badge badge-muted"
+                            >
+
+                              <%= passenger.seatNumber %>
+
+                            </span>
+
+                          </td>
+
+
+                          <td>
+                            <%= passenger.name %>
+                          </td>
+
+
+                          <td>
+                            <%= passenger.age %> Yrs
+                          </td>
+
+                        </tr>
+
+                      <% }) %>
+
+
+                    <% } else { %>
+
+                      <tr>
+
+                        <td
+                          colspan="3"
+                          class="text-center text-muted"
+                        >
+                          No passenger details found.
+                        </td>
+
+                      </tr>
+
+                    <% } %>
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+
+            </div>
+
+          </div>
+
+
+          <!-- =========================================
+               RIGHT
+          ========================================== -->
+
+          <div class="col-lg-4">
+
+            <div class="panel">
+
+
+              <div class="panel-head">
+
+                <h2>
+
+                  <i
+                    class="bi bi-arrow-counterclockwise me-2 text-brand"
+                  ></i>
+
+                  Refund Details
+
+                </h2>
+
+              </div>
+
+
+              <!-- Refund Amount -->
+
+              <div class="price-row total">
+
+                <span>
+                  Refund Amount
+                </span>
+
+                <span class="text-success">
+
+                  ₹<%= Number(
+                    payment.refundedAmount ||
+                    payment.amount ||
+                    0
+                  ).toFixed(2) %>
+
+                </span>
+
+              </div>
+
+
+              <!-- Refund Status -->
+
+              <div class="mt-3 mb-3">
+
+                <% if (
+                  payment.refundStatus ===
+                  "processed"
+                ) { %>
+
+                  <span
+                    class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1"
+                  >
+
+                    <i
+                      class="bi bi-check-circle-fill me-1"
+                    ></i>
+
+                    Refund Processed
+
+                  </span>
+
+                <% } else if (
+                  payment.refundStatus ===
+                  "pending"
+                ) { %>
+
+                  <span
+                    class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1"
+                  >
+
+                    <i
+                      class="bi bi-clock-fill me-1"
+                    ></i>
+
+                    Refund Pending
+
+                  </span>
+
+                <% } else if (
+                  payment.refundStatus ===
+                  "failed"
+                ) { %>
+
+                  <span
+                    class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1"
+                  >
+
+                    <i
+                      class="bi bi-x-circle-fill me-1"
+                    ></i>
+
+                    Refund Failed
+
+                  </span>
+
+                <% } else { %>
+
+                  <span
+                    class="badge bg-secondary-subtle text-secondary border px-2 py-1"
+                  >
+
+                    Refund Not Available
+
+                  </span>
+
+                <% } %>
+
+              </div>
+
+
+              <hr />
+
+
+              <!-- Transaction -->
+
+              <div
+                class="d-flex justify-content-between py-1 small"
+              >
+
+                <span class="text-muted">
+                  Transaction ID
+                </span>
+
+                <span
+                  class="font-monospace text-break text-end ms-3"
+                >
+
+                  <%= payment.razorpayPaymentId ||
+                      "N/A" %>
+
+                </span>
+
+              </div>
+
+
+              <!-- Refund ID -->
+
+              <div
+                class="d-flex justify-content-between py-1 small"
+              >
+
+                <span class="text-muted">
+                  Refund ID
+                </span>
+
+                <span
+                  class="font-monospace text-break text-end ms-3"
+                >
+
+                  <%= payment.razorpayRefundId ||
+                      "Pending" %>
+
+                </span>
+
+              </div>
+
+
+              <!-- Payment Method -->
+
+              <div
+                class="d-flex justify-content-between py-1 small"
+              >
+
+                <span class="text-muted">
+                  Payment Method
+                </span>
+
+                <strong>
+
+                  <%= payment.paymentMethod ||
+                      "Razorpay" %>
+
+                </strong>
+
+              </div>
+
+
+              <!-- Cancelled On -->
+
+              <div
+                class="d-flex justify-content-between py-1 small"
+              >
+
+                <span class="text-muted">
+                  Cancelled On
+                </span>
+
+                <span>
+
+                  <%= new Date(
+                    booking.updatedAt
+                  ).toLocaleString(
+                    "en-IN",
+                    {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit"
+                    }
+                  ) %>
+
+                </span>
+
+              </div>
+
+
+              <!-- Contact -->
+
+              <div class="border-top mt-3 pt-3">
+
+                <p class="small text-muted mb-0">
+
+                  <i
+                    class="bi bi-info-circle me-1"
+                  ></i>
+
+                  Refunds are returned to the original
+                  payment method. The time taken for the
+                  refund to appear may depend on the
+                  payment method and bank.
+
+                </p>
+              </div>
+
+              <!-- Actions -->
+
+              <div class="d-grid gap-2 mt-4">
+
+                <a
+                  href="/web/customer/view/payment/history"
+                  class="btn btn-outline-secondary"
+                >
+                  <i
+                    class="bi bi-clock-history me-2"
+                  ></i>
+                  Payment History
+                </a>
+                <a
+                  href="/web/customer/view/upcoming/trip"
+                  class="btn btn-brand"
+                >
+                  <i
+                    class="bi bi-ticket-perforated me-2"
+                  ></i>
+                  My Trips
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  ></script>
+  <script
+    src="/assets/js/customer_dashboard.js"
+  ></script>
+</body>
+</html>

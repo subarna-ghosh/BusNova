@@ -8,6 +8,8 @@ const TripController = require("../../controllers/admin/TripController");
 const DriverController = require("../../controllers/admin/DriverController");
 const StopController = require("../../controllers/admin/StopController");
 const CouponController = require("../../controllers/admin/CouponController");
+const CustomerController = require("../../controllers/admin/CustomerController");
+const BookingController = require("../../controllers/admin/BookingController");
 const validateWeb = require("../../middlewares/validateWebMiddleware");
 const webProtect = require("../../middlewares/webProtect");
 const roleCheck = require("../../middlewares/roleCheck");
@@ -181,6 +183,22 @@ Router.post(
   webProtect,
   roleCheck("Admin"),
   CouponController.updateCoupon,
+);
+
+// customer management routes
+Router.get(
+  "/view/customers/list",
+  webProtect,
+  roleCheck("Admin"),
+  CustomerController.viewCustomers,
+);
+
+// booking management routes
+Router.get(
+  "/view/bookings/list",
+  webProtect,
+  roleCheck("Admin"),
+  BookingController.viewBookings,
 );
 
 module.exports = Router;

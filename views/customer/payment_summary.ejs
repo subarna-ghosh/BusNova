@@ -190,7 +190,7 @@
 
                   <strong class="d-block">
 
-                    <%= booking.boardingPoint ||
+                    <%= trip.originStop?.city  ||
                         "Selected Boarding Point" %>
 
                   </strong>
@@ -227,7 +227,7 @@
 
                   <strong class="d-block">
 
-                    <%= booking.dropoffPoint ||
+                    <%= trip.destinationStop?.city ||
                         "Selected Dropoff Point" %>
 
                   </strong>
@@ -420,7 +420,7 @@
 
                   <strong>
 
-                    <%= booking.contactEmail ||
+                    <%= user.email ||
                         "Not available" %>
 
                   </strong>
@@ -438,7 +438,7 @@
 
                   <strong>
 
-                    <%= booking.contactPhone ||
+                    <%= user.phone ||
                         "Not available" %>
 
                   </strong>

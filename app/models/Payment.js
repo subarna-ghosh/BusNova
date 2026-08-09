@@ -52,7 +52,21 @@ const paymentSchema = new Schema(
       enum: ["created", "captured", "failed", "refunded"],
       default: "created",
     },
+    
+    refundId: {
+      type: String,
+      default: null,
+    },
 
+    refundedAmount: {
+      type: Number,
+      default: 0,
+    },
+
+    refundedAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     versionKey: false,

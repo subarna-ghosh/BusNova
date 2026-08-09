@@ -23,6 +23,7 @@ const activityLogSchema = new Schema(
         "Booking",
         "Payment",
         "Coupon",
+        "Customer",
         "Driver",
         "Staff",
         "Notification",

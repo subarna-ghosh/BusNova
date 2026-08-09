@@ -13,29 +13,45 @@
 
   <nav class="sidebar-nav">
     <div class="nav-group-label">Account</div>
-    <a href="/web/customer/view/dashboard" class="nav-link-item active">
+    <a
+      href="/web/customer/view/dashboard"
+      class="nav-link-item <%= currentPath === '/web/customer/view/dashboard' ? 'active' : '' %>"
+    >
       <i class="bi bi-person-circle"></i><span>Customer Profile</span>
     </a>
     <div class="nav-group-label">Trips</div>
-    <a href="/web/customer/view/bookings" class="nav-link-item">
+    <a
+      href="/web/customer/view/bookings"
+      class="nav-link-item <%= currentPath === '/web/customer/view/bookings' ? 'active' : '' %>"
+    >
       <i class="bi bi-clock-history"></i><span>Booking History</span>
     </a>
-    <a href="/web/customer/view/upcoming/trip" class="nav-link-item">
+    <a
+      href="/web/customer/view/upcoming/trip"
+      class="nav-link-item <%= currentPath === '/web/customer/view/upcoming/trip' ? 'active' : '' %>"
+    >
       <i class="bi bi-calendar2-check"></i><span>Upcoming Trips</span>
     </a>
-    <a href="cancelled.html" class="nav-link-item">
+    <a
+      href="/web/customer/view/cancelled/trip"
+      class="nav-link-item <%= currentPath === '/web/customer/view/cancelled/trip' ? 'active' : '' %>"
+    >
       <i class="bi bi-x-circle"></i><span>Cancelled Trips</span>
     </a>
-    <a href="/web/customer/view/payment/history" class="nav-link-item">
+    <a
+      href="/web/customer/view/payment/history"
+      class="nav-link-item <%= currentPath === '/web/customer/view/payment/history' ? 'active' : '' %>"
+    >
       <i class="bi bi-credit-card"></i><span>Payment History</span>
     </a>
     <div class="nav-group-label">Preferences</div>
-    <a href="favorites.html" class="nav-link-item">
+    <a
+      href="/web/customer/view/favourite/routes"
+      class="nav-link-item <%= currentPath === '/web/customer/view/favourite/routes' ? 'active' : '' %>"
+    >
       <i class="bi bi-heart"></i><span>Favorite Routes</span>
     </a>
-    <a href="passengers.html" class="nav-link-item">
-      <i class="bi bi-people"></i><span>Saved Passengers</span>
-    </a>
+
   </nav>
 
   <div class="sidebar-foot">

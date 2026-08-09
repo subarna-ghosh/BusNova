@@ -2,166 +2,138 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1"
+    content="width=device-width,initial-scale=1"
   />
-
-  <title>BusNova — Payment History</title>
-
+  <title>BusNova — Cancelled Trips</title>
   <!-- Bootstrap -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     rel="stylesheet"
   />
-
   <!-- Bootstrap Icons -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
     rel="stylesheet"
   />
-
-  <!-- Fonts -->
+  <!-- Google Fonts -->
   <link
     href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
     rel="stylesheet"
   />
-
   <!-- Dashboard CSS -->
-  <link
-    rel="stylesheet"
-    href="/assets/css/admin_dashboard.css"
-  />
-
-  <link
-    rel="stylesheet"
-    href="/assets/css/customer_dashboard.css"
-  />
+  <link rel="stylesheet" href="/assets/css/admin_dashboard.css"/>
+  <link rel="stylesheet" href="/assets/css/customer_dashboard.css"/>
 </head>
-
 <body>
+  <!-- Sidebar backdrop -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+  <!-- Sidebar -->
 
-  <!-- SIDEBAR -->
   <%- include('../layouts/customer_sidebar') %>
-
   <div class="admin-main">
-
-    <!-- NAVBAR -->
+    <!-- Navbar -->
     <%- include('../layouts/customer_navbar') %>
 
     <main class="admin-content">
-
       <section class="admin-page">
-
         <!-- =========================================
              PAGE HEADER
         ========================================== -->
-
         <div class="page-head">
-
           <div>
-
             <h1>
-              Payment History
+              Cancelled Trips
             </h1>
-
             <p>
-              Every payment and refund tied to your bookings.
+              Trips you've cancelled and their refund status.
             </p>
-
           </div>
-
         </div>
 
-
         <!-- =========================================
-             PAYMENT TABLE
+             CANCELLED TRIPS
         ========================================== -->
 
         <div class="panel">
-
           <div class="table-responsive">
-
             <table class="table admin-table align-middle">
-
               <thead>
-
                 <tr>
-
-                  <th>
-                    Transaction
-                  </th>
-
-                  <th>
-                    Booking
-                  </th>
-
-                  <th>
-                    Date
-                  </th>
-
-                  <th>
-                    Method
-                  </th>
-
-                  <th>
-                    Amount
-                  </th>
-
-                  <th>
-                    Status
-                  </th>
-
-                  <th class="text-center">
-                    Summary
-                  </th>
-
+                  <th>Booking</th>
+                  <th>Route</th>
+                  <th>Travel Date</th>
+                  <th>Cancelled On</th>
+                  <th>Amount</th>
+                  <th>Refund Status</th>
+                  <th class="text-center">Details</th>
                 </tr>
-
               </thead>
-
 
               <tbody>
 
-                <% if (listPayment && listPayment.length > 0) { %>
+                <% if (
+                  cancelledTrips &&
+                  cancelledTrips.length > 0
+                ) { %>
 
-                  <% listPayment.forEach((val) => { %>
+
+                  <% cancelledTrips.forEach((list) => { %>
+
 
                     <tr>
-
                       <!-- =================================
-                           TRANSACTION ID
+                           BOOKING
                       ================================== -->
 
                       <td class="mono">
-
-                        <%= val.razorpayPaymentId || "—" %>
-
+                        <%= list.bookingCode || "—" %>
                       </td>
 
-
                       <!-- =================================
-                           BOOKING CODE
+                           ROUTE
                       ================================== -->
 
-                      <td class="mono">
+                      <td>
+                        <% if (
+                          list.originStop &&
+                          list.destinationStop
+                        ) { %>
 
-                        <%= val.booking?.bookingCode || "—" %>
+                          <%= list.originStop.city ||
+                              list.originStop.name ||
+                              "Origin" %>
 
+                          <i
+                            class="bi bi-arrow-right mx-1"
+                          ></i>
+
+                          <%= list.destinationStop.city ||
+                              list.destinationStop.name ||
+                              "Destination" %>
+
+                        <% } else { %>
+
+                          <span class="text-muted">
+                            Route unavailable
+                          </span>
+                        <% } %>
                       </td>
 
-
                       <!-- =================================
-                           PAYMENT DATE
+                           TRAVEL DATE
                       ================================== -->
 
                       <td>
 
-                        <% if (val.createdAt) { %>
+                        <% if (
+                          list.trip &&
+                          list.trip.departureAt
+                        ) { %>
 
                           <%= new Date(
-                            val.createdAt
+                            list.trip.departureAt
                           ).toLocaleDateString(
                             "en-IN",
                             {
@@ -179,242 +151,177 @@
 
                       </td>
 
-
                       <!-- =================================
-                           PAYMENT METHOD
+                           CANCELLED ON
                       ================================== -->
 
                       <td>
 
-                        <% if (val.paymentMethod) { %>
+                        <% if (list.updatedAt) { %>
 
-                          <span class="text-capitalize">
-
-                            <%= val.paymentMethod %>
-
-                          </span>
-
+                          <%= new Date(
+                            list.updatedAt
+                          ).toLocaleDateString(
+                            "en-IN",
+                            {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric"
+                            }
+                          ) %>
                         <% } else { %>
 
                           —
 
                         <% } %>
-
                       </td>
-
 
                       <!-- =================================
                            AMOUNT
                       ================================== -->
 
                       <td>
-
                         <strong>
-
                           ₹<%= Number(
-                            val.amount || 0
+                          list.totalAmount || 0
                           ).toFixed(2) %>
-
-                        </strong>
-
+                         </strong>
                       </td>
 
-
                       <!-- =================================
-                           PAYMENT STATUS
+                           REFUND STATUS
                       ================================== -->
 
                       <td>
-
-                        <% if (val.status === "captured") { %>
-
-                          <span class="badge badge-success">
-
+                        <% if (
+                          list.payment &&
+                          list.payment.status === "refunded"
+                        ) { %>
+                          <span
+                            class="badge badge-success"
+                          >
                             <i
                               class="bi bi-check-circle me-1"
                             ></i>
-
-                            Captured
-
+                            Refunded
                           </span>
 
+                        <% } else if (
+                          list.payment &&
+                          list.payment.status === "captured"
+                        ) { %>
 
-                        <% } else if (val.status === "failed") { %>
+                          <span
+                            class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle"
+                          >
+                            <i
+                              class="bi bi-clock me-1"
+                            ></i>
+                            Processing
+                          </span>
 
+                        <% } else if (
+                          list.payment &&
+                          list.payment.status === "failed"
+                        ) { %>
                           <span
                             class="badge bg-danger-subtle text-danger border border-danger-subtle"
                           >
-
                             <i
                               class="bi bi-x-circle me-1"
                             ></i>
 
                             Failed
-
                           </span>
 
-
-                        <% } else if (val.status === "refunded") { %>
-
-                          <span
-                            class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle"
-                          >
-
-                            <i
-                              class="bi bi-arrow-counterclockwise me-1"
-                            ></i>
-
-                            Refunded
-
-                          </span>
-
-
-                        <% } else if (val.status === "pending") { %>
-
+                        <% } else { %>
                           <span
                             class="badge bg-secondary-subtle text-secondary border border-secondary-subtle"
                           >
-
                             <i
-                              class="bi bi-clock me-1"
+                              class="bi bi-dash-circle me-1"
                             ></i>
-
-                            Pending
-
+                            Not Available
                           </span>
-
-
-                        <% } else { %>
-
-                          <span class="badge bg-secondary">
-
-                            <%= val.status || "Unknown" %>
-
-                          </span>
-
                         <% } %>
-
                       </td>
 
 
                       <!-- =================================
-                           SUMMARY
+                           DETAILS
                       ================================== -->
 
                       <td class="text-center">
-
                         <% if (
-                          val.status === "captured" &&
-                          val.booking?._id
+                          list.payment &&
+                          list.payment.status === "refunded"
                         ) { %>
-
                           <a
+                            href="/web/customer/payment/refunded/<%= list._id %>"
                             class="icon-btn-sm"
-                            href="/web/customer/view/payment/summary/<%= val.booking._id %>"
-                            aria-label="View payment summary"
-                            title="View payment summary"
-                          >
-
-                            <i class="bi bi-receipt"></i>
-
-                          </a>
-
-                        <% } else if (
-                          val.status === "refunded" &&
-                          val.booking?._id
-                        ) { %>
-
-                          <a
-                            class="icon-btn-sm"
-                            href="/web/customer/payment/refunded/<%= val.booking._id %>"
-                            aria-label="View refund"
                             title="View refund"
+                            aria-label="View refund"
                           >
-
-                            <i class="bi bi-arrow-counterclockwise"></i>
-
+                            <i
+                              class="bi bi-receipt"
+                            ></i>
                           </a>
+
 
                         <% } else { %>
 
                           <span
                             class="text-muted"
-                            title="No receipt available"
+                            title="No refund details available"
                           >
-
-                            <i class="bi bi-dash-lg"></i>
-
+                            <i
+                              class="bi bi-dash-lg"
+                            ></i>
                           </span>
-
                         <% } %>
-
                       </td>
-
                     </tr>
 
                   <% }) %>
 
-
                 <% } else { %>
 
-                  <!-- =================================
-                       NO PAYMENTS
-                  ================================== -->
+
+                  <!-- =====================================
+                       EMPTY STATE
+                  ====================================== -->
 
                   <tr>
-
                     <td
                       colspan="7"
                       class="text-center py-5"
                     >
-
                       <div class="mb-3">
-
                         <i
-                          class="bi bi-receipt-cutoff text-muted"
+                          class="bi bi-calendar-x text-muted"
                           style="font-size: 42px;"
                         ></i>
-
                       </div>
-
                       <h5 class="mb-1">
-                        No payment history
+                        No cancelled trips
                       </h5>
-
                       <p class="text-muted mb-0">
-                        Your payments and refunds will appear here.
+                        Your cancelled trips will appear here.
                       </p>
-
                     </td>
-
                   </tr>
-
                 <% } %>
 
               </tbody>
-
             </table>
-
           </div>
-
         </div>
-
       </section>
-
     </main>
-
   </div>
-
-
   <!-- Bootstrap JS -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-  ></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Customer Dashboard JS -->
-  <script
-    src="/assets/js/customer_dashboard.js"
-  ></script>
-
+  <script src="/assets/js/customer_dashboard.js"></script>
 </body>
 </html>

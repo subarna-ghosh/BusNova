@@ -22,6 +22,29 @@ const bookingValidation = [
     .withMessage("Invalid amount."),
 ];
 
+const updateProfileValidation = [
+  body("name")
+    .optional({ checkFalsy: true })
+    .trim()
+    .notEmpty()
+    .withMessage("Name is required")
+    .isLength({ min: 2, max: 50 })
+    .withMessage("Name must be between 2 and 50 characters"),
+
+  body("phone")
+    .optional({ checkFalsy: true })
+    .trim()
+    .isMobilePhone("en-IN")
+    .withMessage("Please enter a valid phone number"),
+
+  body("email")
+    .optional({ checkFalsy: true })
+    .trim()
+    .isEmail()
+    .withMessage("Please enter a valid email address")
+    .normalizeEmail(),
+];
 module.exports = {
   bookingValidation,
+  updateProfileValidation,
 };
