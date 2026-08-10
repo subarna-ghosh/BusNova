@@ -49,6 +49,7 @@ class DriverController {
     return res.render("admin/dashboard/drivers", {
       findBuses,
       drivers: findDrivers,
+      findAdmin: req.user.name,
     });
   }
 

@@ -13,7 +13,75 @@ const activityLogger = require("../../helpers/activityLogger");
 
 class CustomerController {
   async viewCustomers(req, res) {
-    return res.render("admin/dashboard/customers");
+    try {
+      const customerRole = await Role.findOne({
+        roleName: "Customer",
+      });
+      if (!customerRole) {
+        logger.warn("Customer role not found");
+
+        return res.render("admin/dashboard/customers", {
+          findAdmin: req.user.name,
+          customers: [],
+        });
+      }
+
+      const customers = await User.aggregate([
+        {
+          $match: {
+            roleId: customerRole._id,
+            status: "active",
+            isDeleted: false,
+          },
+        },
+
+        // User -> Bookings
+        {
+          $lookup: {
+            from: "bookings",
+            localField: "_id",
+            foreignField: "userId",
+            as: "bookings",
+          },
+        },
+
+        // Add booking count
+        {
+          $addFields: {
+            bookingCount: {
+              $size: "$bookings",
+            },
+          },
+        },
+
+        // Only return required fields
+        {
+          $project: {
+            name: 1,
+            email: 1,
+            phone: 1,
+            bookingCount: 1,
+            createdAt: 1,
+          },
+        },
+
+        // Latest customers first
+        {
+          $sort: {
+            createdAt: -1,
+          },
+        },
+      ]);
+
+      return res.render("admin/dashboard/customers", {
+        findAdmin: req.user.name,
+        customers,
+      });
+    } catch (error) {
+      logger.error(`View Customers Error: ${error.message}`);
+
+      return res.redirect("/web/admin/view/dashboard");
+    }
   }
 }
 module.exports = new CustomerController();

@@ -10,7 +10,10 @@ const activityLogger = require("../../helpers/activityLogger");
 class StopController {
   async viewStops(req, res) {
     const findStops = await Stop.find({ isDeleted: false });
-    return res.render("admin/dashboard/stop", { stops: findStops });
+    return res.render("admin/dashboard/stop", {
+      stops: findStops,
+      findAdmin: req.user.name,
+    });
   }
 
   async addStop(req, res) {

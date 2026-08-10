@@ -46,14 +46,14 @@
         aria-label="Admin menu"
       >
         <span class="avatar-initials">
-          <%= findAdmin.name
+          <%= findAdmin
             .split(" ")
             .map(word => word.charAt(0))
             .join("")
             .toUpperCase()
           %>
         </span>
-        <span class="d-none d-md-inline"><%=findAdmin.name%></span>
+        <span class="d-none d-md-inline"><%= findAdmin%></span>
         <i class="bi bi-chevron-down small"></i>
       </button>
       <ul class="dropdown-menu dropdown-menu-end">

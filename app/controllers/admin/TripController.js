@@ -151,6 +151,7 @@ class TripController {
       buses: viewBuses,
       drivers: viewDrivers,
       trips: viewTrips,
+      findAdmin: req.user.name,
     });
   }
 

@@ -509,6 +509,18 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
       AOS.init();
+      document.addEventListener("DOMContentLoaded", () => {
+        const travelDate = document.getElementById("travelDate");
+        const today = new Date();
+
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
+
+        const todayDate = `${year}-${month}-${day}`;
+
+        travelDate.min = todayDate;
+      });
     </script>
 
     <!-- <script src="js/script.js"></script> -->

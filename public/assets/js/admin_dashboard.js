@@ -23,142 +23,437 @@ const muted = "#726a5c";
 const gridColor = "rgba(23,19,16,0.08)";
 
 function initCharts() {
-  if (typeof Chart === "undefined") return; // Chart.js only loaded on dashboard.html / reports.html
+  if (typeof Chart === "undefined") return;
 
   Chart.defaults.font.family = "Poppins, sans-serif";
   Chart.defaults.color = muted;
 
-  const revenueCtx = document.getElementById("revenueChart");
-  if (revenueCtx) {
-    new Chart(revenueCtx, {
-      type: "bar",
+  // =========================================
+  // REVENUE / BOOKINGS CHART
+  // =========================================
+
+  const revenueChartElement = document.getElementById("revenueChart");
+  const revenueDataElement = document.getElementById("revenueChartData");
+
+  if (revenueChartElement && revenueDataElement) {
+    let revenueChartData = [];
+
+    // -----------------------------------------
+    // Get data sent from EJS
+    // -----------------------------------------
+
+    try {
+      revenueChartData = JSON.parse(revenueDataElement.dataset.revenue || "[]");
+    } catch (error) {
+      console.error("Error parsing revenue chart data:", error);
+    }
+
+    // -----------------------------------------
+    // Prepare chart data
+    // -----------------------------------------
+
+    const labels = revenueChartData.map((item) => {
+      const date = new Date(item._id);
+
+      return date.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+      });
+    });
+
+    const bookings = revenueChartData.map((item) => item.bookings || 0);
+
+    const capturedAmount = revenueChartData.map(
+      (item) => item.capturedAmount || 0,
+    );
+
+    const refundedAmount = revenueChartData.map(
+      (item) => item.refundedAmount || 0,
+    );
+    const netRevenue = revenueChartData.map((item) => item.netRevenue || 0);
+
+    // -----------------------------------------
+    // Create Chart
+    // -----------------------------------------
+
+    new Chart(revenueChartElement, {
       data: {
-        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        labels: labels,
         datasets: [
+          // Bookings
           {
+            type: "bar",
             label: "Bookings",
-            data: [180, 220, 190, 260, 300, 340, 290],
+            data: bookings,
             backgroundColor: orange,
             borderRadius: 6,
+            yAxisID: "y",
             order: 2,
           },
+
+          // Net Revenue
           {
-            label: "Revenue (₹k)",
-            data: [120, 150, 140, 190, 210, 260, 230],
             type: "line",
+            label: "Net Revenue",
+            data: netRevenue,
             borderColor: ink,
             backgroundColor: ink,
             tension: 0.35,
-            order: 1,
-            yAxisID: "y1",
             pointRadius: 3,
+            pointHoverRadius: 5,
+            yAxisID: "y1",
+            order: 1,
           },
         ],
       },
+
       options: {
         responsive: true,
-        interaction: { mode: "index", intersect: false },
+        maintainAspectRatio: true,
+        interaction: {
+          mode: "index",
+          intersect: false,
+        },
+
         plugins: {
           legend: {
             position: "bottom",
-            labels: { boxWidth: 10, usePointStyle: true },
+
+            labels: {
+              boxWidth: 10,
+              usePointStyle: true,
+            },
+          },
+
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                const index = context.dataIndex;
+
+                if (context.dataset.label === "Bookings") {
+                  return `Bookings: ${bookings[index]}`;
+                }
+
+                if (context.dataset.label === "Net Revenue") {
+                  return `Net Revenue: ₹${Number(
+                    netRevenue[index],
+                  ).toLocaleString("en-IN")}`;
+                }
+              },
+
+              afterBody: function (tooltipItems) {
+                const index = tooltipItems[0].dataIndex;
+
+                return [
+                  `Captured: ₹${Number(capturedAmount[index]).toLocaleString(
+                    "en-IN",
+                  )}`,
+
+                  `Refunded: ₹${Number(refundedAmount[index]).toLocaleString(
+                    "en-IN",
+                  )}`,
+                ];
+              },
+            },
           },
         },
+
         scales: {
-          x: { grid: { display: false } },
-          y: { grid: { color: gridColor }, beginAtZero: true },
+          // -----------------------------------
+          // Bookings axis
+          // -----------------------------------
+
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: gridColor,
+            },
+            title: {
+              display: true,
+              text: "Bookings",
+            },
+          },
+
+          // -----------------------------------
+          // Revenue axis
+          // -----------------------------------
+
           y1: {
             position: "right",
-            grid: { display: false },
             beginAtZero: true,
+            grid: {
+              display: false,
+            },
+            title: {
+              display: true,
+              text: "Revenue (₹)",
+            },
+          },
+
+          x: {
+            grid: {
+              display: false,
+            },
           },
         },
       },
     });
   }
 
+  // =========================================
+  // OCCUPANCY BY ROUTE
+  // =========================================
+
   const occCtx = document.getElementById("occupancyChart");
-  if (occCtx) {
+  const occupancyDataElement = document.getElementById("occupancyChartData");
+
+  if (occCtx && occupancyDataElement) {
+    let occupancyChartData = [];
+
+    // -----------------------------------------
+    // Parse EJS data
+    // -----------------------------------------
+
+    try {
+      occupancyChartData = JSON.parse(
+        occupancyDataElement.dataset.occupancy || "[]",
+      );
+    } catch (error) {
+      console.error("Error parsing occupancy chart data:", error);
+    }
+
+    // -----------------------------------------
+    // Prepare labels
+    // -----------------------------------------
+
+    const labels = occupancyChartData.map((item) => item.route);
+
+    // -----------------------------------------
+    // Prepare occupancy values
+    // -----------------------------------------
+
+    const occupancyValues = occupancyChartData.map(
+      (item) => item.occupancy || 0,
+    );
+
+    // -----------------------------------------
+    // Create doughnut chart
+    // -----------------------------------------
+
     new Chart(occCtx, {
       type: "doughnut",
       data: {
-        labels: ["Kolkata–Digha", "Kolkata–Puri", "B'lore–Hyd", "Others"],
+        labels: labels,
         datasets: [
           {
-            data: [34, 28, 22, 16],
-            backgroundColor: [orange, "#e8850d", ink, "#c9c1ae"],
+            data: occupancyValues,
+            backgroundColor: [orange, "#e8850d", ink, "#c9c1ae", "#8c8372"],
             borderWidth: 0,
           },
         ],
       },
+
       options: {
         responsive: true,
+        cutout: "65%",
         plugins: {
           legend: {
             position: "bottom",
-            labels: { boxWidth: 10, font: { size: 11 } },
+            labels: {
+              boxWidth: 10,
+              font: {
+                size: 11,
+              },
+            },
+          },
+
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                const item = occupancyChartData[context.dataIndex];
+                return [
+                  `${item.route}: ${item.occupancy}%`,
+                  `Booked: ${item.bookedSeats}`,
+                  `Available: ${item.availableSeats}`,
+                ];
+              },
+            },
           },
         },
-        cutout: "65%",
       },
     });
   }
 
-  const repRevCtx = document.getElementById("reportRevenueChart");
-  if (repRevCtx) {
-    new Chart(repRevCtx, {
+  const reportRevenueCtx = document.getElementById("reportRevenueChart");
+  const reportRevenueDataElement = document.getElementById(
+    "reportRevenueChartData",
+  );
+
+  if (reportRevenueCtx && reportRevenueDataElement) {
+    const revenueData = JSON.parse(
+      reportRevenueDataElement.dataset.revenue || "[]",
+    );
+
+    console.log("Monthly Revenue Data:", revenueData);
+
+    const labels = revenueData.map((item) => item.label);
+
+    const revenues = revenueData.map((item) => Number(item.revenue || 0));
+
+    new Chart(reportRevenueCtx, {
       type: "line",
+
       data: {
-        labels: ["Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+        labels: labels,
+
         datasets: [
           {
-            label: "Revenue (₹L)",
-            data: [9.2, 10.4, 11.1, 13.6, 15.2, 18.6],
+            label: "Net Revenue",
+
+            data: revenues,
+
             borderColor: orange,
-            backgroundColor: "rgba(255,158,44,0.15)",
+
+            backgroundColor: "rgba(255, 158, 44, 0.15)",
+
             fill: true,
+
             tension: 0.35,
-            pointRadius: 3,
+
+            pointRadius: 4,
+
+            pointHoverRadius: 6,
           },
         ],
       },
+
       options: {
         responsive: true,
-        plugins: { legend: { display: false } },
+
+        interaction: {
+          mode: "index",
+          intersect: false,
+        },
+
+        plugins: {
+          legend: {
+            display: false,
+          },
+
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                return (
+                  "Net Revenue: ₹" + Number(context.raw).toLocaleString("en-IN")
+                );
+              },
+            },
+          },
+        },
+
         scales: {
-          x: { grid: { display: false } },
-          y: { grid: { color: gridColor }, beginAtZero: true },
+          x: {
+            grid: {
+              display: false,
+            },
+          },
+
+          y: {
+            beginAtZero: true,
+
+            grid: {
+              color: gridColor,
+            },
+
+            ticks: {
+              callback: function (value) {
+                return "₹" + (Number(value) / 100000).toFixed(1) + "L";
+              },
+            },
+          },
         },
       },
     });
   }
 
   const repRouteCtx = document.getElementById("reportRouteChart");
-  if (repRouteCtx) {
+
+  const routeDataElement = document.getElementById("reportRouteChartData");
+
+  if (repRouteCtx && routeDataElement) {
+    const routeData = JSON.parse(routeDataElement.dataset.routes || "[]");
+
+    console.log("Chart Route Data:", routeData);
+
+    const labels = routeData.map((item) => item.route);
+
+    const passengerCounts = routeData.map((item) =>
+      Number(item.passengers || 0),
+    );
+
     new Chart(repRouteCtx, {
       type: "bar",
+
       data: {
-        labels: [
-          "Kolkata–Digha",
-          "Kolkata–Puri",
-          "B'lore–Hyd",
-          "Kolkata–Siliguri",
-        ],
+        labels: labels,
+
         datasets: [
           {
-            data: [420, 360, 280, 190],
-            backgroundColor: [orange, "#e8850d", ink, "#c9c1ae"],
+            label: "Passengers",
+
+            data: passengerCounts,
+
+            backgroundColor: [orange, "#e8850d", ink, "#c9c1ae", "#77716a"],
+
             borderRadius: 6,
           },
         ],
       },
+
       options: {
         indexAxis: "y",
+
         responsive: true,
-        plugins: { legend: { display: false } },
+
+        plugins: {
+          legend: {
+            display: false,
+          },
+
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                const index = context.dataIndex;
+
+                const item = routeData[index];
+
+                return [
+                  `Passengers: ${item.passengers}`,
+                  `Bookings: ${item.bookingCount}`,
+                ];
+              },
+            },
+          },
+        },
+
         scales: {
-          x: { grid: { color: gridColor }, beginAtZero: true },
-          y: { grid: { display: false } },
+          x: {
+            beginAtZero: true,
+
+            grid: {
+              color: gridColor,
+            },
+
+            ticks: {
+              precision: 0,
+            },
+          },
+
+          y: {
+            grid: {
+              display: false,
+            },
+          },
         },
       },
     });

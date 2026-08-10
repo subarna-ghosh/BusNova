@@ -8,7 +8,9 @@ const activityLogger = require("../../helpers/activityLogger");
 
 class SeatController {
   viewSeats(req, res) {
-    return res.render("admin/dashboard/seats");
+    return res.render("admin/dashboard/seats", {
+      findAdmin: req.user.name,
+    });
   }
 
   async saveSeatLayout(req, res) {

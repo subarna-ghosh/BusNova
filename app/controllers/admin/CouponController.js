@@ -9,7 +9,10 @@ const activityLogger = require("../../helpers/activityLogger");
 class CouponController {
   async viewCoupons(req, res) {
     const showCoupons = await Coupon.find({ isDeleted: false });
-    return res.render("admin/dashboard/coupons", { coupons: showCoupons });
+    return res.render("admin/dashboard/coupons", {
+      coupons: showCoupons,
+      findAdmin: req.user.name,
+    });
   }
 
   async createCoupon(req, res) {

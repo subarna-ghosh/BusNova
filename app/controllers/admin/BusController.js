@@ -14,6 +14,7 @@ class BusController {
     return res.render("admin/dashboard/buses", {
       seatLayouts: findSeatLayouts,
       buses: findBuses,
+      findAdmin: req.user.name,
     });
   }
 
@@ -143,7 +144,7 @@ class BusController {
         _id: { $ne: id },
         isDeleted: false,
       });
-      
+
       if (duplicate) {
         logger.warn(
           `Registration Number already exists : ${registrationNumber}`,

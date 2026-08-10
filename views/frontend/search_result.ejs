@@ -488,6 +488,17 @@
         document.getElementById(`step2-passenger-view-${tripId}`).style.display = "none";
         document.getElementById(`step1-fare-view-${tripId}`).style.display = "block";
       }
+
+      // will not allow customer to select yesterday or any date before today
+      document.addEventListener("DOMContentLoaded", () => {
+        const travelDate = document.getElementById("departDate");
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
+        const todayDate = `${year}-${month}-${day}`;
+        travelDate.min = todayDate;
+      });
     </script>
   </body>
 </html>

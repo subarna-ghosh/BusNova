@@ -1,105 +1,837 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>BusNova — Booking Management</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/assets/css/admin_dashboard.css" />
-  </head>
-  <body>
-    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
-    <%- include('../../layouts/admin_sidebar') %>
+<head>
 
-    <div class="admin-main">
-      <%- include('../../layouts/admin_navbar') %>
+  <meta charset="utf-8" />
 
-      <main class="admin-content">
-        <section class="admin-page">
-          <div class="page-head">
-            <div>
-              <h1>Booking Management</h1>
-              <p>Every ticket booked across your routes.</p>
-            </div>
-            <button class="btn btn-outline-brand">
-              <i class="bi bi-download me-1"></i>Export
-            </button>
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  />
+
+  <title>BusNova — Booking Management</title>
+
+
+  <!-- Bootstrap -->
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+
+  <!-- Bootstrap Icons -->
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    rel="stylesheet"
+  />
+
+
+  <!-- Google Fonts -->
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+    rel="stylesheet"
+  />
+
+
+  <!-- Admin CSS -->
+
+  <link
+    rel="stylesheet"
+    href="/assets/css/admin_dashboard.css"
+  />
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================================
+       SIDEBAR BACKDROP
+  ========================================== -->
+
+  <div
+    class="sidebar-backdrop"
+    id="sidebarBackdrop"
+  ></div>
+
+
+  <!-- =========================================
+       SIDEBAR
+  ========================================== -->
+
+  <%- include('../../layouts/admin_sidebar') %>
+
+
+  <!-- =========================================
+       MAIN
+  ========================================== -->
+
+  <div class="admin-main">
+
+
+    <!-- NAVBAR -->
+
+    <%- include('../../layouts/admin_navbar') %>
+
+
+    <!-- =========================================
+         CONTENT
+    ========================================== -->
+
+    <main class="admin-content">
+
+      <section class="admin-page">
+
+
+        <!-- =====================================
+             PAGE HEADER
+        ====================================== -->
+
+        <div class="page-head">
+          <div>
+            <h1>
+              Booking Management
+            </h1>
+            <p>
+              Every ticket booked across your routes.
+            </p>
           </div>
-          <ul class="nav nav-pills bn-pills mb-3">
-            <li class="nav-item">
-              <a class="nav-link active" href="#">All</a>
-            </li>
-            <li class="nav-item"><a class="nav-link" href="#">Confirmed</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Pending</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Cancelled</a></li>
-          </ul>
-          <div class="panel">
-            <div class="table-responsive">
-              <table class="table admin-table align-middle">
-                <thead>
-                  <tr>
-                    <th>Booking</th>
-                    <th>Passenger</th>
-                    <th>Route</th>
-                    <th>Seats</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="mono">#10493</td>
-                    <td>Rajesh Bahera</td>
-                    <td>Kolkata → Digha</td>
-                    <td>2A, 2B</td>
-                    <td>₹1,300</td>
-                    <td><span class="badge badge-success">Confirmed</span></td>
-                  </tr>
-                  <tr>
-                    <td class="mono">#10492</td>
-                    <td>Anwesha Sen</td>
-                    <td>Kolkata → Puri</td>
-                    <td>1C</td>
-                    <td>₹780</td>
-                    <td><span class="badge badge-warning">Pending</span></td>
-                  </tr>
-                  <tr>
-                    <td class="mono">#10491</td>
-                    <td>Manoj Kumar</td>
-                    <td>Bangalore → Hyderabad</td>
-                    <td>4D</td>
-                    <td>₹870</td>
-                    <td><span class="badge badge-success">Confirmed</span></td>
-                  </tr>
-                  <tr>
-                    <td class="mono">#10490</td>
-                    <td>Sneha Roy</td>
-                    <td>Kolkata → Siliguri</td>
-                    <td>3A</td>
-                    <td>₹750</td>
-                    <td><span class="badge badge-danger">Cancelled</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-      </main>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/assets/js/admin_dashboard.js"></script>
-  </body>
+          <a
+            href="/web/admin/bookings/export"
+            class="btn btn-outline-brand"
+          >
+            <i class="bi bi-download me-1"></i>
+            Export CSV
+          </a>
+
+        </div>
+
+
+        <!-- =====================================
+             FILTERS
+        ====================================== -->
+
+        <ul
+          class="nav nav-pills bn-pills mb-3"
+          id="bookingFilterPills"
+        >
+
+          <li class="nav-item">
+
+            <a
+              href="#"
+              class="nav-link active"
+              data-filter="all"
+            >
+              All
+            </a>
+
+          </li>
+
+
+          <li class="nav-item">
+
+            <a
+              href="#"
+              class="nav-link"
+              data-filter="confirmed"
+            >
+              Confirmed
+            </a>
+
+          </li>
+
+
+          <li class="nav-item">
+
+            <a
+              href="#"
+              class="nav-link"
+              data-filter="pending"
+            >
+              Pending
+            </a>
+
+          </li>
+
+
+          <li class="nav-item">
+
+            <a
+              href="#"
+              class="nav-link"
+              data-filter="cancelled"
+            >
+              Cancelled
+            </a>
+
+          </li>
+
+
+          <li class="nav-item">
+
+            <a
+              href="#"
+              class="nav-link"
+              data-filter="completed"
+            >
+              Completed
+            </a>
+
+          </li>
+
+        </ul>
+
+
+        <!-- =====================================
+             TABLE PANEL
+        ====================================== -->
+
+        <div class="panel">
+
+
+          <div class="table-responsive">
+
+            <table
+              class="table admin-table align-middle"
+            >
+
+
+              <!-- =================================
+                   TABLE HEADER
+              ================================== -->
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    Booking
+                  </th>
+
+                  <th>
+                    Customer
+                  </th>
+
+                  <th>
+                    Route
+                  </th>
+
+                  <th>
+                    Travel Date
+                  </th>
+
+                  <th>
+                    Seats
+                  </th>
+
+                  <th>
+                    Amount
+                  </th>
+
+                  <th>
+                    Status
+                  </th>
+
+                </tr>
+
+              </thead>
+
+
+              <!-- =================================
+                   TABLE BODY
+              ================================== -->
+
+              <tbody id="bookingTableBody">
+
+
+                <% if (
+                  findBooking &&
+                  findBooking.length > 0
+                ) { %>
+
+
+                  <!-- =================================
+                       BOOKINGS
+                  ================================== -->
+
+                  <% findBooking.forEach((booking) => { %>
+
+
+                    <tr
+                      class="booking-row"
+                      data-status="<%= booking.bookingStatus %>"
+                    >
+
+
+                      <!-- =============================
+                           BOOKING
+                      ============================== -->
+
+                      <td>
+
+                        <span class="mono">
+
+                          <%= booking.bookingCode || "—" %>
+
+                        </span>
+
+                      </td>
+
+
+                      <!-- =============================
+                           CUSTOMER
+                      ============================== -->
+
+                      <td>
+
+                        <strong>
+
+                          <%= booking.user?.name ||
+                              "Unknown Customer" %>
+
+                        </strong>
+
+
+                        <% if (booking.user?.email) { %>
+
+                          <div>
+
+                            <small class="text-muted">
+
+                              <%= booking.user.email %>
+
+                            </small>
+
+                          </div>
+
+                        <% } %>
+
+                      </td>
+
+
+                      <!-- =============================
+                           ROUTE
+                      ============================== -->
+
+                      <td>
+
+                        <div class="fw-semibold">
+
+                          <%= booking.originStop?.city ||
+                              booking.originStop?.name ||
+                              "Origin" %>
+
+
+                          <i
+                            class="bi bi-arrow-right mx-1"
+                          ></i>
+
+
+                          <%= booking.destinationStop?.city ||
+                              booking.destinationStop?.name ||
+                              "Destination" %>
+
+                        </div>
+
+                      </td>
+
+
+                      <!-- =============================
+                           TRAVEL DATE
+                      ============================== -->
+
+                      <td>
+
+                        <% if (
+                          booking.trip &&
+                          booking.trip.departureAt
+                        ) { %>
+
+
+                          <div>
+
+                            <%= new Date(
+                              booking.trip.departureAt
+                            ).toLocaleDateString(
+                              "en-IN",
+                              {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric"
+                              }
+                            ) %>
+
+                          </div>
+
+
+                          <small class="text-muted">
+
+                            <%= new Date(
+                              booking.trip.departureAt
+                            ).toLocaleTimeString(
+                              "en-IN",
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit"
+                              }
+                            ) %>
+
+                          </small>
+
+
+                        <% } else { %>
+
+                          —
+
+                        <% } %>
+
+                      </td>
+
+
+                      <!-- =============================
+                           SEATS
+                      ============================== -->
+
+                      <td>
+                        <% if (Array.isArray(booking.seatNumbers) && booking.seatNumbers.length > 0 ) { %>
+                          <span class="mono">
+                            <%= booking.seatNumbers.join(", ") %>
+                          </span>
+                        <% } else { %>
+                          —
+                        <% } %>
+                      </td>
+
+
+                      <!-- =============================
+                           AMOUNT
+                      ============================== -->
+
+                      <td>
+
+                        <strong>
+
+                          ₹<%= Number(
+                            booking.totalAmount || 0
+                          ).toFixed(2) %>
+
+                        </strong>
+
+                      </td>
+
+
+                      <!-- =============================
+                           STATUS
+                      ============================== -->
+
+                      <td>
+                        <% if (
+                          booking.bookingStatus ===
+                          "confirmed"
+                        ) { %>
+                          <span
+                            class="badge badge-success"
+                          >
+                            <i
+                              class="bi bi-check-circle me-1"
+                            ></i>
+                            Confirmed
+                          </span>
+                        <% } else if (
+                          booking.bookingStatus ===
+                          "pending"
+                        ) { %>
+                          <span
+                            class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle"
+                          >
+                            <i
+                              class="bi bi-clock me-1"
+                            ></i>
+                            Pending
+                          </span>
+                        <% } else if (
+                          booking.bookingStatus ===
+                          "cancelled"
+                        ) { %>
+                          <span
+                            class="badge bg-danger-subtle text-danger border border-danger-subtle"
+                          >
+                            <i
+                              class="bi bi-x-circle me-1"
+                            ></i>
+                            Cancelled
+                          </span>
+                        <% } else if (
+                          booking.bookingStatus ===
+                          "completed"
+                        ) { %>
+                          <span
+                            class="badge bg-primary-subtle text-primary border border-primary-subtle"
+                          >
+                            <i
+                              class="bi bi-check2-all me-1"
+                            ></i>
+                            Completed
+                          </span>
+                        <% } else { %>
+                          <span
+                            class="badge bg-secondary"
+                          >
+                            <%= booking.bookingStatus ||
+                                "Unknown" %>
+                          </span>
+                        <% } %>
+                      </td>
+                    </tr>
+
+
+                  <% }) %>
+
+
+                <% } else { %>
+
+
+                  <!-- =================================
+                       NO BOOKINGS AT ALL
+                  ================================== -->
+
+                  <tr>
+
+                    <td
+                      colspan="8"
+                      class="text-center py-5"
+                    >
+
+                      <div class="mb-3">
+
+                        <i
+                          class="bi bi-ticket-perforated text-muted"
+                          style="font-size: 42px;"
+                        ></i>
+
+                      </div>
+
+
+                      <h5 class="mb-1">
+
+                        No bookings found
+
+                      </h5>
+
+
+                      <p class="text-muted mb-0">
+
+                        Customer bookings will appear here.
+
+                      </p>
+
+                    </td>
+
+                  </tr>
+
+
+                <% } %>
+
+
+                <!-- =================================
+                     NO FILTER RESULTS
+                ================================== -->
+
+                <tr
+                  id="noFilterResults"
+                  style="display: none;"
+                >
+
+                  <td
+                    colspan="8"
+                    class="text-center py-5"
+                  >
+
+                    <div class="mb-3">
+
+                      <i
+                        id="noFilterIcon"
+                        class="bi bi-inbox text-muted"
+                        style="font-size: 42px;"
+                      ></i>
+
+                    </div>
+
+
+                    <h5
+                      id="noFilterTitle"
+                      class="mb-1"
+                    >
+
+                      No bookings found
+
+                    </h5>
+
+
+                    <p
+                      id="noFilterMessage"
+                      class="text-muted mb-0"
+                    >
+
+                      There are no bookings in this category.
+
+                    </p>
+
+                  </td>
+
+                </tr>
+
+
+              </tbody>
+
+
+            </table>
+
+          </div>
+
+        </div>
+
+
+      </section>
+
+    </main>
+
+
+  </div>
+
+
+  <!-- =========================================
+       BOOTSTRAP JS
+  ========================================== -->
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  ></script>
+
+
+  <!-- ADMIN JS -->
+
+  <script
+    src="/assets/js/admin_dashboard.js"
+  ></script>
+
+
+  <!-- =========================================
+       BOOKING FILTER
+  ========================================== -->
+
+  <script>
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+
+        const filterLinks =
+          document.querySelectorAll(
+            "#bookingFilterPills .nav-link"
+          );
+
+
+        const rows =
+          document.querySelectorAll(
+            ".booking-row"
+          );
+
+
+        const emptyRow =
+          document.getElementById(
+            "noFilterResults"
+          );
+
+
+        const emptyTitle =
+          document.getElementById(
+            "noFilterTitle"
+          );
+
+
+        const emptyMessage =
+          document.getElementById(
+            "noFilterMessage"
+          );
+
+
+        const emptyIcon =
+          document.getElementById(
+            "noFilterIcon"
+          );
+
+
+        // =====================================
+        // Filter function
+        // =====================================
+
+        function filterBookings(filter) {
+
+          let visibleCount = 0;
+
+
+          rows.forEach((row) => {
+
+            const status =
+              row.dataset.status;
+
+
+            if (
+              filter === "all" ||
+              status === filter
+            ) {
+
+              row.style.display = "";
+
+              visibleCount++;
+
+            } else {
+
+              row.style.display = "none";
+
+            }
+
+          });
+
+
+          // ===================================
+          // Show empty state
+          // ===================================
+
+          if (visibleCount === 0) {
+
+            emptyRow.style.display = "";
+
+
+            if (filter === "all") {
+
+              emptyTitle.textContent =
+                "No bookings found";
+
+              emptyMessage.textContent =
+                "There are no bookings available at the moment.";
+
+              emptyIcon.className =
+                "bi bi-ticket-perforated text-muted";
+
+            } else {
+
+              const formattedStatus =
+                filter.charAt(0).toUpperCase() +
+                filter.slice(1);
+
+
+              emptyTitle.textContent =
+                `No ${formattedStatus.toLowerCase()} bookings`;
+
+
+              emptyMessage.textContent =
+                `There are no ${filter} bookings at the moment.`;
+
+
+              if (filter === "pending") {
+
+                emptyIcon.className =
+                  "bi bi-clock-history text-muted";
+
+              } else if (
+                filter === "confirmed"
+              ) {
+
+                emptyIcon.className =
+                  "bi bi-check-circle text-muted";
+
+              } else if (
+                filter === "cancelled"
+              ) {
+
+                emptyIcon.className =
+                  "bi bi-x-circle text-muted";
+
+              } else if (
+                filter === "completed"
+              ) {
+
+                emptyIcon.className =
+                  "bi bi-check2-all text-muted";
+
+              } else {
+
+                emptyIcon.className =
+                  "bi bi-inbox text-muted";
+
+              }
+
+            }
+
+          } else {
+
+            emptyRow.style.display = "none";
+
+          }
+
+        }
+
+
+        // =====================================
+        // Click filters
+        // =====================================
+
+        filterLinks.forEach((link) => {
+
+          link.addEventListener(
+            "click",
+            (event) => {
+
+              event.preventDefault();
+
+
+              // Remove active
+              filterLinks.forEach((item) => {
+
+                item.classList.remove(
+                  "active"
+                );
+
+              });
+
+
+              // Add active
+              link.classList.add("active");
+
+
+              const filter =
+                link.dataset.filter;
+
+
+              filterBookings(filter);
+
+            }
+          );
+
+        });
+
+
+        // =====================================
+        // Initial state
+        // =====================================
+
+        filterBookings("all");
+
+      }
+    );
+
+  </script>
+
+
+</body>
+
 </html>

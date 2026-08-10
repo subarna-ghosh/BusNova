@@ -63,6 +63,7 @@ class RouteController {
       return res.render("admin/dashboard/routes", {
         stops: showStops,
         routes: showRoutes,
+        findAdmin: req.user.name,
       });
     } catch (error) {
       console.error("Error fetching routes:", error);
