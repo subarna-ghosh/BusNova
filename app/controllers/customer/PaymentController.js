@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto");
+const socket = require("../../config/socket");
 const Role = require("../../models/Role");
 const User = require("../../models/User");
 const Booking = require("../../models/Booking");
@@ -9,9 +10,11 @@ const Stop = require("../../models/Stop");
 const Payment = require("../../models/Payment");
 const Coupon = require("../../models/Coupon");
 const Passenger = require("../../models/Passenger");
+const Notification = require("../../models/Notification");
 const logger = require("../../utils/logger");
 const activityLogger = require("../../helpers/activityLogger");
 const razorpay = require("../../config/razorpay");
+const createAdminNotification = require("../../utils/adminNotification");
 class PaymentController {
   async viewPaymentHistory(req, res) {
     try {
@@ -37,10 +40,23 @@ class PaymentController {
           },
         },
       ]);
+      const notifications = await Notification.find({
+        isDeleted: false,
+        status: "sent",
+        $or: [
+          { audience: "all" },
+          { audience: "Customer" },
+          { audience: "specific_user", userId: req.user.id },
+        ],
+      })
+        .sort({ sentAt: -1 })
+        .limit(10)
+        .lean();
 
       return res.render("customer/payment_history", {
         username: req.user.name,
         listPayment,
+        notifications,
       });
     } catch (error) {
       logger.error(`Booking History Error: ${error.message}`);
@@ -182,6 +198,20 @@ class PaymentController {
 
       const trip = tripResult[0];
 
+      // notification
+      const notifications = await Notification.find({
+        isDeleted: false,
+        status: "sent",
+        $or: [
+          { audience: "all" },
+          { audience: "Customer" },
+          { audience: "specific_user", userId: req.user.id },
+        ],
+      })
+        .sort({ sentAt: -1 })
+        .limit(10)
+        .lean();
+
       // -----------------------------------------
       // Render payment summary
       // -----------------------------------------
@@ -193,6 +223,7 @@ class PaymentController {
         trip,
         user,
         username: req.user.name,
+        notifications,
       });
     } catch (error) {
       logger.error(`Payment summary error: ${error.message}`);
@@ -227,8 +258,11 @@ class PaymentController {
       // -----------------------------------------
 
       const seatNumbers = Array.isArray(bookingData.seats)
-        ? bookingData.seats
-        : bookingData.seats.split(",").map((seat) => seat.trim());
+        ? bookingData.seats.map((seat) => String(seat).trim())
+        : String(bookingData.seats)
+            .split(",")
+            .map((seat) => seat.trim())
+            .filter(Boolean);
 
       if (!seatNumbers.length) {
         req.session.paymentError = "Please select at least one seat.";
@@ -342,7 +376,13 @@ class PaymentController {
         bookingStatus: "pending",
       });
 
-      logger.info(`Pending booking created: ${booking._id}`);
+      // notify admin
+      await createAdminNotification({
+        title: "New Booking",
+        message: `New booking ${booking.bookingCode} has been created.`,
+        type: "booking",
+        referenceId: booking._id,
+      });
 
       // -----------------------------------------
       // IMPORTANT
@@ -566,6 +606,14 @@ class PaymentController {
         },
       );
 
+      // notify admin
+      await createAdminNotification({
+        title: "Payment Successful",
+        message: `Payment received for booking ${booking.bookingCode}.`,
+        type: "payment",
+        referenceId: payment._id,
+      });
+
       if (!booking) {
         logger.warn(`Booking not found for payment ${payment._id}`);
 
@@ -661,9 +709,23 @@ class PaymentController {
       delete req.session.paymentError;
       delete req.session.paymentBookingId;
 
+      const notifications = await Notification.find({
+        isDeleted: false,
+        status: "sent",
+        $or: [
+          { audience: "all" },
+          { audience: "Customer" },
+          { audience: "specific_user", userId: req.user.id },
+        ],
+      })
+        .sort({ sentAt: -1 })
+        .limit(10)
+        .lean();
+
       return res.render("customer/payment_failed", {
         message,
         username: req.user.name,
+        notifications,
       });
     } catch (error) {
       logger.error(`Payment failed page error: ${error.message}`);
@@ -800,6 +862,18 @@ class PaymentController {
         seatNumber: 1,
       });
 
+      const notifications = await Notification.find({
+        isDeleted: false,
+        status: "sent",
+        $or: [
+          { audience: "all" },
+          { audience: "Customer" },
+          { audience: "specific_user", userId: req.user.id },
+        ],
+      })
+        .sort({ sentAt: -1 })
+        .limit(10)
+        .lean();
       // -----------------------------------------
       // 6. Render refund page
       // -----------------------------------------
@@ -811,6 +885,7 @@ class PaymentController {
         passengers,
         user,
         username: req.user.name,
+        notifications,
       });
     } catch (error) {
       logger.error(`Refund details page error: ${error.message}`);

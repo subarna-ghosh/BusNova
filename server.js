@@ -1,14 +1,16 @@
 require("dotenv").config();
 const express = require("express");
+const http = require("http");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const cors = require("cors");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const path = require("path");
-const views = require("views");
 const ejs = require("ejs");
 const db = require("./app/config/db");
+const logger = require("./app/utils/logger");
+const socket = require("./app/config/socket");
 const app = express();
 db();
 
@@ -69,6 +71,10 @@ app.use(api);
 // Server
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  console.log(`server is running on port --> http://localhost:${port}`);
+const server = http.createServer(app);
+
+socket.initSocket(server);
+
+server.listen(port, () => {
+  logger.info(`server is running on port --> http://localhost:${port}`);
 });

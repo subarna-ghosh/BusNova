@@ -19,13 +19,6 @@ class SearchController {
 
       const listDestination = await Trip.aggregate([
         {
-          $match: {
-            isDeleted: false,
-            status: "scheduled",
-          },
-        },
-
-        {
           $lookup: {
             from: "routes",
             localField: "routeId",
@@ -33,9 +26,7 @@ class SearchController {
             as: "route",
           },
         },
-
         { $unwind: "$route" },
-
         {
           $lookup: {
             from: "stops",
@@ -44,9 +35,7 @@ class SearchController {
             as: "originStop",
           },
         },
-
         { $unwind: "$originStop" },
-
         {
           $lookup: {
             from: "stops",
@@ -55,8 +44,17 @@ class SearchController {
             as: "destinationStop",
           },
         },
-
         { $unwind: "$destinationStop" },
+        {
+          $group: {
+            _id: {
+              origin: "$route.originStopId",
+              destination: "$route.destinationStopId",
+            },
+            originStop: { $first: "$originStop" },
+            destinationStop: { $first: "$destinationStop" },
+          },
+        },
       ]);
 
       // -----------------------------------------

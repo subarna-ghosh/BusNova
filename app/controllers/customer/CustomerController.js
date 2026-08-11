@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Role = require("../../models/Role");
 const User = require("../../models/User");
 const Booking = require("../../models/Booking");
+const Notification = require("../../models/Notification");
 const Trip = require("../../models/Trip");
 const Route = require("../../models/Route");
 const Stop = require("../../models/Stop");
@@ -208,17 +209,33 @@ class CustomerController {
       const seatsBooked =
         totalSeatsBooked.length > 0 ? totalSeatsBooked[0].total : 0;
 
+      // save notification
+      const notifications = await Notification.find({
+        isDeleted: false,
+        status: "sent",
+        $or: [
+          { audience: "all" },
+          { audience: "Customer" },
+          { audience: "specific_user", userId: userId },
+        ],
+      })
+        .sort({ sentAt: -1 })
+        .limit(10)
+        .lean();
+
       // -----------------------------------------
       // RENDER DASHBOARD
       // -----------------------------------------
 
       return res.render("customer/customer_dashboard", {
         findUser,
-        username: findUser.name,
         totalTrips,
         upcomingTripCount,
         favoriteRouteCount,
         seatsBooked,
+        username: findUser.name,
+        currentUserId: req.user.id,
+        notifications,
       });
     } catch (error) {
       logger.error(`Customer Dashboard Error: ${error.message}`);

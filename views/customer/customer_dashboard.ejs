@@ -347,10 +347,75 @@
       </main>
     </div>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="/assets/js/customer_dashboard.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const notificationMenu =
+          document.getElementById("notificationMenu");
+
+        const notificationDot =
+          document.getElementById("notificationDot");
+
+        const socket = io();
+
+        socket.on("connect", () => {
+          console.log("Customer socket connected:", socket.id);
+
+          socket.emit("joinUserRoom", "<%= currentUserId %>");
+
+          socket.emit("joinRoleRoom", "Customer");
+        });
+
+        socket.on("newNotification", (notification) => {
+          console.log("New notification:", notification);
+
+          addNotification(notification);
+
+          if (notificationDot) {
+            notificationDot.style.display = "block";
+          }
+        });
+
+        function addNotification(notification) {
+
+          // Remove "No new notifications"
+          const noNotification =
+            document.getElementById("noNotificationItem");
+
+          if (noNotification) {
+            noNotification.remove();
+          }
+
+          const item = document.createElement("li");
+
+          item.className = "notif-item";
+
+          item.innerHTML = `
+            <i class="bi bi-bell text-brand"></i>
+
+            <div>
+              <strong>${escapeHtml(notification.title)}</strong>
+
+              <span>${escapeHtml(notification.message)}</span>
+            </div>
+          `;
+
+         notificationMenu.prepend(item);
+        }
+
+        function escapeHtml(value) {
+          const div = document.createElement("div");
+
+          div.textContent = value;
+
+          return div.innerHTML;
+        }
+      });
+    </script>
+
     <script>
       document.addEventListener("DOMContentLoaded", () => {
 

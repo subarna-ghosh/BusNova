@@ -139,6 +139,7 @@
                     class="btn-view-seats"
                     data-trip-id="<%= trip._id %>"
                     data-base-fare="<%= trip.baseFare %>"
+                    data-premium-fare="<%= trip.premiumFare %>"              
                     data-total-seats="<%= trip.bus ? trip.bus.totalSeats : 20 %>"
                     data-bus-layout='<%- JSON.stringify((trip.bus && trip.bus.seatlayoutid) ? trip.bus.seatlayoutid : null) %>'
                     data-booked-seats='<%- JSON.stringify(trip.bookedSeatNumbers || []) %>'
@@ -265,7 +266,7 @@
       const GST_RATE = 0.05;
       const tripStateMap = {};
 
-      function toggleSeatPanel(tripId, baseFare = 0, busLayout = null, defaultSeats = 20,bookedSeats = []) {
+      function toggleSeatPanel(tripId, baseFare = 0,premiumFare = 0, busLayout = null, defaultSeats = 20,bookedSeats = []) {
         const accordion = document.getElementById(`seatAccordion-${tripId}`);
         const isActive = accordion.classList.contains('active');
 
@@ -277,6 +278,7 @@
             tripStateMap[tripId] = {
               selectedSeats: [],
               baseFare: baseFare,
+              premiumFare: premiumFare,
               busLayout: busLayout,
               defaultSeats: defaultSeats,
               bookedSeats: bookedSeats
@@ -293,11 +295,11 @@
       function handleViewSeatsClick(btn) {
         const tripId = btn.getAttribute("data-trip-id");
 
-        const baseFare =
-          parseFloat(btn.getAttribute("data-base-fare")) || 0;
+        const baseFare = parseFloat(btn.getAttribute("data-base-fare")) || 0;
 
-        const totalSeats =
-          parseInt(btn.getAttribute("data-total-seats"), 10) || 20;
+        const premiumFare = parseFloat(btn.getAttribute("data-premium-fare")) || 0;
+
+        const totalSeats = parseInt(btn.getAttribute("data-total-seats"), 10) || 20;
 
         let busLayout = null;
         let bookedSeats = [];
@@ -319,8 +321,9 @@
         }
 
         toggleSeatPanel(
-          tripId,
+         tripId,
           baseFare,
+          premiumFare,
           busLayout,
           totalSeats,
           bookedSeats
@@ -345,9 +348,9 @@
           seatEl.classList.add("seat");
 
           if (seatData.row && seatData.column) {
-            seatEl.style.gridRow = seatData.row;
+                  seatEl.style.gridRow = seatData.row;
             seatEl.style.gridColumn = seatData.column;
-          }
+           }
 
           // -----------------------------------------
           // Aisle / Gap
@@ -356,7 +359,6 @@
           if (seatData.isAisle || seatData.type === "gap") {
 
             seatEl.classList.add("aisle-gap");
-
             seatEl.style.pointerEvents = "none";
 
           } else {
@@ -367,20 +369,7 @@
             seatEl.innerText = seatNumber;
 
             // -----------------------------------------
-            // Premium / Regular
-            // -----------------------------------------
-
-            if (
-              seatData.isPremium ||
-              seatData.seatType === "sleeper"
-            ) {
-              seatEl.classList.add("premium");
-            } else {
-              seatEl.classList.add("available");
-            }
-
-            // -----------------------------------------
-            // CHECK BOOKED STATUS
+            // CHECK BOOKED STATUS FIRST
             // -----------------------------------------
 
             const isBooked =
@@ -388,12 +377,35 @@
 
             if (isBooked) {
 
+              // Booked always wins over premium
+              seatEl.classList.remove(
+                "premium",
+                "available",
+                "selected"
+              );
+
               seatEl.classList.add("booked");
 
-              // Prevent selecting booked seat
               seatEl.style.pointerEvents = "none";
 
             } else {
+
+              // -----------------------------------------
+              // PREMIUM / REGULAR
+              // -----------------------------------------
+
+              if (
+                seatData.isPremium ||
+                seatData.seatType === "sleeper"
+              ) {
+              seatEl.classList.add("premium");
+              } else {
+              seatEl.classList.add("available");
+              }
+
+              // -----------------------------------------
+              // SELECT SEAT
+              // -----------------------------------------
 
               seatEl.onclick = () =>
                 selectSeat(
@@ -406,6 +418,7 @@
 
           deck.appendChild(seatEl);
         });
+              
           
         } else {
           deck.style.display = "grid";
@@ -435,25 +448,82 @@
       }
 
       function updateBilling(tripId) {
-        const state = tripStateMap[tripId];
-        const count = state.selectedSeats.length;
-        const totalBase = count * state.baseFare;
-        const gst = totalBase * GST_RATE;
-        const total = totalBase + gst;
+  const state = tripStateMap[tripId];
 
-        document.getElementById(`lblSeats-${tripId}`).innerText = count > 0 ? state.selectedSeats.join(", ") : "-";
-        document.getElementById(`lblBaseFare-${tripId}`).innerText = totalBase.toFixed(2);
-        document.getElementById(`lblGst-${tripId}`).innerText = gst.toFixed(2);
-        document.getElementById(`lblTotal-${tripId}`).innerText = total.toFixed(2);
-        document.getElementById(`btnPayAmount-${tripId}`).innerText = `₹${total.toFixed(2)}`;
-        document.getElementById(`btnContinue-${tripId}`).disabled = count === 0;
+  let ticketFare = 0;
 
-        // Populate hidden form inputs for step 2 submission
-        document.getElementById(`inputSeats-${tripId}`).value = state.selectedSeats.join(",");
-        document.getElementById(`inputTotalAmount-${tripId}`).value = total.toFixed(2);
-        document.getElementById(`inputBoarding-${tripId}`).value = document.getElementById(`boardingPoint-${tripId}`).value;
-        document.getElementById(`inputDropoff-${tripId}`).value = document.getElementById(`dropoffPoint-${tripId}`).value;
-      }
+  state.selectedSeats.forEach((seatId) => {
+    const seatData = state.busLayout?.seats?.find(
+      (seat) => (seat.seatNumber || seat.label) === seatId
+    );
+
+    if (seatData && seatData.isPremium) {
+      ticketFare += state.premiumFare;
+    } else {
+      ticketFare += state.baseFare;
+    }
+  });
+
+  const gst = ticketFare * GST_RATE;
+  const total = ticketFare + gst;
+
+  document.getElementById(
+    `lblSeats-${tripId}`
+  ).innerText =
+    state.selectedSeats.length > 0
+      ? state.selectedSeats.join(", ")
+      : "-";
+
+  document.getElementById(
+    `lblBaseFare-${tripId}`
+  ).innerText =
+    ticketFare.toFixed(2);
+
+  document.getElementById(
+    `lblGst-${tripId}`
+  ).innerText =
+    gst.toFixed(2);
+
+  document.getElementById(
+    `lblTotal-${tripId}`
+  ).innerText =
+    total.toFixed(2);
+
+  document.getElementById(
+    `btnPayAmount-${tripId}`
+  ).innerText =
+    `₹${total.toFixed(2)}`;
+
+  document.getElementById(
+    `btnContinue-${tripId}`
+  ).disabled =
+    state.selectedSeats.length === 0;
+
+  // Hidden form values
+  document.getElementById(
+    `inputSeats-${tripId}`
+  ).value =
+    state.selectedSeats.join(",");
+
+  document.getElementById(
+    `inputTotalAmount-${tripId}`
+  ).value =
+    total.toFixed(2);
+
+  document.getElementById(
+    `inputBoarding-${tripId}`
+  ).value =
+    document.getElementById(
+      `boardingPoint-${tripId}`
+    ).value;
+
+  document.getElementById(
+    `inputDropoff-${tripId}`
+  ).value =
+    document.getElementById(
+      `dropoffPoint-${tripId}`
+    ).value;
+}
 
       function goToPassengerStep(tripId) {
         document.getElementById(`step1-fare-view-${tripId}`).style.display = "none";

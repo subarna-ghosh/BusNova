@@ -9,6 +9,7 @@ const Route = require("../../models/Route");
 const Stop = require("../../models/Stop");
 const Payment = require("../../models/Payment");
 const Passenger = require("../../models/Passenger");
+const Notification = require("../../models/Notification");
 const sendEmail = require("../../utils/sendEmail");
 const logger = require("../../utils/logger");
 const {
@@ -139,9 +140,23 @@ class CancelledTripsController {
         },
       ]);
 
+      const notifications = await Notification.find({
+        isDeleted: false,
+        status: "sent",
+        $or: [
+          { audience: "all" },
+          { audience: "Customer" },
+          { audience: "specific_user", userId: req.user.id },
+        ],
+      })
+        .sort({ sentAt: -1 })
+        .limit(10)
+        .lean();
+
       return res.render("customer/cancelled_trips", {
         username: req.user.name,
         cancelledTrips,
+        notifications,
       });
     } catch (error) {
       logger.error(`Cancelled trips error: ${error.message}`);

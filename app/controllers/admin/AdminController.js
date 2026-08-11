@@ -4,6 +4,8 @@ const User = require("../../models/User");
 const Bus = require("../../models/Bus");
 const Booking = require("../../models/Booking");
 const Trip = require("../../models/Trip");
+const DriverProfile = require("../../models/DriverProfile");
+const AdminNotification = require("../../models/AdminNotification");
 const Route = require("../../models/Route");
 const Stop = require("../../models/Stop");
 const Payment = require("../../models/Payment");
@@ -18,6 +20,13 @@ const activityLogger = require("../../helpers/activityLogger");
 class AdminController {
   async viewAdminDashboard(req, res) {
     try {
+      const adminNotifications = await AdminNotification.find({
+        isDeleted: false,
+      })
+        .sort({ createdAt: -1 })
+        .limit(20)
+        .lean();
+
       const bookings = await Booking.aggregate([
         {
           $match: {
@@ -188,7 +197,6 @@ class AdminController {
             as: "bus",
           },
         },
-
         {
           $unwind: {
             path: "$bus",
@@ -197,16 +205,29 @@ class AdminController {
         },
         {
           $lookup: {
-            from: "users",
+            from: "driverprofiles",
             localField: "driverId",
             foreignField: "_id",
-            as: "driver",
+            as: "dprofile",
           },
         },
-
         {
           $unwind: {
-            path: "$driver",
+            path: "$dprofile",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "dprofile.userId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $unwind: {
+            path: "$user",
             preserveNullAndEmptyArrays: true,
           },
         },
@@ -638,6 +659,7 @@ class AdminController {
       const revenueToday = revenueStats[0]?.netRevenue || 0;
 
       return res.render("admin/dashboard/admin_dashboard", {
+        adminNotifications,
         findAdmin: req.user.name,
         findBooking: bookings,
         viewTrips,

@@ -9,12 +9,19 @@ const Bus = require("../../models/Bus");
 const Route = require("../../models/Route");
 const Trip = require("../../models/Trip");
 const Driver = require("../../models/DriverProfile");
+const AdminNotification = require("../../models/AdminNotification");
 const logger = require("../../utils/logger");
 const activityLogger = require("../../helpers/activityLogger");
 const sendDriverEmail = require("../../utils/sendDriverEmail");
 
 class DriverController {
   async viewDrivers(req, res) {
+    const adminNotifications = await AdminNotification.find({
+      isDeleted: false,
+    })
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .lean();
     const findBuses = await Bus.find({ isDeleted: false });
     const findDrivers = await Driver.aggregate([
       {
@@ -50,6 +57,7 @@ class DriverController {
       findBuses,
       drivers: findDrivers,
       findAdmin: req.user.name,
+      adminNotifications,
     });
   }
 

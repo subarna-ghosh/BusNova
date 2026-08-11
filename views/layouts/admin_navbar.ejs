@@ -9,35 +9,55 @@
   </div>
 
   <div class="topbar-actions">
+    <!-- notification -->
     <button
       class="icon-btn"
       aria-label="Notifications"
       data-bs-toggle="dropdown"
     >
       <i class="bi bi-bell"></i>
-      <span class="icon-dot"></span>
+      <span class="icon-dot" id="notificationDot" style="display: none"></span>
     </button>
-    <ul class="dropdown-menu dropdown-menu-end notif-menu">
+
+    
+   <ul
+  class="dropdown-menu dropdown-menu-end notif-menu"
+  id="notificationMenu"
+>
+  <% if (adminNotifications && adminNotifications.length > 0) { %>
+
+    <% adminNotifications.forEach(notification => { %>
+
       <li class="notif-item">
-        <i class="bi bi-ticket-perforated text-brand"></i>
+        <i class="bi bi-bell text-brand"></i>
+
         <div>
-          <strong>New booking</strong><span>Seat 4B on Kolkata → Digha</span>
+          <strong>
+            <%= notification.title %>
+          </strong>
+
+          <span>
+            <%= notification.message %>
+          </span>
         </div>
       </li>
-      <li class="notif-item">
-        <i class="bi bi-exclamation-triangle text-danger"></i>
-        <div>
-          <strong>Trip delayed</strong><span>BN-04 NV running 20 min late</span>
-        </div>
-      </li>
-      <li class="notif-item">
-        <i class="bi bi-cash-coin text-success"></i>
-        <div>
-          <strong>Payment received</strong
-          ><span>₹1,300 for booking #10493</span>
-        </div>
-      </li>
-    </ul>
+
+    <% }) %>
+
+  <% } else { %>
+
+    <li class="notif-item no-notification">
+      <i class="bi bi-bell text-brand"></i>
+
+      <div>
+        <strong>No new notifications</strong>
+
+        <span>You are all caught up.</span>
+      </div>
+    </li>
+
+  <% } %>
+</ul>
 
     <div class="dropdown">
       <button
@@ -46,12 +66,8 @@
         aria-label="Admin menu"
       >
         <span class="avatar-initials">
-          <%= findAdmin
-            .split(" ")
-            .map(word => word.charAt(0))
-            .join("")
-            .toUpperCase()
-          %>
+          <%= findAdmin .split(" ") .map(word => word.charAt(0)) .join("")
+          .toUpperCase() %>
         </span>
         <span class="d-none d-md-inline"><%= findAdmin%></span>
         <i class="bi bi-chevron-down small"></i>

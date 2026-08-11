@@ -7,6 +7,7 @@ const Route = require("../../models/Route");
 const Stop = require("../../models/Stop");
 const Payment = require("../../models/Payment");
 const Passenger = require("../../models/Passenger");
+const Notification = require("../../models/Notification");
 const logger = require("../../utils/logger");
 const activityLogger = require("../../helpers/activityLogger");
 
@@ -175,9 +176,23 @@ class UpcomingTripsController {
         },
       ]);
 
+      const notifications = await Notification.find({
+        isDeleted: false,
+        status: "sent",
+        $or: [
+          { audience: "all" },
+          { audience: "Customer" },
+          { audience: "specific_user", userId: req.user.id },
+        ],
+      })
+        .sort({ sentAt: -1 })
+        .limit(10)
+        .lean();
+
       return res.render("customer/upcoming_trips", {
         findBooking,
         username: req.user.name,
+        notifications,
       });
     } catch (error) {
       logger.error(`View upcoming trips error: ${error.message}`);

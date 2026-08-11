@@ -6,7 +6,9 @@ const User = require("../../models/User");
 const Otp = require("../../models/Otp");
 const sendEmail = require("../../utils/sendEmail");
 const sendForgotPasswordEmail = require("../../utils/sendForgotEmail");
+const socket = require("../../config/socket");
 const logger = require("../../utils/logger");
+const createAdminNotification = require("../../utils/adminNotification");
 const {
   createAccessToken,
   createRefreshToken,
@@ -29,13 +31,17 @@ class AuthController {
         !password?.trim()
       ) {
         logger.warn(
-          `Registration failed. Missing required fields: ${email || "Unknown Email"}`,
+          `Registration failed. Missing required fields: ${
+            email || "Unknown Email"
+          }`,
         );
+
         return res.redirect("/web/auth/view/register");
       }
 
       if (!agreeTerms) {
         logger.warn(`Terms not accepted by: ${email}`);
+
         return res.redirect("/web/auth/view/register");
       }
 
@@ -47,6 +53,7 @@ class AuthController {
 
       if (existingUser) {
         logger.warn(`Registration failed. Email already exists: ${email}`);
+
         return res.redirect("/web/auth/view/register");
       }
 
@@ -58,6 +65,7 @@ class AuthController {
 
       if (!customerRole) {
         logger.error("Customer role not found");
+
         return res.redirect("/web/auth/view/register");
       }
 
@@ -92,6 +100,19 @@ class AuthController {
         action: "Register",
         description: `${user.name} registered successfully`,
       });
+
+      // -----------------------------------------
+      // SOCKET NOTIFICATION TO ADMIN
+      // -----------------------------------------
+
+      await createAdminNotification({
+        title: "New Customer",
+        message: `New customer ${user.name} has registered.`,
+        type: "registration",
+        referenceId: user._id,
+      });
+
+      // -----------------------------------------
 
       logger.info(`Customer registered successfully: ${email}`);
 
@@ -318,7 +339,9 @@ class AuthController {
       if (req.session.bookingData) {
         req.session.bookingData.userId = isPresent._id;
 
-        const redirectUrl = req.session.redirectAfterLogin || "/web/customer/view/booking/checkout";
+        const redirectUrl =
+          req.session.redirectAfterLogin ||
+          "/web/customer/view/booking/checkout";
 
         delete req.session.redirectAfterLogin;
 

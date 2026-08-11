@@ -8,12 +8,19 @@ const Stop = require("../../models/Stop");
 const Payment = require("../../models/Payment");
 const Passenger = require("../../models/Passenger");
 const Coupon = require("../../models/Coupon");
+const AdminNotification = require("../../models/AdminNotification");
 const logger = require("../../utils/logger");
 const activityLogger = require("../../helpers/activityLogger");
 
 class CustomerController {
   async viewCustomers(req, res) {
     try {
+      const adminNotifications = await AdminNotification.find({
+        isDeleted: false,
+      })
+        .sort({ createdAt: -1 })
+        .limit(20)
+        .lean();
       const customerRole = await Role.findOne({
         roleName: "Customer",
       });
@@ -23,6 +30,7 @@ class CustomerController {
         return res.render("admin/dashboard/customers", {
           findAdmin: req.user.name,
           customers: [],
+          adminNotifications,
         });
       }
 
@@ -76,6 +84,7 @@ class CustomerController {
       return res.render("admin/dashboard/customers", {
         findAdmin: req.user.name,
         customers,
+        adminNotifications,
       });
     } catch (error) {
       logger.error(`View Customers Error: ${error.message}`);

@@ -26,10 +26,21 @@ const tripSchema = new Schema(
       type: Date,
       required: true,
     },
+
+    // Normal seat fare
     baseFare: {
       type: Number,
       required: true,
+      min: 0,
     },
+
+    // Premium seat fare
+    premiumFare: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    
     availableSeats: {
       type: Number,
       required: true,

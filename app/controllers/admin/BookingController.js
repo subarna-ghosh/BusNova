@@ -7,6 +7,7 @@ const Route = require("../../models/Route");
 const Stop = require("../../models/Stop");
 const Payment = require("../../models/Payment");
 const Passenger = require("../../models/Passenger");
+const AdminNotification = require("../../models/AdminNotification");
 const Coupon = require("../../models/Coupon");
 const logger = require("../../utils/logger");
 const activityLogger = require("../../helpers/activityLogger");
@@ -14,6 +15,13 @@ const activityLogger = require("../../helpers/activityLogger");
 class BookingController {
   async viewBookings(req, res) {
     try {
+      const adminNotifications = await AdminNotification.find({
+        isDeleted: false,
+      })
+        .sort({ createdAt: -1 })
+        .limit(20)
+        .lean();
+
       const bookings = await Booking.aggregate([
         {
           $match: {
@@ -132,6 +140,7 @@ class BookingController {
       return res.render("admin/dashboard/bookings", {
         findBooking: bookings,
         findAdmin: req.user.name,
+        adminNotifications,
       });
     } catch (error) {
       logger.error(`View bookings error: ${error.message}`);

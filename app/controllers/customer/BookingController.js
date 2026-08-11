@@ -7,6 +7,8 @@ const Route = require("../../models/Route");
 const Stop = require("../../models/Stop");
 const Payment = require("../../models/Payment");
 const Passenger = require("../../models/Passenger");
+const Notification = require("../../models/Notification");
+const createAdminNotification = require("../../utils/adminNotification");
 const logger = require("../../utils/logger");
 const activityLogger = require("../../helpers/activityLogger");
 const razorpay = require("../../config/razorpay");
@@ -103,9 +105,23 @@ class BookingController {
 
       console.log("BOOKINGS:", findBooking);
 
+      const notifications = await Notification.find({
+        isDeleted: false,
+        status: "sent",
+        $or: [
+          { audience: "all" },
+          { audience: "Customer" },
+          { audience: "specific_user", userId: userId },
+        ],
+      })
+        .sort({ sentAt: -1 })
+        .limit(10)
+        .lean();
+
       return res.render("customer/bookings", {
         username: req.user.name,
         findBooking,
+        notifications,
       });
     } catch (error) {
       logger.error(`Booking History Error: ${error.message}`);
@@ -208,6 +224,19 @@ class BookingController {
 
       delete req.session.paymentError;
 
+      const notifications = await Notification.find({
+        isDeleted: false,
+        status: "sent",
+        $or: [
+          { audience: "all" },
+          { audience: "Customer" },
+          { audience: "specific_user", userId: req.user.id },
+        ],
+      })
+        .sort({ sentAt: -1 })
+        .limit(10)
+        .lean();
+
       return res.render("customer/payment_checkout", {
         bookingData,
         trip: showTripDetail[0],
@@ -215,6 +244,7 @@ class BookingController {
         razorpayKeyId: process.env.RAZORPAY_KEY_ID,
         paymentError,
         username: req.user.name,
+        notifications,
       });
     } catch (error) {
       logger.error(`Checkout Error: ${error.message}`);
@@ -495,8 +525,15 @@ class BookingController {
       // -----------------------------------------
 
       booking.bookingStatus = "cancelled";
-
       await booking.save();
+
+      // notify admin
+      await createAdminNotification({
+        title: "Booking Cancelled",
+        message: `Booking ${booking.bookingCode} has been cancelled.`,
+        type: "cancellation",
+        referenceId: booking._id,
+      });
 
       logger.info(`Booking ${booking.bookingCode} cancelled by user ${userId}`);
 

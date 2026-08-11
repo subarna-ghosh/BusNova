@@ -12,6 +12,7 @@ const CustomerController = require("../../controllers/admin/CustomerController")
 const BookingController = require("../../controllers/admin/BookingController");
 const PaymentController = require("../../controllers/admin/PaymentController");
 const ReportController = require("../../controllers/admin/ReportController");
+const NotificationController = require("../../controllers/admin/NotificationController");
 const validateWeb = require("../../middlewares/validateWebMiddleware");
 const webProtect = require("../../middlewares/webProtect");
 const roleCheck = require("../../middlewares/roleCheck");
@@ -225,4 +226,20 @@ Router.get(
   roleCheck("Admin"),
   ReportController.viewReports,
 );
+
+// notification management routes
+Router.get(
+  "/view/notifications",
+  webProtect,
+  roleCheck("Admin"),
+  NotificationController.viewNotification,
+);
+
+Router.post(
+  "/notification/create",
+  webProtect,
+  roleCheck("Admin"),
+  NotificationController.createNotification,
+);
+
 module.exports = Router;

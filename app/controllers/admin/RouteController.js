@@ -6,6 +6,7 @@ const SeatLayout = require("../../models/Seat");
 const Bus = require("../../models/Bus");
 const Route = require("../../models/Route");
 const Stop = require("../../models/Stop");
+const AdminNotification = require("../../models/AdminNotification");
 const logger = require("../../utils/logger");
 const activityLogger = require("../../helpers/activityLogger");
 
@@ -25,6 +26,12 @@ const formatStops = (stopsInput) => {
 class RouteController {
   async viewRoutes(req, res) {
     try {
+      const adminNotifications = await AdminNotification.find({
+        isDeleted: false,
+      })
+        .sort({ createdAt: -1 })
+        .limit(20)
+        .lean();
       const showStops = await Stop.find({ isDeleted: false });
       const showRoutes = await Route.aggregate([
         {
@@ -64,6 +71,7 @@ class RouteController {
         stops: showStops,
         routes: showRoutes,
         findAdmin: req.user.name,
+        adminNotifications,
       });
     } catch (error) {
       console.error("Error fetching routes:", error);

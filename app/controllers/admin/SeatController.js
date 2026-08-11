@@ -3,13 +3,21 @@ const jwt = require("jsonwebtoken");
 const Role = require("../../models/Role");
 const User = require("../../models/User");
 const SeatLayout = require("../../models/Seat");
+const AdminNotification = require("../../models/AdminNotification");
 const logger = require("../../utils/logger");
 const activityLogger = require("../../helpers/activityLogger");
 
 class SeatController {
-  viewSeats(req, res) {
+  async viewSeats(req, res) {
+    const adminNotifications = await AdminNotification.find({
+      isDeleted: false,
+    })
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .lean();
     return res.render("admin/dashboard/seats", {
       findAdmin: req.user.name,
+      adminNotifications,
     });
   }
 

@@ -4,15 +4,23 @@ const Role = require("../../models/Role");
 const User = require("../../models/User");
 const Stop = require("../../models/Stop");
 const Route = require("../../models/Route");
+const AdminNotification = require("../../models/AdminNotification");
 const logger = require("../../utils/logger");
 const activityLogger = require("../../helpers/activityLogger");
 
 class StopController {
   async viewStops(req, res) {
+    const adminNotifications = await AdminNotification.find({
+      isDeleted: false,
+    })
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .lean();
     const findStops = await Stop.find({ isDeleted: false });
     return res.render("admin/dashboard/stop", {
       stops: findStops,
       findAdmin: req.user.name,
+      adminNotifications,
     });
   }
 

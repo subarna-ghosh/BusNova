@@ -3,15 +3,23 @@ const jwt = require("jsonwebtoken");
 const Role = require("../../models/Role");
 const User = require("../../models/User");
 const Coupon = require("../../models/Coupon");
+const AdminNotification = require("../../models/AdminNotification");
 const logger = require("../../utils/logger");
 const activityLogger = require("../../helpers/activityLogger");
 
 class CouponController {
   async viewCoupons(req, res) {
+    const adminNotifications = await AdminNotification.find({
+      isDeleted: false,
+    })
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .lean();
     const showCoupons = await Coupon.find({ isDeleted: false });
     return res.render("admin/dashboard/coupons", {
       coupons: showCoupons,
       findAdmin: req.user.name,
+      adminNotifications,
     });
   }
 

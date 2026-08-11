@@ -8,12 +8,19 @@ const Stop = require("../../models/Stop");
 const Payment = require("../../models/Payment");
 const Passenger = require("../../models/Passenger");
 const Coupon = require("../../models/Coupon");
+const AdminNotification = require("../../models/AdminNotification");
 const logger = require("../../utils/logger");
 const activityLogger = require("../../helpers/activityLogger");
 
 class PaymentController {
   async viewPaymentList(req, res) {
     try {
+      const adminNotifications = await AdminNotification.find({
+        isDeleted: false,
+      })
+        .sort({ createdAt: -1 })
+        .limit(20)
+        .lean();
       const listPayment = await Payment.aggregate([
         {
           $lookup: {
@@ -124,6 +131,7 @@ class PaymentController {
 
       return res.render("admin/dashboard/payments", {
         findAdmin: req.user.name,
+        adminNotifications,
         listPayment,
         paymentStats: {
           collectedThisMonth,

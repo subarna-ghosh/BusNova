@@ -3,18 +3,26 @@ const jwt = require("jsonwebtoken");
 const Role = require("../../models/Role");
 const User = require("../../models/User");
 const SeatLayout = require("../../models/Seat");
+const AdminNotification = require("../../models/AdminNotification");
 const Bus = require("../../models/Bus");
 const logger = require("../../utils/logger");
 const activityLogger = require("../../helpers/activityLogger");
 
 class BusController {
   async viewBuses(req, res) {
+    const adminNotifications = await AdminNotification.find({
+      isDeleted: false,
+    })
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .lean();
     const findBuses = await Bus.find({ isDeleted: false });
     const findSeatLayouts = await SeatLayout.find({ isDeleted: false });
     return res.render("admin/dashboard/buses", {
       seatLayouts: findSeatLayouts,
       buses: findBuses,
       findAdmin: req.user.name,
+      adminNotifications,
     });
   }
 
