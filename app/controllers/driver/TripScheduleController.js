@@ -5,6 +5,7 @@ const Role = require("../../models/Role");
 const User = require("../../models/User");
 const Trip = require("../../models/Trip");
 const DriverProfile = require("../../models/DriverProfile");
+const Notification = require("../../models/Notification");
 const Passenger = require("../../models/Passenger");
 const sendEmail = require("../../utils/sendEmail");
 const logger = require("../../utils/logger");
@@ -13,21 +14,12 @@ const activityLogger = require("../../helpers/activityLogger");
 class TripScheduleController {
   async viewSchedules(req, res) {
     try {
-      // -----------------------------------------
-      // 1. Logged-in user
-      // -----------------------------------------
-
       const userId = req.user.id;
-
       if (!userId) {
         logger.warn("User ID not found in JWT");
 
         return res.redirect("/web/auth/view/login");
       }
-
-      // -----------------------------------------
-      // 2. Find driver's profile
-      // -----------------------------------------
 
       const findDriver = await DriverProfile.findOne({
         userId,
@@ -42,15 +34,21 @@ class TripScheduleController {
 
       const driverId = findDriver._id;
 
-      // -----------------------------------------
-      // 3. Get driver's upcoming trips
-      // -----------------------------------------
+      // save notification
+      const notifications = await Notification.find({
+        isDeleted: false,
+        status: "sent",
+        $or: [
+          { audience: "all" },
+          { audience: "Driver" },
+          { audience: "specific_user", userId: driverId },
+        ],
+      })
+        .sort({ sentAt: -1 })
+        .limit(10)
+        .lean();
 
       const schedules = await Trip.aggregate([
-        // =========================================
-        // TRIP
-        // =========================================
-
         {
           $match: {
             driverId: new mongoose.Types.ObjectId(driverId),
@@ -66,10 +64,6 @@ class TripScheduleController {
             },
           },
         },
-
-        // =========================================
-        // ROUTE
-        // =========================================
 
         {
           $lookup: {
@@ -87,10 +81,6 @@ class TripScheduleController {
           },
         },
 
-        // =========================================
-        // ORIGIN STOP
-        // =========================================
-
         {
           $lookup: {
             from: "stops",
@@ -106,10 +96,6 @@ class TripScheduleController {
             preserveNullAndEmptyArrays: true,
           },
         },
-
-        // =========================================
-        // DESTINATION STOP
-        // =========================================
 
         {
           $lookup: {
@@ -127,10 +113,6 @@ class TripScheduleController {
           },
         },
 
-        // =========================================
-        // BUS
-        // =========================================
-
         {
           $lookup: {
             from: "buses",
@@ -146,10 +128,6 @@ class TripScheduleController {
             preserveNullAndEmptyArrays: true,
           },
         },
-
-        // =========================================
-        // PROJECT
-        // =========================================
 
         {
           $project: {
@@ -173,20 +151,12 @@ class TripScheduleController {
           },
         },
 
-        // =========================================
-        // SORT
-        // =========================================
-
         {
           $sort: {
             departureAt: 1,
           },
         },
       ]);
-
-      // -----------------------------------------
-      // 4. Group trips by departure date
-      // -----------------------------------------
 
       const groupedSchedules = {};
 
@@ -200,14 +170,11 @@ class TripScheduleController {
         groupedSchedules[dateKey].push(trip);
       });
 
-      // -----------------------------------------
-      // 5. Render
-      // -----------------------------------------
-
       return res.render("driver/trip_schedule", {
         schedules,
         groupedSchedules,
-        findDriver: req.user.name,
+        driverName: req.user?.name || "Driver",
+        notifications,
       });
     } catch (error) {
       logger.error(`View driver schedule error: ${error.message}`);
@@ -215,7 +182,8 @@ class TripScheduleController {
       return res.render("driver/trip_schedule", {
         schedules: [],
         groupedSchedules: {},
-        findDriver: req.user.name,
+        driverName: req.user?.name || "Driver",
+        notifications,
       });
     }
   }

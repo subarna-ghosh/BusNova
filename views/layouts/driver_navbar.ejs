@@ -15,30 +15,37 @@
       data-bs-toggle="dropdown"
     >
       <i class="bi bi-bell"></i>
-      <span class="icon-dot"></span>
+      <span class="icon-dot" id="notificationDot" style="display: none"></span>
     </button>
-    <ul class="dropdown-menu dropdown-menu-end notif-menu">
-      <li class="notif-item">
-        <i class="bi bi-bus-front text-brand"></i>
-        <div>
-          <strong>New trip assigned</strong
-          ><span>Kolkata → Digha, 22:30 departure</span>
-        </div>
-      </li>
-      <li class="notif-item">
-        <i class="bi bi-calendar2-week text-warning"></i>
-        <div>
-          <strong>Schedule updated</strong
-          ><span>Thu duty shifted to 06:00 start</span>
-        </div>
-      </li>
-      <li class="notif-item">
-        <i class="bi bi-people text-success"></i>
-        <div>
-          <strong>Manifest ready</strong
-          ><span>40 passengers confirmed for TRP-2291</span>
-        </div>
-      </li>
+
+    <ul
+      class="dropdown-menu dropdown-menu-end notif-menu"
+      id="notificationMenu"
+    >
+      <% if (notifications && notifications.length > 0) { %>
+        <% notifications.forEach(notification => { %>
+          <li class="notif-item">
+            <i class="bi bi-bell text-brand"></i>
+            <div>
+              <strong>
+                <%= notification.title %>
+              </strong>
+              <span>
+                <%= notification.message %>
+              </span>
+            </div>
+          </li>
+        <% }) %>
+     <% } else { %>
+        <li class="notif-item" id="noNotificationItem">
+          <i class="bi bi-bell text-brand"></i>
+          <div>
+            <strong>No new notifications</strong>
+            <span>You're all caught up.</span>
+          </div>
+        </li>
+
+     <% } %>
     </ul>
 
     <div class="dropdown">
@@ -47,8 +54,10 @@
         data-bs-toggle="dropdown"
         aria-label="Account menu"
       >
-        <span class="avatar-initials">SM</span>
-        <span class="d-none d-md-inline">Sourav Mallick</span>
+        <span class="avatar-initials">
+          <%=driverName .split(" ") .map(word => word.charAt(0)) .join("").toUpperCase() %>
+        </span>
+        <span class="d-none d-md-inline"><%= driverName %></span>
         <i class="bi bi-chevron-down small"></i>
       </button>
       <ul class="dropdown-menu dropdown-menu-end">

@@ -1,200 +1,431 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>BusNova — Passenger List</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/assets/css/admin_dashboard.css" />
-    <link rel="stylesheet" href="/assets/css/driver_dashboard.css" />
-  </head>
-  <body>
-    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
-    <%- include('../layouts/driver_sidebar') %>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-    <div class="admin-main">
-      <!-- NAVBAR -->
-      <%- include('../layouts/driver_navbar') %>
+  <title>BusNova — Passenger List</title>
 
-      <main class="admin-content">
-        <section class="admin-page">
-          <div class="page-head">
-            <div>
-              <h1>Passenger List</h1>
-              <p>Manifest for your assigned trip.</p>
-            </div>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    rel="stylesheet"
+  />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="/assets/css/admin_dashboard.css" />
+  <link rel="stylesheet" href="/assets/css/driver_dashboard.css" />
+</head>
+
+<body>
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <%- include('../layouts/driver_sidebar') %>
+
+  <div class="admin-main">
+
+    <%- include('../layouts/driver_navbar') %>
+
+    <main class="admin-content">
+
+      <section class="admin-page">
+
+        <div class="page-head">
+
+          <div>
+            <h1>Passenger List</h1>
+            <p>Manifest for your assigned trip.</p>
           </div>
 
-          <div class="panel mb-3">
-            <div class="trip-select-bar">
-              <div class="route-pill">
-                <span>Kolkata</span>
-                <i class="bi bi-arrow-right"></i>
-                <span>Digha</span>
-              </div>
-              <select class="form-select form-select-sm w-auto" id="tripSelect">
-                <option>#TRP-2291 · Departs 22:30 · BN-04 NV</option>
-                <option>#TRP-2287 · Departs 23:00 · BN-11 NV</option>
-                <option>#TRP-2280 · Departs 06:15 · BN-22 NV</option>
-              </select>
+        </div>
+
+
+        <% if (!trips || trips.length === 0) { %>
+
+          <!-- No trips -->
+
+          <div class="panel text-center py-5">
+
+            <div class="stat-icon bg-muted mx-auto mb-3"
+                 style="width:55px;height:55px;font-size:22px;">
+
+              <i class="bi bi-bus-front"></i>
+
             </div>
 
+            <h4>No trips assigned</h4>
+
+            <p class="text-muted mb-0">
+              You currently have no upcoming trips assigned to you.
+            </p>
+
+          </div>
+
+        <% } else { %>
+
+
+          <!-- Trip selector -->
+
+          <div class="panel mb-3">
+
+            <div class="trip-select-bar">
+
+              <div class="route-pill">
+
+                <span>
+                  <%= selectedTrip.originStop.city || "Origin" %>
+                </span>
+
+                <i class="bi bi-arrow-right"></i>
+
+                <span>
+                  <%= selectedTrip.destinationStop.city || "Destination" %>
+                </span>
+
+              </div>
+
+
+              <select
+                class="form-select form-select-sm w-auto"
+                id="tripSelect"
+                onchange="changeTrip(this.value)"
+              >
+
+                <% trips.forEach(trip => { %>
+
+                  <option
+                    value="<%= trip._id %>"
+                    <%= selectedTrip._id.toString() === trip._id.toString()
+                      ? "selected"
+                      : "" %>
+                  >
+
+                    <%= trip.originStop.city || "Origin" %>
+                    →
+                    <%= trip.destinationStop.city || "Destination" %>
+
+                    ·
+
+                    Departs
+                    <%= new Date(trip.departureAt).toLocaleTimeString(
+                      "en-IN",
+                      {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                      }
+                    ) %>
+
+                    ·
+
+                    <%= trip.busNumber || "Bus" %>
+
+                  </option>
+
+                <% }) %>
+
+              </select>
+
+            </div>
+
+
+            <!-- Statistics -->
+
             <div class="row g-3 stat-row">
+
+              <!-- Total seats -->
+
               <div class="col-6 col-lg-3">
+
                 <div class="stat-card">
+
                   <div class="stat-icon bg-orange">
                     <i class="bi bi-people"></i>
                   </div>
+
                   <div>
-                    <div class="stat-value">40</div>
-                    <div class="stat-label">Total seats</div>
+
+                    <div class="stat-value">
+                      <%= selectedTrip.bookedSeatNumbers
+                        ? selectedTrip.bookedSeatNumbers.length
+                        : 0 %>
+                    </div>
+
+                    <div class="stat-label">
+                      Booked seats
+                    </div>
+
                   </div>
+
                 </div>
+
               </div>
+
+
+              <!-- Passengers -->
+
               <div class="col-6 col-lg-3">
+
                 <div class="stat-card">
+
                   <div class="stat-icon bg-green">
-                    <i class="bi bi-check2-circle"></i>
+                    <i class="bi bi-person-check"></i>
                   </div>
+
                   <div>
-                    <div class="stat-value">32</div>
-                    <div class="stat-label">Checked in</div>
+
+                    <div class="stat-value">
+                      <%= passengers.length %>
+                    </div>
+
+                    <div class="stat-label">
+                      Passengers
+                    </div>
+
                   </div>
+
                 </div>
+
               </div>
+
+
+              <!-- Available -->
+
               <div class="col-6 col-lg-3">
+
                 <div class="stat-card">
+
                   <div class="stat-icon bg-ink">
-                    <i class="bi bi-hourglass-split"></i>
+                    <i class="bi bi-person-plus"></i>
                   </div>
+
                   <div>
-                    <div class="stat-value">6</div>
-                    <div class="stat-label">Pending</div>
+
+                    <div class="stat-value">
+                      <%= selectedTrip.availableSeats %>
+                    </div>
+
+                    <div class="stat-label">
+                      Available seats
+                    </div>
+
                   </div>
+
                 </div>
+
               </div>
+
+
+              <!-- Status -->
+
               <div class="col-6 col-lg-3">
+
                 <div class="stat-card">
+
                   <div class="stat-icon bg-blue">
-                    <i class="bi bi-person-dash"></i>
+                    <i class="bi bi-clock-history"></i>
                   </div>
+
                   <div>
-                    <div class="stat-value">2</div>
-                    <div class="stat-label">No-show</div>
+
+                    <div class="stat-value"
+                         style="font-size:16px;">
+
+                      <%= selectedTrip.status %>
+
+                    </div>
+
+                    <div class="stat-label">
+                      Trip status
+                    </div>
+
                   </div>
+
                 </div>
+
               </div>
+
             </div>
+
           </div>
+
+
+          <!-- Passenger manifest -->
 
           <div class="panel">
-            <div class="panel-head">
-              <h2>Manifest — Trip #TRP-2291</h2>
-              <span class="text-muted small"
-                >Departs 22:30 from Dadar East, Asiad Bus Stand</span
-              >
-            </div>
-            <div class="table-responsive">
-              <table class="table admin-table align-middle">
-                <thead>
-                  <tr>
-                    <th>Seat</th>
-                    <th>Name</th>
-                    <th>Gender / Age</th>
-                    <th>Boarding Point</th>
-                    <th>Phone</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody id="passengerManifestBody">
-                  <tr data-status="checked-in">
-                    <td><span class="badge badge-muted">1A</span></td>
-                    <td>Rahul Sharma</td>
-                    <td>M / 28</td>
-                    <td>Dadar East</td>
-                    <td>+91 98765 43210</td>
-                    <td>
-                      <button class="passenger-status-toggle">
-                        <span class="badge badge-success">Checked in</span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr data-status="checked-in">
-                    <td><span class="badge badge-muted">1B</span></td>
-                    <td>Priya Sharma</td>
-                    <td>F / 26</td>
-                    <td>Dadar East</td>
-                    <td>+91 98765 43211</td>
-                    <td>
-                      <button class="passenger-status-toggle">
-                        <span class="badge badge-success">Checked in</span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr data-status="pending">
-                    <td><span class="badge badge-muted">2A</span></td>
-                    <td>Anwesha Sen</td>
-                    <td>F / 31</td>
-                    <td>Sion Circle</td>
-                    <td>+91 90000 11122</td>
-                    <td>
-                      <button class="passenger-status-toggle">
-                        <span class="badge badge-warning">Pending</span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr data-status="pending">
-                    <td><span class="badge badge-muted">2B</span></td>
-                    <td>Manoj Kumar</td>
-                    <td>M / 34</td>
-                    <td>Sion Circle</td>
-                    <td>+91 90000 11123</td>
-                    <td>
-                      <button class="passenger-status-toggle">
-                        <span class="badge badge-warning">Pending</span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr data-status="no-show">
-                    <td><span class="badge badge-muted">3A</span></td>
-                    <td>Sneha Roy</td>
-                    <td>F / 24</td>
-                    <td>Dadar East</td>
-                    <td>+91 90000 22233</td>
-                    <td><span class="badge badge-danger">No-show</span></td>
-                  </tr>
-                  <tr data-status="checked-in">
-                    <td><span class="badge badge-muted">3B</span></td>
-                    <td>Arjun Nair</td>
-                    <td>M / 40</td>
-                    <td>Sion Circle</td>
-                    <td>+91 90000 22234</td>
-                    <td>
-                      <button class="passenger-status-toggle">
-                        <span class="badge badge-success">Checked in</span>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-      </main>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/assets/js/driver_dashboard.js"></script>
-  </body>
+            <div class="panel-head">
+
+              <h2>
+                Manifest —
+                <%= selectedTrip.originStop.city || "Origin" %>
+                →
+                <%= selectedTrip.destinationStop.city || "Destination" %>
+              </h2>
+
+              <span class="text-muted small">
+
+                Departs
+
+                <%= new Date(
+                  selectedTrip.departureAt
+                ).toLocaleString("en-IN") %>
+
+              </span>
+
+            </div>
+
+
+            <% if (passengers && passengers.length > 0) { %>
+
+              <div class="table-responsive">
+
+                <table class="table admin-table align-middle">
+
+                  <thead>
+
+                    <tr>
+                      <th>Seat</th>
+                      <th>Name</th>
+                      <th>Age</th>
+                      <th>Phone</th>
+                      <th>Status</th>
+                    </tr>
+
+                  </thead>
+
+
+                  <tbody id="passengerManifestBody">
+
+                    <% passengers.forEach(passenger => { %>
+
+                      <tr>
+
+                        <td>
+                          <span class="badge badge-muted">
+                            <%= passenger.seatNumber %>
+                          </span>
+                        </td>
+
+                        <td>
+                          <%= passenger.name %>
+                        </td>
+
+                        <td>
+                          <%= passenger.age %>
+                        </td>
+
+                        <td>
+                          <%= passenger.phone || "N/A" %>
+                        </td>
+
+                        <td>
+
+                          <% if (
+                            passenger.bookingStatus === "confirmed"
+                          ) { %>
+
+                            <span class="badge badge-success">
+                              Confirmed
+                            </span>
+
+                          <% } else if (
+                            passenger.bookingStatus === "completed"
+                          ) { %>
+
+                            <span class="badge badge-muted">
+                              Completed
+                            </span>
+
+                          <% } else { %>
+
+                            <span class="badge badge-warning">
+                              <%= passenger.bookingStatus %>
+                            </span>
+
+                          <% } %>
+
+                        </td>
+
+                      </tr>
+
+                    <% }) %>
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+
+            <% } else { %>
+
+
+              <!-- No passengers -->
+
+              <div class="text-center py-5">
+
+                <div
+                  class="stat-icon bg-muted mx-auto mb-3"
+                  style="width:55px;height:55px;font-size:22px;"
+                >
+
+                  <i class="bi bi-people"></i>
+
+                </div>
+
+                <h5>No passengers yet</h5>
+
+                <p class="text-muted mb-0">
+                  No confirmed bookings have been made for this trip.
+                </p>
+
+              </div>
+
+
+            <% } %>
+
+          </div>
+
+
+        <% } %>
+
+      </section>
+
+    </main>
+
+  </div>
+
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+
+  <script src="/assets/js/driver_dashboard.js"></script>
+
+
+  <script>
+
+    function changeTrip(tripId) {
+
+      if (!tripId) {
+        return;
+      }
+
+      window.location.href =
+        `/web/driver/view/passenger/list?trip=${tripId}`;
+
+    }
+
+  </script>
+
+</body>
 </html>

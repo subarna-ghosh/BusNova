@@ -20,7 +20,7 @@ Router.get(
   "/view/passenger/list",
   webProtect,
   roleCheck("Driver"),
-  PassengerListController.viewPassengers,
+  PassengerListController.viewPassengerList,
 );
 
 // trip schedule routes
