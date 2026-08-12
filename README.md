@@ -19,14 +19,13 @@
 
 ## 📌 Overview
 
-**BusNova** is a web-based bus agency management system that centralizes the operations of a bus travel business — buses, routes, stops, trips, seat layouts, bookings, passengers, payments, drivers, staff, and customer accounts — into a single platform.
+**BusNova** is a web-based bus agency management system that centralizes the operations of a bus travel business — buses, routes, stops, trips, seat layouts, bookings, passengers, payments, drivers, and customer accounts — into a single platform.
 
 The system is built around four distinct user workflows:
 
 | Role | Responsibility |
 |---|---|
 | 🧑‍💼 **Admin** | Full system management and oversight |
-| 🎫 **Booking Staff** | Day-to-day booking and operational tasks |
 | 🙋 **Customer** | Search buses, select seats, book tickets, pay online |
 | 🧑‍✈️ **Driver** | View assigned trips and duty schedules |
 
@@ -41,7 +40,7 @@ Real-time updates are powered by **Socket.IO**, and payments are processed throu
 
 - Authentication & role-based access control
 - Central dashboard with system-wide analytics
-- User, staff, and driver management
+- User and driver management
 - Bus, seat layout, route, and stop/station management
 - Trip scheduling and monitoring
 - Booking, passenger, and payment oversight
@@ -149,7 +148,6 @@ BusNova/
 │   ├── admin/
 │   ├── customer/
 │   ├── driver/
-│   ├── staff/
 │   └── layouts/
 │
 ├── .env
@@ -188,7 +186,7 @@ Banners             Settings            ActivityLogs
 ### 1. Clone the Repository
 
 ```bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
+git clone https://github.com/subarna-ghosh/BusNova.git
 cd BusNova
 ```
 
@@ -254,7 +252,6 @@ http://localhost:3000
 | Role | Email | Password |
 |---|---|---|
 | Admin | `YOUR_ADMIN_EMAIL` | `YOUR_ADMIN_PASSWORD` |
-| Booking Staff | `YOUR_STAFF_EMAIL` | `YOUR_STAFF_PASSWORD` |
 | Driver | `YOUR_DRIVER_EMAIL` | `YOUR_DRIVER_PASSWORD` |
 | Customer | `YOUR_CUSTOMER_EMAIL` | `YOUR_CUSTOMER_PASSWORD` |
 
@@ -328,7 +325,7 @@ io.to(`user:${userId}`).emit("newNotification", {
 
 ### 📢 Admin Notifications
 
-System-generated admin notifications are tracked separately from customer/staff notifications, and persist even while the admin is offline:
+System-generated admin notifications are tracked separately from customer/driver notifications, and persist even while the admin is offline:
 
 ```text
 New Customer Registered   Payment Successful
@@ -354,9 +351,6 @@ Admin
  ├── Manage Trips
  ├── Manage Bookings
  └── Manage Notifications
-
-Booking Staff
- └── Booking Operations
 
 Driver
  └── Assigned Trips
@@ -391,7 +385,7 @@ Route + Bus + Driver + Departure Time + Arrival Time + Fare + Seat Availability
 
 ## 📊 Admin Dashboard Modules
 
-Users · Buses · Seat Layouts · Routes · Stops · Trips · Bookings · Payments · Passengers · Drivers · Staff · Coupons · Notifications · Activity Logs · Settings
+Users · Buses · Seat Layouts · Routes · Stops · Trips · Bookings · Payments · Passengers · Drivers  · Coupons · Notifications · Activity Logs · Settings
 
 ---
 
