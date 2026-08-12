@@ -66,6 +66,9 @@ app.use(express.static("public"));
 
 // Routes
 const api = require("./app/routes");
+app.get("/", (req, res) => {
+  res.redirect("/web/home/view/landing/page");
+});
 app.use(api);
 
 // Server

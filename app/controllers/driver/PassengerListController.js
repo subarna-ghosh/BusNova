@@ -6,15 +6,11 @@ const DriverProfile = require("../../models/DriverProfile");
 const Passenger = require("../../models/Passenger");
 const sendEmail = require("../../utils/sendEmail");
 const logger = require("../../utils/logger");
-const {
-  createAccessToken,
-  createRefreshToken,
-} = require("../../utils/createToken");
 const activityLogger = require("../../helpers/activityLogger");
 
-class DriverController {
-  viewDriverDashboard(req, res) {
-    return res.render("driver/driver_dashboard");
+class PassengerListController {
+  viewPassengers(req, res) {
+    return res.render("driver/passenger_list");
   }
 }
-module.exports = new DriverController();
+module.exports = new PassengerListController();

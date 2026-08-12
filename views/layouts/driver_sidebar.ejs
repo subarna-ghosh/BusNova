@@ -1,0 +1,42 @@
+<aside class="admin-sidebar" id="adminSidebar">
+  <div class="sidebar-brand">
+    <span class="brand-mark">B</span>
+    <span>BusNova</span>
+    <button
+      class="sidebar-close d-lg-none"
+      id="sidebarClose"
+      aria-label="Close menu"
+    >
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-group-label">Overview</div>
+    <a
+      href="/web/driver/view/dashboard"
+      class="nav-link-item <%= currentPath === '/web/driver/view/dashboard' ? 'active' : '' %>"
+    >
+      <i class="bi bi-bus-front"></i><span>Assigned Trips</span>
+    </a>
+    <div class="nav-group-label">Operations</div>
+    <a
+      href="/web/driver/view/passenger/list"
+      class="nav-link-item <%= currentPath === '/web/driver/view/passenger/list' ? 'active' : '' %>"
+    >
+      <i class="bi bi-people"></i><span>Passenger List</span>
+    </a>
+    <a
+      href="/web/driver/view/trip/schedule"
+      class="nav-link-item <%= currentPath === '/web/driver/view/trip/schedule' ? 'active' : '' %>"
+    >
+      <i class="bi bi-calendar2-week"></i><span>Trip Schedule</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-foot">
+    <a href="/web/home/view/landing/page" class="nav-link-item">
+      <i class="bi bi-box-arrow-left"></i><span>Back to site</span>
+    </a>
+  </div>
+</aside>

@@ -1,0 +1,67 @@
+/* ============================================================
+   Driver dashboard — extends admin.css design tokens.
+   Load admin.css BEFORE this file; these rules reuse its
+   :root variables (--bn-orange, --bn-ink, --bn-muted, --bn-line, --bn-bg …).
+   ============================================================ */
+
+/* ================= Route pill (trip header) ================= */
+.route-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bn-orange-soft);
+  color: var(--bn-orange-dark);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+.route-pill i {
+  font-size: 0.75rem;
+}
+
+/* ================= Passenger list header ================= */
+.trip-select-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.passenger-status-toggle {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* ================= Trip schedule ================= */
+.schedule-day-block {
+  margin-bottom: 22px;
+}
+
+.schedule-day-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.schedule-day-heading h3 {
+  font-family: "Baloo 2", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.schedule-day-count {
+  font-size: 0.78rem;
+  color: var(--bn-muted);
+}
+
+.trip-list .duty-sub {
+  font-size: 0.78rem;
+  color: var(--bn-muted);
+}
