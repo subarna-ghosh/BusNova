@@ -22,12 +22,21 @@ const activityLogger = require("../../helpers/activityLogger");
 class DriverController {
   async viewDriverDashboard(req, res) {
     try {
+      // -----------------------------------------
+      // 1. Get logged-in driver
+      // -----------------------------------------
+
       const driverUserId = req.user.id;
+
       if (!driverUserId) {
         logger.warn("Driver user ID missing from JWT/session");
 
         return res.redirect("/web/auth/view/login");
       }
+
+      // -----------------------------------------
+      // 2. Find DriverProfile
+      // -----------------------------------------
 
       const driverProfile = await DriverProfile.findOne({
         userId: driverUserId,
@@ -40,11 +49,19 @@ class DriverController {
         return res.redirect("/web/auth/view/login");
       }
 
+      // -----------------------------------------
+      // 3. Today start/end
+      // -----------------------------------------
+
       const startOfToday = new Date();
       startOfToday.setHours(0, 0, 0, 0);
 
       const endOfToday = new Date();
       endOfToday.setHours(23, 59, 59, 999);
+
+      // -----------------------------------------
+      // 4. Get today's trips
+      // -----------------------------------------
 
       const todayTrips = await Trip.aggregate([
         {
@@ -59,6 +76,11 @@ class DriverController {
             isDeleted: false,
           },
         },
+
+        // -----------------------------------------
+        // Route
+        // -----------------------------------------
+
         {
           $lookup: {
             from: "routes",
@@ -75,6 +97,52 @@ class DriverController {
           },
         },
 
+        // -----------------------------------------
+        // Origin Stop
+        // route.originStopId -> stops._id
+        // -----------------------------------------
+
+        {
+          $lookup: {
+            from: "stops",
+            localField: "route.originStopId",
+            foreignField: "_id",
+            as: "originStop",
+          },
+        },
+
+        {
+          $unwind: {
+            path: "$originStop",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+
+        // -----------------------------------------
+        // Destination Stop
+        // route.destinationStopId -> stops._id
+        // -----------------------------------------
+
+        {
+          $lookup: {
+            from: "stops",
+            localField: "route.destinationStopId",
+            foreignField: "_id",
+            as: "destinationStop",
+          },
+        },
+
+        {
+          $unwind: {
+            path: "$destinationStop",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+
+        // -----------------------------------------
+        // Bus
+        // -----------------------------------------
+
         {
           $lookup: {
             from: "buses",
@@ -90,6 +158,10 @@ class DriverController {
             preserveNullAndEmptyArrays: true,
           },
         },
+
+        // -----------------------------------------
+        // Bookings
+        // -----------------------------------------
 
         {
           $lookup: {
@@ -109,6 +181,8 @@ class DriverController {
                   bookingStatus: {
                     $in: ["confirmed", "completed"],
                   },
+
+                  isDeleted: false,
                 },
               },
             ],
@@ -116,6 +190,10 @@ class DriverController {
             as: "bookings",
           },
         },
+
+        // -----------------------------------------
+        // Passenger count
+        // -----------------------------------------
 
         {
           $addFields: {
@@ -137,11 +215,17 @@ class DriverController {
           },
         },
 
+        // -----------------------------------------
+        // Total seats
+        // -----------------------------------------
+
         {
           $addFields: {
             totalSeats: {
               $add: [
-                "$availableSeats",
+                {
+                  $ifNull: ["$availableSeats", 0],
+                },
 
                 {
                   $size: {
@@ -153,11 +237,19 @@ class DriverController {
           },
         },
 
+        // -----------------------------------------
+        // Sort
+        // -----------------------------------------
+
         {
           $sort: {
             departureAt: 1,
           },
         },
+
+        // -----------------------------------------
+        // Project
+        // -----------------------------------------
 
         {
           $project: {
@@ -169,21 +261,30 @@ class DriverController {
 
             availableSeats: 1,
             bookedSeatNumbers: 1,
-            totalSeats: 1,
 
+            totalSeats: 1,
             passengerCount: 1,
 
-            "route._id": 1,
-            "route.origin": 1,
-            "route.destination": 1,
-            "route.originStop": 1,
-            "route.destinationStop": 1,
+            // Origin stop
+            "originStop._id": 1,
+            "originStop.name": 1,
+            "originStop.city": 1,
 
+            // Destination stop
+            "destinationStop._id": 1,
+            "destinationStop.name": 1,
+            "destinationStop.city": 1,
+
+            // Bus
             "bus._id": 1,
             "bus.busNumber": 1,
           },
         },
       ]);
+
+      // -----------------------------------------
+      // 5. Total passengers today
+      // -----------------------------------------
 
       let todayPassengerCount = 0;
 
@@ -191,21 +292,32 @@ class DriverController {
         todayPassengerCount += trip.passengerCount || 0;
       });
 
+      // -----------------------------------------
+      // 6. Next departure
+      // -----------------------------------------
+
       const now = new Date();
 
       const nextDeparture = await Trip.aggregate([
         {
           $match: {
             driverId: new mongoose.Types.ObjectId(driverProfile._id),
+
             departureAt: {
               $gte: now,
             },
+
             isDeleted: false,
+
             status: {
               $nin: ["cancelled", "completed"],
             },
           },
         },
+
+        // -----------------------------------------
+        // Get nearest trip
+        // -----------------------------------------
 
         {
           $sort: {
@@ -216,6 +328,10 @@ class DriverController {
         {
           $limit: 1,
         },
+
+        // -----------------------------------------
+        // Route
+        // -----------------------------------------
 
         {
           $lookup: {
@@ -233,6 +349,50 @@ class DriverController {
           },
         },
 
+        // -----------------------------------------
+        // Origin Stop
+        // -----------------------------------------
+
+        {
+          $lookup: {
+            from: "stops",
+            localField: "route.originStopId",
+            foreignField: "_id",
+            as: "originStop",
+          },
+        },
+
+        {
+          $unwind: {
+            path: "$originStop",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+
+        // -----------------------------------------
+        // Destination Stop
+        // -----------------------------------------
+
+        {
+          $lookup: {
+            from: "stops",
+            localField: "route.destinationStopId",
+            foreignField: "_id",
+            as: "destinationStop",
+          },
+        },
+
+        {
+          $unwind: {
+            path: "$destinationStop",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+
+        // -----------------------------------------
+        // Bus
+        // -----------------------------------------
+
         {
           $lookup: {
             from: "buses",
@@ -249,6 +409,10 @@ class DriverController {
           },
         },
 
+        // -----------------------------------------
+        // Project
+        // -----------------------------------------
+
         {
           $project: {
             _id: 1,
@@ -257,26 +421,37 @@ class DriverController {
             arrivalAt: 1,
             status: 1,
 
-            "route.origin": 1,
-            "route.destination": 1,
+            // Origin
+            "originStop._id": 1,
+            "originStop.name": 1,
+            "originStop.city": 1,
 
-            "route.originStop": 1,
-            "route.destinationStop": 1,
+            // Destination
+            "destinationStop._id": 1,
+            "destinationStop.name": 1,
+            "destinationStop.city": 1,
 
+            // Bus
             "bus.busNumber": 1,
           },
         },
       ]);
 
       // -----------------------------------------
-      // On-time rate
-      // -----------------------------------------
-      // Trip model doesn't have
-      // actualDepartureAt, so a real rate cannot
-      // be calculated yet.
+      // 7. On-time rate
       // -----------------------------------------
 
+      // Trip currently does not have
+      // actualDepartureAt / delayedBy.
+      //
+      // Therefore real historical on-time
+      // calculation isn't possible yet.
+
       const onTimeRate = 100;
+
+      // -----------------------------------------
+      // 8. Get driver user
+      // -----------------------------------------
 
       const driver = await User.findById(driverUserId)
         .select("name email phone")
@@ -284,25 +459,45 @@ class DriverController {
 
       if (!driver) {
         logger.warn(`Driver user not found: ${driverUserId}`);
+
         return res.redirect("/web/auth/view/login");
       }
 
-      // save notification
+      // -----------------------------------------
+      // 9. Get notifications
+      // -----------------------------------------
+
       const notifications = await Notification.find({
         isDeleted: false,
         status: "sent",
+
         $or: [
-          { audience: "all" },
-          { audience: "Driver" },
-          { audience: "specific_user", userId: driverUserId },
+          {
+            audience: "all",
+          },
+
+          {
+            audience: "Driver",
+          },
+
+          {
+            audience: "specific_user",
+            userId: driverUserId,
+          },
         ],
       })
-        .sort({ sentAt: -1 })
+        .sort({
+          sentAt: -1,
+        })
         .limit(10)
         .lean();
 
+      // -----------------------------------------
+      // 10. Render dashboard
+      // -----------------------------------------
+
       return res.render("driver/driver_dashboard", {
-        driverName: req.user?.name || "Driver",
+        driverName: driver.name || req.user?.name || "Driver",
         currentUserId: driverUserId,
         todayTrips,
         todayPassengerCount,
@@ -315,12 +510,12 @@ class DriverController {
 
       return res.render("driver/driver_dashboard", {
         driverName: req.user?.name || "Driver",
-        currentUserId: driverUserId,
+        currentUserId: req.user?.id || null,
         todayTrips: [],
         todayPassengerCount: 0,
         onTimeRate: 0,
         nextDeparture: null,
-        notifications,
+        notifications: [],
       });
     }
   }

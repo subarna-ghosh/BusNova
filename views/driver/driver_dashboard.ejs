@@ -192,15 +192,9 @@
                             <!-- Route -->
 
                             <td>
-                              <%= trip.route?.originStop?.name ||
-                                  trip.route?.origin ||
-                                  "Unknown"
-                              %>
-                              →
-                              <%= trip.route?.destinationStop?.name ||
-                                  trip.route?.destination ||
-                                  "Unknown"
-                              %>
+                              <strong><%= trip.originStop?.name || "Unknown" %></strong>
+                               →
+                               <strong><%= trip.destinationStop?.name || "Unknown" %></strong>
                             </td>
 
                             <!-- Bus -->
@@ -380,15 +374,9 @@
                         <!-- ROUTE -->
                         <div>
                           <div class="trip-route">
-                            <%= trip.route?.originStop?.name ||
-                                trip.route?.origin ||
-                                "Unknown"
-                            %>
+                            <%= trip.originStop?.city || "Unknown" %>
                             →
-                            <%= trip.route?.destinationStop?.name ||
-                                trip.route?.destination ||
-                                "Unknown"
-                            %>
+                            <%= trip.destinationStop?.city || "Unknown" %>
                           </div>
 
                           <div class="trip-sub">
