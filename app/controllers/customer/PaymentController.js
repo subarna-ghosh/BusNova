@@ -15,6 +15,7 @@ const logger = require("../../utils/logger");
 const activityLogger = require("../../helpers/activityLogger");
 const razorpay = require("../../config/razorpay");
 const createAdminNotification = require("../../utils/adminNotification");
+const sendTicketEmail = require("../../utils/sendTicketEmail");
 class PaymentController {
   async viewPaymentHistory(req, res) {
     try {
@@ -519,7 +520,10 @@ class PaymentController {
           },
         );
 
+        // -----------------------------------------
         // Release seats
+        // -----------------------------------------
+
         if (payment) {
           const booking = await Booking.findById(payment.bookingId);
 
@@ -606,13 +610,8 @@ class PaymentController {
         },
       );
 
-      // notify admin
-      await createAdminNotification({
-        title: "Payment Successful",
-        message: `Payment received for booking ${booking.bookingCode}.`,
-        type: "payment",
-        referenceId: payment._id,
-      });
+      // IMPORTANT:
+      // Check booking before using booking.bookingCode
 
       if (!booking) {
         logger.warn(`Booking not found for payment ${payment._id}`);
@@ -623,7 +622,49 @@ class PaymentController {
       }
 
       // -----------------------------------------
-      // 5. Store booking ID for summary
+      // 5. Notify Admin
+      // -----------------------------------------
+
+      await createAdminNotification({
+        title: "Payment Successful",
+
+        message: `Payment received for booking ${booking.bookingCode}.`,
+
+        type: "payment",
+
+        referenceId: payment._id,
+      });
+
+      // -----------------------------------------
+      // 6. Send Digital Ticket Email
+      // -----------------------------------------
+
+      try {
+        await sendTicketEmail(booking._id);
+
+        logger.info(
+          `Digital ticket email sent for booking ${booking.bookingCode}`,
+        );
+      } catch (emailError) {
+        /*
+         * IMPORTANT:
+         *
+         * Do NOT cancel the booking if email fails.
+         *
+         * Payment is already successful and booking
+         * is already confirmed.
+         *
+         * The user can still see the ticket from
+         * "My Bookings".
+         */
+
+        logger.error(
+          `Ticket email failed for booking ${booking.bookingCode}: ${emailError.message}`,
+        );
+      }
+
+      // -----------------------------------------
+      // 7. Store booking ID for summary
       // -----------------------------------------
 
       req.session.paymentSummary = {
@@ -631,14 +672,13 @@ class PaymentController {
       };
 
       // -----------------------------------------
-      // IMPORTANT
-      // Remove failure-cleanup session data
+      // 8. Remove payment failure data
       // -----------------------------------------
 
       delete req.session.paymentBookingId;
 
       // -----------------------------------------
-      // 6. Clear checkout data
+      // 9. Clear checkout data
       // -----------------------------------------
 
       delete req.session.bookingData;
@@ -646,7 +686,7 @@ class PaymentController {
       delete req.session.paymentError;
 
       // -----------------------------------------
-      // 7. Go to Payment Summary
+      // 10. Go to Payment Summary
       // -----------------------------------------
 
       return req.session.save(() => {

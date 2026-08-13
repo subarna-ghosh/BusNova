@@ -129,20 +129,24 @@ BusNova/
 │
 ├── app/
 │   ├── config/
+│   │   ├── cloudinary.js
 │   │   ├── db.js
-│   │   └── socket.js
+|   |   |__ emailConfig.js
+|   |   |__ razorpay.js
+|   |   |__ socket.js
 │   │
 │   ├── controllers/
+│   ├── helpers/
 │   ├── middleware/
 │   ├── models/
 │   ├── routes/
-│   └── utils/
+│   ├── utils/
+│   └── validations/
 │
 ├── public/
 │   └── assets/
 │       ├── css/
-│       ├── js/
-│       └── images/
+│       └── js/
 │
 ├── views/
 │   ├── admin/
