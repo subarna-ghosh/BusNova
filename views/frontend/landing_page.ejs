@@ -43,16 +43,15 @@
           <!-- search buses -->
           <form action="/web/search/view/result" method="GET">
             <div class="row g-2 align-items-end">
+    
               <!-- From (Origin) Select Dropdown -->
               <div class="col-md-3 text-start">
                 <label for="origin" class="form-label small text-dark mb-1">From</label>
                 <select class="form-select" id="origin" name="from" required>
                   <option value="" selected disabled>Select origin</option>
-                  <% if (typeof destination !== 'undefined' && destination.length > 0) { %>
-                    <% destination.forEach((o) => { %>
-                      <option value="<%= o.originStop._id %>">
-                        <%= o.originStop.city %>
-                      </option>
+                 <% if (typeof origins !== 'undefined' && origins.length > 0) { %>
+                    <% origins.forEach((city) => { %>
+                      <option value="<%= city %>"><%= city %></option>
                     <% }) %>
                   <% } %>
                 </select>
@@ -63,13 +62,11 @@
                 <label for="destination" class="form-label small text-dark mb-1">To</label>
                 <select class="form-select" id="destination" name="to" required>
                   <option value="" selected disabled>Select destination</option>
-                  <% if (typeof destination !== 'undefined' && destination.length > 0) { %>
-                    <% destination.forEach((d) => { %>
-                      <option value="<%= d.destinationStop._id %>">
-                        <%= d.destinationStop.city %>
-                      </option>
+                  <% if (typeof destinations !== 'undefined' && destinations.length > 0) { %>
+                    <% destinations.forEach((city) => { %>
+                      <option value="<%= city %>"><%= city %></option>
                     <% }) %>
-                  <% } %>
+                 <% } %>
                 </select>
               </div>
 
@@ -77,7 +74,7 @@
               <div class="col-md-3 text-start">
                 <label for="travelDate" class="form-label small text-dark mb-1">Departure</label>
                 <input
-                  type="date"
+                 type="date"
                   class="form-control"
                   id="travelDate"
                   name="departDate"
@@ -88,9 +85,10 @@
               <!-- Submit Button -->
               <div class="col-md-3">
                 <button type="submit" class="btn btn-brand w-100">
-                  Search buses
+                 Search buses
                 </button>
               </div>
+
             </div>
           </form>
         </div>

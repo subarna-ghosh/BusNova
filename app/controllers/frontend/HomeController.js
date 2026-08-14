@@ -11,7 +11,9 @@ const activityLogger = require("../../helpers/activityLogger");
 class HomeController {
   async viewLandingPage(req, res) {
     try {
-      const listDestination = await Trip.aggregate([
+      // Unique Origin Cities
+      const originsData = await Trip.aggregate([
+        { $match: { isDeleted: false } },
         {
           $lookup: {
             from: "routes",
@@ -30,6 +32,22 @@ class HomeController {
           },
         },
         { $unwind: "$originStop" },
+        { $group: { _id: "$originStop.city" } },
+        { $sort: { _id: 1 } },
+      ]);
+
+      // Unique Destination Cities
+      const destinationsData = await Trip.aggregate([
+        { $match: { isDeleted: false } },
+        {
+          $lookup: {
+            from: "routes",
+            localField: "routeId",
+            foreignField: "_id",
+            as: "route",
+          },
+        },
+        { $unwind: "$route" },
         {
           $lookup: {
             from: "stops",
@@ -39,24 +57,20 @@ class HomeController {
           },
         },
         { $unwind: "$destinationStop" },
-        {
-          $group: {
-            _id: {
-              origin: "$route.originStopId",
-              destination: "$route.destinationStopId",
-            },
-            originStop: { $first: "$originStop" },
-            destinationStop: { $first: "$destinationStop" },
-          },
-        },
+        { $group: { _id: "$destinationStop.city" } },
+        { $sort: { _id: 1 } },
       ]);
 
       return res.render("frontend/landing_page", {
-        destination: listDestination,
+        origins: originsData.map((item) => item._id),
+        destinations: destinationsData.map((item) => item._id),
       });
     } catch (error) {
       logger.error(`Landing Page Error: ${error.message}`);
-      return res.render("frontend/landing_page", { destination: [] });
+      return res.render("frontend/landing_page", {
+        origins: [],
+        destinations: [],
+      });
     }
   }
 }

@@ -18,30 +18,32 @@
 
     <!-- SEARCH BAR FORM -->
     <div class="search-wrapper">
-      <form class="search-form" action="/web/search/view/result" method="GET" id="searchFilterForm">
+     <form class="search-form" action="/web/search/view/result" method="GET" id="searchFilterForm">
         <div class="search-input-group">
           <label for="fromCity">From</label>
           <select id="fromCity" name="from">
-            <% if (typeof destination !== 'undefined' && destination.length > 0) { %>
-              <% destination.forEach((o) => { %>
-                <option value="<%= o.originStop._id %>" <%= queryParams && queryParams.from == o.originStop._id ? 'selected' : '' %>>
-                  <%= o.originStop.city %>
-                </option>
-              <% }) %>
-            <% } %>
+            <option value="" disabled <%= !queryParams || !queryParams.from ? 'selected' : '' %>>Select Origin</option>
+            <% if (typeof origins !== 'undefined' && origins.length > 0) { %>
+              <% origins.forEach((city) => { %>
+                <option value="<%= city %>" <%= queryParams && queryParams.from === city ? 'selected' : '' %>>
+                 <%= city %>
+               </option>
+             <% }) %>
+           <% } %>
           </select>
           <i class="fa-solid fa-chevron-down dropdown-icon"></i>
-        </div>
+       </div>
 
         <div class="search-input-group">
           <label for="toCity">To</label>
           <select id="toCity" name="to">
-            <% if (typeof destination !== 'undefined' && destination.length > 0) { %>
-              <% destination.forEach((d) => { %>
-                <option value="<%= d.destinationStop._id %>" <%= queryParams && queryParams.to == d.destinationStop._id ? 'selected' : '' %>>
-                  <%= d.destinationStop.city %>
+            <option value="" disabled <%= !queryParams || !queryParams.to ? 'selected' : '' %>>Select Destination</option>
+            <% if (typeof destinations !== 'undefined' && destinations.length > 0) { %>
+              <% destinations.forEach((city) => { %>
+                <option value="<%= city %>" <%= queryParams && queryParams.to === city ? 'selected' : '' %>>
+                  <%= city %>
                 </option>
-              <% }) %>
+             <% }) %>
             <% } %>
           </select>
           <i class="fa-solid fa-chevron-down dropdown-icon"></i>
