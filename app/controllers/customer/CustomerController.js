@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const cloudinary = require("../../config/cloudinary");
+const fs = require("fs").promises;
 const Role = require("../../models/Role");
 const User = require("../../models/User");
 const Booking = require("../../models/Booking");
